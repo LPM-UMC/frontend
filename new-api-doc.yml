@@ -1,0 +1,820 @@
+openapi: 3.0.4
+
+info:
+  title: API - LPM UMC
+  description: >
+    Dokumentasi REST API Sistem Lembaga Penjaminan Mutu (LPM) Universitas Muhammadiyah Cirebon.
+    API ini digunakan untuk autentikasi, monitoring & evaluasi (Monev),
+    penilaian, survei, serta rencana tindak lanjut.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001/api/{lang}
+    description: Server development
+    variables:
+      lang:
+        enum: [id, en]
+        default: id
+  - url: http://lpm.umc.ac.id/api/{lang}
+    description: Server production
+    variables:
+      lang:
+        enum: [id, en]
+        default: id
+
+paths:
+
+  # =====================================================
+  # auth
+  # =====================================================
+
+  /auth/google:
+    get:
+      tags: [Auth]
+      summary: redirect ke google oauth
+      description: >
+        endpoint untuk memulai proses login menggunakan google oauth 2.0.
+        server akan menghasilkan url oauth dan me-redirect user ke halaman login google.
+      responses:
+        "302":
+          description: redirect berhasil ke google oauth consent screen
+          headers:
+            Location:
+              description: URL Google OAuth
+              schema:
+                type: string
+              example: https://accounts.google.com/o/oauth2/v2/auth?...
+        "500":
+          description: Gagal menginisialisasi OAuth Google
+
+  /auth/google/callback:
+    get:
+      tags: [Auth]
+      summary: Callback Google OAuth
+      description: >
+        Endpoint callback yang dipanggil oleh Google setelah user berhasil login.
+        Backend akan menukar authorization code dengan access token.
+      parameters:
+        - in: query
+          name: code
+          required: true
+          description: Authorization code dari Google OAuth
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect ke frontend
+          content:
+            headers:
+              x-Refresh-Token:
+                schema:
+                  type: string
+                  format: uuid
+        "401":
+          description: Gagal login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+        "502":
+          description: Error great system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadGatewayError"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Ambil data user saat ini
+      security:
+        - bearerAuth: []
+      description: >
+        Mengambil informasi user yang sedang login berdasarkan access token.
+      responses:
+        "200":
+          description: Data pengguna berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required: [id, name, email, role]
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: ID unik pengguna
+                      nid:
+                        type: string
+                        description: NID pengguna jika dosen
+                        example: null
+                      nim:
+                        type: string
+                        description: NIM pengguna jika mahasiswa
+                        example: 220511145
+                      name:
+                        type: string
+                        example: Rifki Saifullah
+                      email:
+                        type: string
+                        description: Alamat email pengguna
+                        example: test@mail.me
+                      picture:
+                        type: string
+                        description: URL foto profil pengguna
+                      role:
+                        type: array
+                        description: Daftar peran pengguna dalam sistem
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                              example: mahasiswa
+                      study_program:
+                        type: object
+                        nullable: true
+                        description: Data program studi jika pengguna adalah mahasiswa
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          name:
+                            type: string
+                            example: Teknik Informatika
+                          degree_level:
+                            type: string
+                            example: S1
+                      head_of_study_programs:
+                        type: array
+                        description: Daftar program studi yang dipimpin jika pengguna adalah Kaprodi
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            code:
+                              type: string
+                            degree_level:
+                              type: string
+                        example: null
+                      dean:
+                        type: object
+                        nullable: true
+                        description: Data fakultas jika pengguna adalah Dekan
+                        properties:
+                          id:
+                            type: string
+                          code:
+                            type: string
+                          name:
+                            type: string
+                        example: null
+        "401":
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+        "502":
+          description: External server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadGatewayError"
+
+  /auth/refresh-token:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      security:
+        - bearerAuth: []
+      description: >
+        Endpoint untuk memperbarui access token menggunakan refresh token
+        tanpa perlu login ulang.
+      responses:
+        "200":
+          description: Access token berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        format: jwt
+                      token_type:
+                        type: string
+                        example: Bearer
+        "401":
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout user
+      security:
+        - bearerAuth: []
+      description: >
+        Mengakhiri sesi login user dan menghapus token autentikasi.
+      responses:
+        "204":
+          description: Logout berhasil (No content)
+        "401":
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+
+  # =====================================================
+  # Kalender
+  # =====================================================
+
+  /kalender:
+    post:
+      tags: [Kalender]
+      summary: Buat kelender baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Monev berhasil dibuat
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                kalender:
+                  type: string
+                  format: binary
+                periode:
+                  type: string
+                  example: 2024/2025
+                semester:
+                  type: string
+                  example: ganjil
+                tanggal_mulai:
+                  type: string
+                  format: date
+                tanggal_selesai:
+                  type: string
+                  format: date
+              required:
+                - kalender
+                - periode
+                - semester
+                - tanggal_mulai
+                - tanggal_selesai
+      responses:
+        "201":
+          description: Berhasil membuat kalender baru
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nama:
+                        type: string
+                        example: kalender-2025-2026-ganjil
+                      periode:
+                        type: string
+                        example: 2025/2026
+                      semester:
+                        type: string
+                        example: Ganjil
+                      is_aktif:
+                        type: boolean
+                        example: true
+                      tanggal_mulai:
+                        type: string
+                        format: date
+                      tanggal_selesai:
+                        type: string
+                        format: date
+        "400":
+          description: Error request tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ZodError"
+        "401":
+          description: Error admin belum login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "403":
+          description: Error bukan admin (LPM)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "409":
+          description: Error kalender dengan tahun tersebut sudah ada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    get:
+      tags: [Kalender]
+      summary: Ambil data semua kalender
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Data semua kalender berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        nama:
+                          type: string
+                          example: kalender-2025-2026-ganjil
+                        periode:
+                          type: string
+                          example: 2025/2026
+                        semester:
+                          type: string
+                          example: Ganjil
+                        is_aktif:
+                          type: boolean
+                          example: true
+                        tanggal_mulai:
+                          type: string
+                          format: date
+                        tanggal_selesai:
+                          type: string
+                          format: date
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: number
+                      page:
+                        type: number
+                      size:
+                        type: number
+                      total_page:
+                        type: number
+        "401":
+          description: Error admin belum login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "403":
+          description: Error bukan admin (LPM)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+
+  /kalender/aktif:
+    get:
+      tags: [Kalender]
+      summary: Ambil data kalender periode aktif
+      responses:
+        "200":
+          description: Berhasil mengamibl data kalender periode aktif
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nama:
+                        type: string
+                        example: kalender-2025-2026-ganjil
+                      periode:
+                        type: string
+                        example: 2025/2026
+                      semester:
+                        type: string
+                        example: Ganjil
+                      is_aktif:
+                        type: boolean
+                        example: true
+                      tanggal_mulai:
+                        type: string
+                        format: date
+                      tanggal_selesai:
+                        type: string
+                        format: date
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  /kalender/{kalenderId}:
+    put:
+      tags: [Kalender]
+      summary: Ubah kalender menjadi satu-satunya kelander dengan status aktif
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Berhasil mengubah status kalender ke aktif
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nama:
+                        type: string
+                        example: kalender-2025-2026-ganjil
+                      periode:
+                        type: string
+                        example: 2025/2026
+                      semester:
+                        type: string
+                        example: Ganjil
+                      is_aktif:
+                        type: boolean
+                        example: true
+                      tanggal_mulai:
+                        type: string
+                        format: date
+                      tanggal_selesai:
+                        type: string
+                        format: date
+        "401":
+          description: Error admin belum login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "403":
+          description: Error bukan admin (LPM)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+    delete:
+      tags: [Kalender]
+      summary: Hapus Kalender
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Berhasil menghapus kalender. No content (tidak mengirimkan apapun)
+        "401":
+          description: Error admin belum login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "403":
+          description: Error bukan admin (LPM)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+  # =====================================================
+  # MONEV
+  # =====================================================
+
+  /monevs:
+    post:
+      tags: [Monev]
+      summary: Buat Monev baru
+      security:
+        - bearerAuth: []
+      description: >
+        Endpoint untuk membuat periode Monitoring dan Evaluasi (Monev) baru.
+      requestBody:
+        description: Monev berhasil dibuat
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    survey:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          template_id:
+                            type: string
+                            format: uuid
+                          target_id:
+                            type: string
+                            format: uuid
+                    tanggal_mulai_monitoring:
+                      type: string
+                      format: date
+                    tanggal_akhir_monitoring:
+                      type: string
+                      format: date
+                    tanggal_mulai_temuan:
+                      type: string
+                      format: date
+                    tanggal_akhir_temuan:
+                      type: string
+                      format: date
+                    tanggal_mulai_rtl:
+                      type: string
+                      format: date
+                    tanggal_akhir_rtl:
+                      type: string
+                      format: date
+                    tanggal_mulai_berita_acara:
+                      type: string
+                      format: date
+                    tanggal_akhir_berita_acara:
+                      type: string
+                      format: date
+                    tanggal_mulai_survei:
+                      type: string
+                      format: date
+                    tanggal_akhir_survei:
+                      type: string
+                      format: date
+                    tanggal_mulai_laporan:
+                      type: string
+                      format: date
+                    tanggal_akhir_laporan:
+                      type: string
+                      format: date
+      responses:
+        "201":
+          description: Monev berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  year_name:
+                    type: string
+                  semester_name:
+                    type: string
+                  status:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+        "502":
+          description: External server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadGatewayError"
+
+  /monevs/summary:
+    get:
+      tags: [Monev]
+      summary: Ringkasan seluruh Monev
+      security:
+        - bearerAuth: []
+      description: >
+        Mengambil ringkasan statistik seluruh Monev yang tersedia.
+      responses:
+        "200":
+          description: Data ringkasan monev berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        year_name:
+                          type: string
+                          example: 2024/2025
+                        semester_name:
+                          type: string
+                          example: Ganjil
+                        status:
+                          type: string
+                          example: Selesai
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthenticatedError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+
+
+components:
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expires_in:
+          type: integer
+        type:
+          type: string
+          example: Bearer
+
+    ZodError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+
+    UnauthorizedError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Unauthorized
+
+    UnauthenticatedError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Unauthenticated
+
+    NotFoundError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Resource not found
+
+    ForbiddenError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Forbidden
+
+    ConflictError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Resource already taken
+
+    InternalServerError:
+      description: Terjadi kesalahan di server internal
+      properties:
+        errors:
+          type: string
+          example: Internal server error
+
+    BadGatewayError:
+      description: Terjadi kesalahan di server GS
+      properties:
+        errors:
+          type: string
+          example: External server error
+

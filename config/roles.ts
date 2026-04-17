@@ -1,0 +1,11 @@
+export const ROLES = {
+  ADMIN_LPM: 'ADMIN_LPM',
+  ADMIN_SPI: 'ADMIN_SPI', 
+  LPM: 'KETUA_LPM',
+  SPI: 'KETUA_SPI',
+  WAKIL_REKTOR: 'WAKIL_REKTOR',
+  REKTOR: 'REKTOR',
+  DEKAN: 'DEKAN',
+  KAPRODI: 'KAPRODI',
+  GKMF: 'GKMF'
+} as const

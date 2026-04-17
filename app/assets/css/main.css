@@ -1,0 +1,8 @@
+/* assets/css/main.css */
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@source "../../../app/**/*.{vue,ts,js}";
+@source "../../../features/**/*.{vue,ts,js}";
+@source "../../../components/**/*.{vue,ts,js}";
+@source "../../../composables/**/*.{ts,js}";
