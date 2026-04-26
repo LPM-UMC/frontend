@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     baseURL: '/frontend/' 
   },
   nitro: {
-    preset: 'github-pages'
+    // preset: 'github-pages'
   },
 
   alias: {
