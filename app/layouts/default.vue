@@ -1,6 +1,6 @@
 <!-- layouts/default.vue -->
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen overflow-x-hidden bg-white">
     <!-- Header umum (AppHeader) -->
     <AppHeader />
 

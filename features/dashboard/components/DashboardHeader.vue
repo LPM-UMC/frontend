@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import ProfilePopUp from './ProfilePopUp.vue'
 import { getDashboardDummyUser } from '../data/dashboardDummy'
 import { useDashboardRepository } from '../composables/useDashboardRepository'
 import type { DashboardLocale, DashboardUser } from '../types/dashboard'
+import { navigateTo } from 'nuxt/app'
 
 const { locale, setLocale } = useI18n()
 const repository = useDashboardRepository('auto')
@@ -65,7 +67,7 @@ onUnmounted(() => {
 <template>
   <header class="fixed inset-x-0 top-0 z-50">
     <div class="border-b border-[#ececec] bg-white">
-      <div class="mx-auto flex h-[58px] w-full max-w-[1520px] items-center justify-between px-3 sm:h-[86px] sm:px-5 md:px-6">
+      <div class="mx-auto flex h-[58px] w-full max-w-[1880px] items-center justify-between px-3 sm:h-[86px] sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <NuxtLink to="/dashboard" class="flex min-w-0 items-center gap-2 sm:gap-3">
           <img
             src="/img/logo-umc.jpg"
@@ -74,9 +76,9 @@ onUnmounted(() => {
           >
 
           <div class="min-w-0 text-[#171717]">
-            <p class="truncate text-[12px] font-bold leading-[1.2] sm:text-[14px]">Lembaga Penjaminan Mutu</p>
-            <p class="truncate text-[12px] font-bold leading-[1.2] sm:text-[14px]">dan Satuan Pengawas Internal</p>
-            <p class="truncate text-[12px] font-bold leading-[1.2] sm:text-[14px]">Universitas Muhammadiyah Cirebon</p>
+            <span class="block truncate text-[15px] font-bold text-[#111827] sm:text-[18px]">
+            SI IMUT
+          </span>
           </div>
         </NuxtLink>
 

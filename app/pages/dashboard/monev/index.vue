@@ -2,7 +2,7 @@
 import DashboardMonevPage from '#features/dashboard/pages/DashboardMonevPages.vue'
 
 definePageMeta({
-  layout: 'dashboard',
+  layout: 'monev',
 })
 </script>
 

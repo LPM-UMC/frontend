@@ -5,10 +5,19 @@ export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  
+  app: {
+    // Ganti 'nama-repo' dengan nama repositori Anda di GitHub
+    baseURL: '/frontend/' 
+  },
+  nitro: {
+    preset: 'github-pages'
+  },
 
   alias: {
     // alias final yang ingin dipakai
     '#features': fileURLToPath(new URL('./features', import.meta.url)),
+    '#i18n': fileURLToPath(new URL('./i18n', import.meta.url)),
     '#config': fileURLToPath(new URL('./config', import.meta.url)),
     '#stores': fileURLToPath(new URL('./stores', import.meta.url)),
     '#types': fileURLToPath(new URL('./types', import.meta.url)),

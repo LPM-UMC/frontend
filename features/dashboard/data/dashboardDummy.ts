@@ -13,6 +13,9 @@ const defaultMenuDescription =
 const defaultTopicDescription =
   'Lorem ipsum dolor sit amet consectetur adipiscing elit af mauris in. Aliquet hendrerit ante. Pellentesque id amet sapien.'
 
+const defaultFm01Route =
+  '/dashboard/periode-modul/pm-2026-ganjil/unit/teknik-informatika/fm1/aspek/aspek-kesiapan-rps'
+
 export const dashboardDummyUser: DashboardUser = {
   id: 'usr-lpm-001',
   name: 'Arie S Utami, M.T.',
@@ -36,7 +39,7 @@ const dashboardDummyHomeData: DashboardHomeData = {
       title: 'Monev',
       description: defaultMenuDescription,
       image: '/img/gedung-umc.jpg',
-      to: '/dashboard/monev',
+      to: defaultFm01Route,
       ctaLabel: 'Masuk',
     },
     {
@@ -45,7 +48,7 @@ const dashboardDummyHomeData: DashboardHomeData = {
       title: 'Modul Generator',
       description: defaultMenuDescription,
       image: '/img/gedung-umc.jpg',
-      to: '/dashboard/ami',
+      to: '/dashboard/modul',
       ctaLabel: 'Masuk',
     },
     {
@@ -54,7 +57,7 @@ const dashboardDummyHomeData: DashboardHomeData = {
       title: 'Survey Generator',
       description: defaultMenuDescription,
       image: '/img/gedung-umc.jpg',
-      to: '/dashboard/ami',
+      to: '/dashboard/survey',
       ctaLabel: 'Masuk',
     },
     {
@@ -63,7 +66,7 @@ const dashboardDummyHomeData: DashboardHomeData = {
       title: 'Kalender Generator',
       description: defaultMenuDescription,
       image: '/img/gedung-umc.jpg',
-      to: '/dashboard/ami',
+      to: '/dashboard/kalender-generator',
       ctaLabel: 'Masuk',
     },
   ],
@@ -117,7 +120,7 @@ function buildTopics(
     moduleKey,
     title,
     description: defaultTopicDescription,
-    to: '/dashboard/monev',
+    to: moduleKey === 'monev' ? defaultFm01Route : '/dashboard/monev',
     ctaLabel: 'Learn more',
     accentVariant,
   }))

@@ -1,5 +1,11 @@
 # Dependencies
 node_modules/
+.pnpm-store/
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
 
 # Nuxt / Nitro outputs
 .nuxt/
@@ -15,6 +21,9 @@ coverage/
 # Logs
 logs/
 *.log
+*.pid
+*.seed
+*.pid.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -29,5 +38,9 @@ pnpm-debug.log*
 .vscode/
 .idea/
 .fleet/
+.history/
 .DS_Store
 Thumbs.db
+
+new-api-doc.yml
+ketentuan.md

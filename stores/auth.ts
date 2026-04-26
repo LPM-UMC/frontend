@@ -1,8 +1,8 @@
 import axios from "axios";
+import type { AxiosInstance } from "axios";
 import { StatusCodes } from "http-status-codes";
-import { useNuxtApp, useRuntimeConfig } from "nuxt/app";
 import { defineStore } from "pinia";
-import type { User } from "#types/user";
+import type { User } from "../types/user";
 
 export const useAuthStore = defineStore("authStore", {
   state: () => ({
@@ -31,6 +31,9 @@ export const useAuthStore = defineStore("authStore", {
       this.type = null;
       this.user = null;
     },
+    setUser(user: User): void {
+      this.user = user;
+    },
     async login() {
       const config = useRuntimeConfig();
       this.setup();
@@ -38,7 +41,7 @@ export const useAuthStore = defineStore("authStore", {
       window.location.href = config.public.apiBase + "/auth/google";
     },
     async refresh(): Promise<boolean> {
-      const { $axios } = useNuxtApp() as any;
+      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
 
       this.setup();
 
@@ -73,7 +76,7 @@ export const useAuthStore = defineStore("authStore", {
       }
     },
     async getCurrentUser() {
-      const { $axios } = useNuxtApp() as any;
+      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
       this.setup();
 
       try {
@@ -107,7 +110,7 @@ export const useAuthStore = defineStore("authStore", {
       }
     },
     async logout() {
-      const { $axios } = useNuxtApp() as any;
+      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
 
       this.setup();
 

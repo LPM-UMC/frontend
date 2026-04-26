@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 const props = withDefaults(defineProps<{
   title: string
   description: string
@@ -18,20 +20,20 @@ const imageSrc = computed(() => {
 <template>
   <NuxtLink
     :to="props.to"
-    class="group flex h-full w-full flex-col overflow-hidden rounded-[16px] border border-[#d6d9df] bg-[#efefef] p-[8px] shadow-[0_3px_10px_rgba(15,23,42,0.12)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(15,23,42,0.16)]"
+    class="group flex h-full min-h-[300px] w-full flex-col overflow-hidden rounded-[16px] border border-[#d6d9df] bg-[#efefef] p-[8px] shadow-[0_3px_10px_rgba(15,23,42,0.12)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(15,23,42,0.16)] sm:min-h-[320px] xl:min-h-[336px]"
   >
     <img
       :src="imageSrc"
       :alt="props.title"
-      class="h-[172px] w-full rounded-[12px] object-cover"
+      class="h-[160px] w-full rounded-[12px] object-cover sm:h-[172px] xl:h-[182px]"
     />
 
     <div class="flex flex-1 flex-col px-3 pb-3 pt-3.5 sm:px-3.5 sm:pt-4">
-      <h3 class="text-[20px] font-semibold leading-tight text-[#232a35]">
+      <h3 class="text-[18px] font-semibold leading-tight text-[#232a35] sm:text-[19px] xl:text-[20px]">
         {{ props.title }}
       </h3>
 
-      <p class="mt-2.5 flex-1 text-[14px] leading-[1.55] text-[#667487]">
+      <p class="mt-2.5 flex-1 text-[13px] leading-[1.55] text-[#667487] sm:text-[14px]">
         {{ props.description }}
       </p>
 

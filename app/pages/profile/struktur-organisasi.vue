@@ -1,10 +1,10 @@
 <template>
-  <main class="bg-white">
+  <main class="bg-white text-gray-900">
     <!-- ================= HERO ================= -->
   <section class="relative bg-black">
     <div class="w-full">
       <div
-        class="relative w-full h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] overflow-hidden"
+        class="relative h-[260px] w-full overflow-hidden sm:h-[300px] md:h-[340px] lg:h-[380px] xl:h-[420px] 2xl:h-[460px]"
       >
         <!-- FOTO HERO -->
         <img
@@ -18,7 +18,7 @@
 
         <!-- TEKS HERO -->
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full max-w-6xl px-4 sm:px-6 lg:px-8 lg:pl-55">
+          <div class="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:max-w-[1440px] lg:px-8 lg:pl-16 xl:pl-20 2xl:pl-24">
             <!-- Judul (tetap sempit) -->
             <div class="max-w-xl">
               <p
@@ -28,7 +28,7 @@
               </p>
 
               <h1
-                class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-black leading-tight text-white mb-3"
+                class="mb-3 text-2xl font-black leading-tight text-white sm:text-3xl md:text-4xl lg:text-[2.6rem] xl:text-[2.9rem]"
               >
                 STRUKTUR ORGANISASI
                 <span class="block">LPM &amp; SPI Universitas</span>
@@ -38,8 +38,7 @@
 
             <!-- Paragraf (LEBIH PANJANG) -->
             <p
-              class="text-xs sm:text-sm md:text-base text-white/90 leading-relaxed
-                    max-w-3xl lg:max-w-4xl"
+              class="max-w-3xl text-xs leading-relaxed text-white/90 sm:text-sm md:text-base lg:max-w-4xl"
             >
               Struktur organisasi kami terdiri atas Kepala Lembaga,
               Sekretariat, Bidang Penjaminan Mutu, Bidang Audit Internal,
@@ -55,9 +54,9 @@
 
     <!-- ================= STATISTIK SINGKAT ================= -->
   <section class="bg-white pt-6 pb-8 md:pt-8 md:pb-10">
-    <div class="max-w-6xl mx-auto px-4 md:px-6">
+    <div class="mx-auto max-w-[1280px] px-4 md:px-6 xl:max-w-[1440px]">
       <div
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 md:gap-8"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-5 md:gap-8 lg:gap-10"
       >
         <div
           v-for="item in stats"
@@ -92,7 +91,7 @@
 
     <!-- ================= NILAI-NILAI KAMI ================= -->
     <section class="pb-12 md:pb-16">
-      <div class="max-w-6xl mx-auto px-4 md:px-6">
+      <div class="mx-auto max-w-[1280px] px-4 md:px-6 xl:max-w-[1440px]">
         <div class="text-center mb-8 md:mb-10">
           <h2 class="text-base md:text-lg font-bold text-[#e30613]">
             Nilai - Nilai Kami
@@ -136,7 +135,7 @@
 
     <!-- ================= PIMPINAN LPM & SPI ================= -->
     <section class="pb-12 md:pb-16">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 text-center">
+      <div class="mx-auto max-w-[1280px] px-4 text-center md:px-6 xl:max-w-[1440px]">
         <h2 class="text-base md:text-lg font-bold text-[#e30613] mb-1">
           Pimpinan LPM dan SPI
         </h2>
@@ -148,7 +147,7 @@
         </p>
 
         <!-- 2 kartu pimpinan -->
-        <div class="mt-2 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+        <div class="mx-auto mt-2 grid max-w-4xl gap-4 sm:grid-cols-2 sm:gap-6">
           <div
             v-for="leader in leaders"
             :key="leader.name"
@@ -222,7 +221,7 @@
 
     <!-- ================= STRUKTUR ORGANISASI (BAGAN) ================= -->
     <section class="pb-12 md:pb-16">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 text-center">
+      <div class="mx-auto max-w-[1280px] px-4 text-center md:px-6 xl:max-w-[1440px]">
         <h2 class="text-base md:text-lg font-bold text-[#e30613] mb-1">
           Struktur Organisasi LPM &amp; SPI
         </h2>
@@ -245,12 +244,12 @@
 
           <div class="p-3 md:p-6">
             <div
-              class="bg-gray-100 rounded-2xl overflow-auto max-h-[480px] md:max-h-[560px]"
+              class="max-h-[480px] overflow-auto rounded-2xl bg-gray-100 md:max-h-[560px]"
             >
               <img
                 src="/img/struktur-organisasi/bagan-struktur-lpm-spi.png"
                 alt="Bagan Struktur Organisasi LPM & SPI UMC"
-                class="w-full h-auto object-contain"
+                class="h-auto w-[920px] max-w-none object-contain md:w-full md:max-w-full"
               />
             </div>
           </div>
@@ -260,7 +259,7 @@
 
     <!-- ================= TIM PENJAMINAN MUTU & AUDIT INTERNAL ================= -->
     <section class="pb-16 md:pb-20">
-      <div class="max-w-6xl mx-auto px-4 md:px-6">
+      <div class="mx-auto max-w-[1280px] px-4 md:px-6 xl:max-w-[1440px]">
         <div class="text-center mb-8 md:mb-10">
           <h2 class="text-base md:text-lg font-bold text-[#e30613] mb-1">
             Tim Penjaminan Mutu &amp; Audit Internal
@@ -275,7 +274,7 @@
 
         <!-- GRID TIM -->
         <div
-          class="grid gap-4 md:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4 2xl:grid-cols-5"
         >
           <article
             v-for="member in team"
@@ -421,7 +420,7 @@ const leaders = [
   },
 ]
 
-// contoh data tim – silakan ganti dengan nama & foto asli
+// contoh data tim - silakan ganti dengan nama & foto asli
 const team = [
   {
     name: 'Ns. Agil Putra Tri Kartika, S.Kep., M.Kep ',

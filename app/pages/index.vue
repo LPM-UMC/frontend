@@ -1,6 +1,6 @@
 <!-- pages/index.vue -->
 <template>
-  <div>
+  <div class="overflow-x-hidden">
     <!-- Section 1: Hero -->
     <HeroSection />
     <!-- Section 2: Kalender Akademik (scroll ke bawah) -->
