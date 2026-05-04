@@ -2,11 +2,11 @@
 import DashboardLingkupDetailPage from '#features/lingkup/pages/DashboardLingkupDetailPage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: "manajemen-modul",
+  requiresAuth: true,
 })
 </script>
 
 <template>
   <DashboardLingkupDetailPage />
 </template>
-

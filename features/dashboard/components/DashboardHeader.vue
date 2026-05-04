@@ -1,48 +1,65 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import ProfilePopUp from './ProfilePopUp.vue'
-import { getDashboardDummyUser } from '../data/dashboardDummy'
-import { useDashboardRepository } from '../composables/useDashboardRepository'
-import type { DashboardLocale, DashboardUser } from '../types/dashboard'
+import { useI18n } from '#imports'
 import { navigateTo } from 'nuxt/app'
+import { useAuthStore } from '#stores/auth'
+import ProfilePopUp from './ProfilePopUp.vue'
+import type { RoleResponse } from '#types/role'
+import { getAvatar } from '#utils/util'
+import { onMounted, onUnmounted, ref } from 'vue'
 
-const { locale, setLocale } = useI18n()
-const repository = useDashboardRepository('auto')
+const { locale } = useI18n()
+const authStore = useAuthStore()
 
-const user = ref<DashboardUser>(getDashboardDummyUser())
-const isLocaleMenuOpen = ref(false)
+// ================= STATE =================
+const openMenu = ref<'lang' | null>(null)
 const isProfileOpen = ref(false)
-const localeMenuRef = ref<HTMLElement | null>(null)
 
-const localeOptions: Array<{ code: DashboardLocale; label: string }> = [
-  { code: 'en', label: 'ENG' },
-  { code: 'id', label: 'ID' },
+const localeMenuRef = ref<HTMLElement | null>(null)
+const profileRef = ref<HTMLElement | null>(null)
+
+// ✅ FIX TYPE
+const user = ref({
+  id: '',
+  name: '',
+  email: '',
+  roles: [] as RoleResponse[],
+  avatar: '',
+  isOnline: false,
+})
+
+// ================= ROLE =================
+const handleChangeRole = (role: RoleResponse) => {
+  authStore.setActiveRole(role)
+}
+
+// ================= LOCALE =================
+const switchLocalePath = useSwitchLocalePath()
+
+const getLocale = async (code: "id" | "en") => {
+  await navigateTo(switchLocalePath(code))
+}
+
+const localeItems = [
+  { code: 'id', label: 'Indonesia' },
+  { code: 'en', label: 'English' },
 ]
 
-const activeLocaleLabel = computed(() =>
-  locale.value === 'en' ? 'ENG' : 'ID'
-)
-
-function toggleLocaleMenu() {
-  isLocaleMenuOpen.value = !isLocaleMenuOpen.value
+const changeLocale = async (code: string) => {
+  closeMenu()
+  await getLocale(code === 'en' ? 'en' : 'id')
 }
 
-function changeLocale(nextLocale: DashboardLocale) {
-  setLocale(nextLocale)
-  isLocaleMenuOpen.value = false
+const toggleMenu = (name: 'lang') => {
+  openMenu.value = openMenu.value === name ? null : name
 }
 
-function closeLocaleMenuOnOutsideClick(event: MouseEvent) {
-  const target = event.target as Node | null
-  if (!target) return
-
-  if (localeMenuRef.value && !localeMenuRef.value.contains(target)) {
-    isLocaleMenuOpen.value = false
-  }
+const closeMenu = () => {
+  openMenu.value = null
 }
 
-function openProfilePopup() {
-  isProfileOpen.value = true
+// ================= PROFILE =================
+function toggleProfilePopup() {
+  isProfileOpen.value = !isProfileOpen.value
 }
 
 function closeProfilePopup() {
@@ -51,69 +68,83 @@ function closeProfilePopup() {
 
 async function handleSignOut() {
   isProfileOpen.value = false
-  await navigateTo('/login')
+  await authStore.logout()
 }
 
+// ================= OUTSIDE CLICK =================
+function handleClickOutside(event: MouseEvent) {
+  const target = event.target as Node | null
+  if (!target) return
+
+  if (localeMenuRef.value && !localeMenuRef.value.contains(target)) {
+    closeMenu()
+  }
+
+}
+
+// ================= INIT =================
 onMounted(async () => {
-  document.addEventListener('click', closeLocaleMenuOnOutsideClick)
-  user.value = await repository.getCurrentUser()
+  document.addEventListener('click', handleClickOutside)
+
+  await authStore.initAuth()
+
+  if (!authStore.user) return
+
+  user.value = {
+    id: authStore.user.id,
+    name: authStore.user.nama,
+    email: authStore.user.email ?? '', // ✅ FIX
+    roles: authStore.roles ?? [], // ✅ FIX
+    avatar: getAvatar(authStore.user.nama, authStore.user.picture),
+    isOnline: true,
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', closeLocaleMenuOnOutsideClick)
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
 <template>
   <header class="fixed inset-x-0 top-0 z-50">
     <div class="border-b border-[#ececec] bg-white">
-      <div class="mx-auto flex h-[58px] w-full max-w-[1880px] items-center justify-between px-3 sm:h-[86px] sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
-        <NuxtLink to="/dashboard" class="flex min-w-0 items-center gap-2 sm:gap-3">
-          <img
-            src="/img/logo-umc.jpg"
-            alt="Logo UMC"
-            class="h-[44px] w-[44px] rounded-full object-cover sm:h-[50px] sm:w-[50px]"
-          >
+      <div class="mx-auto flex h-14.5 w-full max-w-470 items-center justify-between px-3 sm:h-21.5 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
 
-          <div class="min-w-0 text-[#171717]">
-            <span class="block truncate text-[15px] font-bold text-[#111827] sm:text-[18px]">
-            SI IMUT
-          </span>
+        <!-- LOGO -->
+        <NuxtLink to="/" class="flex min-w-0 items-center gap-3">
+          <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
+            <img src="/img/logo-umc.jpg" class="h-full w-full object-cover">
+          </div>
+
+          <div class="min-w-0 leading-tight">
+            <span class="block truncate text-[15px] font-bold md:text-xl">
+              SI IMUT
+            </span>
+            <span class="hidden truncate text-[11px] text-gray-500 sm:block">
+              LPM & SPI UMC
+            </span>
           </div>
         </NuxtLink>
 
-        <div class="flex items-center gap-1.5 sm:gap-2 md:gap-3">
-          <button
-            type="button"
-            aria-label="Toggle theme"
-            class="grid h-8 w-8 place-items-center rounded-full text-[#6b7280] transition hover:bg-[#f1f3f5] hover:text-[#374151]"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-[17px] w-[17px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 0111.21 3a7 7 0 109.79 9.79z" />
-            </svg>
-          </button>
+        <!-- RIGHT -->
+        <div class="flex items-center gap-2">
 
-          <div ref="localeMenuRef" class="relative">
+          <!-- LANGUAGE -->
+          <div ref="localeMenuRef" class="relative block">
             <button
-              type="button"
-              class="inline-flex h-8 items-center gap-1 rounded-[8px] px-2 text-[13px] font-medium text-[#505967] transition hover:bg-[#f1f3f5]"
-              @click.stop="toggleLocaleMenu"
-            >
-              <span>{{ activeLocaleLabel }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-[14px] w-[14px] text-[#7b8492] transition-transform" :class="isLocaleMenuOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
-              </svg>
+              class="cursor-pointer transition flex items-center gap-1 rounded-md px-2 py-1 text-sm text-[#2f3744] hover:bg-gray-100"
+              @click="toggleMenu('lang')">
+              {{ locale.toUpperCase() }}
+
+              <UIcon name="i-lucide-chevron-down" class="h-4 w-4 transition-transform duration-200"
+                :class="openMenu === 'lang' ? 'rotate-180' : ''" />
             </button>
 
-            <div
-              v-if="isLocaleMenuOpen"
-              class="absolute right-0 top-[calc(100%+7px)] z-20 w-[94px] overflow-hidden rounded-[8px] border border-[#e4e6ea] bg-[#f4f5f7] shadow-[0_8px_24px_rgba(15,23,42,0.15)]"
-            >
+            <div v-if="openMenu === 'lang'" class="absolute right-0 mt-2 w-24 bg-white shadow">
               <button
-                v-for="item in localeOptions"
+                v-for="item in localeItems"
                 :key="item.code"
-                type="button"
-                class="block w-full px-3 py-2 text-left text-[13px] text-[#2f3744] transition hover:bg-white"
+                class="block w-full px-3 py-2 text-left hover:bg-gray-100"
                 @click="changeLocale(item.code)"
               >
                 {{ item.label }}
@@ -121,37 +152,33 @@ onUnmounted(() => {
             </div>
           </div>
 
+          <!-- PROFILE -->
           <button
-            type="button"
-            aria-label="Open profile"
-            class="relative h-[34px] w-[34px] rounded-full"
-            @click="openProfilePopup"
+            ref="profileRef"
+            class="cursor-pointer relative h-8.5 w-8.5"
+            @click.stop="toggleProfilePopup"
           >
-            <img
-              :src="user.avatar"
-              :alt="user.name"
-              class="h-full w-full rounded-full object-cover"
-            >
-            <span
-              v-if="user.isOnline"
-              class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#12bf4c]"
-            />
+            <img :src="user.avatar" class="rounded-full object-cover">
           </button>
+
         </div>
       </div>
     </div>
-
   </header>
 
+  <!-- POPUP -->
   <ProfilePopUp
     :open="isProfileOpen"
     :user="{
-      name: user.name,
+      nama: user.name,
       email: user.email,
-      role: user.role,
+      roles: user.roles,
       avatar: user.avatar,
       online: user.isOnline,
+      activeRole: authStore.activeRole,
     }"
+    :roles="authStore.roles"
+    @change-role="handleChangeRole"
     @close="closeProfilePopup"
     @signout="handleSignOut"
   />

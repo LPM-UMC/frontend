@@ -95,21 +95,6 @@ const pageTitle = computed(() => {
   return 'Lihat Aspek'
 })
 
-const pageDescription = computed(() => {
-  if (props.mode === 'list') {
-    return 'Modul merupakan kerangka kerja monitoring dan evaluasi yang mengatur aspek penilaian, objek yang dievaluasi, serta ruang lingkup dan indikator evaluasi dalam suatu periode. Modul menjadi dasar pelaksanaan monev agar proses penilaian berjalan terstruktur, terukur, dan konsisten.'
-  }
-
-  if (props.mode === 'create') {
-    return 'Gunakan halaman ini untuk generate modul evaluasi baru berdasarkan periode pembelajaran dan unit evaluasi yang dipilih. Modul yang dibuat akan menjadi dasar pelaksanaan monitoring, penilaian, serta pengelolaan data evaluasi secara terstruktur dan terdokumentasi dengan baik.'
-  }
-
-  if (props.mode === 'edit') {
-    return 'Gunakan halaman ini untuk memperbarui nama dan deskripsi modul yang sudah dibuat. Perubahan akan langsung diterapkan pada informasi modul dan dapat terlihat oleh pengguna yang memiliki akses terhadap modul ini.'
-  }
-
-  return 'Gunakan halaman ini untuk melihat detail aspek evaluasi beserta indikator penilaiannya. Informasi yang ditampilkan mencakup nama, deskripsi, objek evaluasi, serta status integrasi sistem. Anda juga dapat melakukan pencarian, pengurutan, dan pengelolaan indikator sesuai kebutuhan.'
-})
 
 const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
   if (props.mode === 'list') {
@@ -764,27 +749,27 @@ watch(
               <dl class="space-y-4">
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Nama</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.name }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">name</dd>
                 </div>
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Deskripsi</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.description }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">description</dd>
                 </div>
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Unit Evaluasi</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.unitEvaluasi }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">nama unitEvaluasi</dd>
                 </div>
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Penanggung Jawab</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.penanggungJawab }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">penanggungJawab</dd>
                 </div>
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Evaluator</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.evaluator }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">Nama Evaluator</dd>
                 </div>
                 <div class="grid gap-1 sm:grid-cols-[260px_minmax(0,1fr)]">
                   <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Dibuat Pada</dt>
-                  <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.createdAt }}</dd>
+                  <dd class="text-[1.25rem] text-[#2b3340]">Tanggal Dibuat</dd>
                 </div>
               </dl>
 
@@ -793,11 +778,9 @@ watch(
                   <p class="text-[1.25rem] font-semibold text-[#5b6575]">Role TTD Berita Acara</p>
                   <div class="mt-2 flex flex-wrap gap-2">
                     <span
-                      v-for="role in detailData.roleTtdBeritaAcara"
-                      :key="`berita-acara-${role}`"
                       class="rounded-full bg-[#e3e8f4] px-4 py-1.5 text-[0.95rem] text-[#3e4dd8]"
                     >
-                      {{ role }}
+                    Dekan
                     </span>
                   </div>
                 </div>
@@ -806,11 +789,9 @@ watch(
                   <p class="text-[1.25rem] font-semibold text-[#5b6575]">Role TTD Laporan</p>
                   <div class="mt-2 flex flex-wrap gap-2">
                     <span
-                      v-for="role in detailData.roleTtdLaporan"
-                      :key="`laporan-${role}`"
                       class="rounded-full bg-[#e3e8f4] px-4 py-1.5 text-[0.95rem] text-[#3e4dd8]"
                     >
-                      {{ role }}
+                    Dekan
                     </span>
                   </div>
                 </div>
@@ -818,15 +799,15 @@ watch(
                 <dl class="space-y-2">
                   <div class="grid grid-cols-[300px_minmax(0,1fr)] gap-1">
                     <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Total Aspek</dt>
-                    <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.totalAspek }}</dd>
+                    <dd class="text-[1.25rem] text-[#2b3340]">1</dd>
                   </div>
                   <div class="grid grid-cols-[300px_minmax(0,1fr)] gap-1">
                     <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Total Objek Evaluasi</dt>
-                    <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.totalObjekEvaluasi }}</dd>
+                    <dd class="text-[1.25rem] text-[#2b3340]">1</dd>
                   </div>
                   <div class="grid grid-cols-[300px_minmax(0,1fr)] gap-1">
                     <dt class="text-[1.25rem] font-semibold text-[#5b6575]">Total Periode Dibuat</dt>
-                    <dd class="text-[1.25rem] text-[#2b3340]">{{ detailData.totalPeriodeDibuat }}</dd>
+                    <dd class="text-[1.25rem] text-[#2b3340]">1</dd>
                   </div>
                 </dl>
               </div>
@@ -875,7 +856,7 @@ watch(
                 Daftar Aspek
               </h2>
               <span class="rounded-full bg-[#eceff5] px-3 py-1 text-[0.95rem] font-semibold text-[#637085]">
-                {{ filteredAspekRows.length }} data
+                Total Aspek data
               </span>
             </div>
             <span class="inline-flex h-11 w-11 items-center justify-center rounded-[16px] border border-[#d8dce4] bg-[#f6f7f9] text-[#697286]">
@@ -901,7 +882,6 @@ watch(
 
               <label class="relative block w-full md:w-[170px]">
                 <select
-                  v-model="aspekSortOrder"
                   class="h-11 w-full appearance-none rounded-[16px] border border-[#d8dde4] bg-[#f7f8fa] px-5 pr-12 text-[0.95rem] text-[#9099a8] outline-none"
                 >
                   <option value="a-z">A - Z</option>
@@ -926,32 +906,30 @@ watch(
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(row, index) in paginatedAspekRows"
-                    :key="row.id"
                     class="border-t border-[#e8edf3]"
                   >
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[0.95rem] text-[#2f3744]">
-                      {{ aspekShowingFrom + index }}
+                      No.
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] font-semibold text-[#3b3f46]">
-                      {{ row.name }}
+                      nama
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] text-[#3f4551]">
-                      {{ row.description }}
+                      deskripsi
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] text-[#3f4551]">
-                      {{ row.objekEvaluasi }}
+                      objek evalusi
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] text-[#3f4551]">
                       <ol class="space-y-1">
-                        <li v-for="(item, itemIndex) in row.indikatorEvaluasi" :key="`${row.id}-${itemIndex}`">
-                          {{ itemIndex + 1 }}. {{ item }}
+                        <li>
+                          1. Indikator 1
                         </li>
                       </ol>
                     </td>
                   </tr>
 
-                  <tr v-if="paginatedAspekRows.length === 0">
+                  <tr>
                     <td colspan="5" class="px-4 py-8 text-center text-[1rem] text-[#7a8392]">
                       Belum ada data aspek.
                     </td>
@@ -962,15 +940,13 @@ watch(
 
             <div class="mt-4 flex flex-col gap-3 border-t border-[#e3e7ee] pt-4 md:flex-row md:items-center md:justify-between">
               <p class="text-[clamp(1rem,1.1vw,1.2rem)] text-[#5d6778]">
-                Menampilkan <strong>{{ aspekShowingFrom }}-{{ aspekShowingTo }}</strong> dari <strong>{{ filteredAspekRows.length }}</strong> data
+                Menampilkan <strong>1-10</strong> dari <strong>1</strong> data
               </p>
 
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   class="rounded-[14px] border border-[#d8dde5] px-5 py-2 text-[0.875rem] text-[#9ca5b4] transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="aspekCurrentPage === 1"
-                  @click="aspekCurrentPage = Math.max(1, aspekCurrentPage - 1)"
                 >
                   Previous
                 </button>
@@ -979,14 +955,12 @@ watch(
                   type="button"
                   class="rounded-[14px] bg-[#e30000] px-5 py-2 text-[0.875rem] font-semibold text-white"
                 >
-                  {{ aspekCurrentPage }}
+                1
                 </button>
 
                 <button
                   type="button"
                   class="rounded-[14px] border border-[#d8dde5] px-5 py-2 text-[0.875rem] text-[#9ca5b4] transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="aspekCurrentPage === aspekTotalPages"
-                  @click="aspekCurrentPage = Math.min(aspekTotalPages, aspekCurrentPage + 1)"
                 >
                   Next
                 </button>
@@ -1027,7 +1001,6 @@ watch(
 
               <label class="relative block w-full md:w-[170px]">
                 <select
-                  v-model="surveiSortOrder"
                   class="h-11 w-full appearance-none rounded-[16px] border border-[#d8dde4] bg-[#f7f8fa] px-5 pr-12 text-[0.95rem] text-[#9099a8] outline-none"
                 >
                   <option value="a-z">A - Z</option>
@@ -1051,25 +1024,23 @@ watch(
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(row, index) in paginatedSurveiRows"
-                    :key="row.id"
                     class="border-t border-[#e8edf3]"
                   >
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[0.95rem] text-[#2f3744]">
-                      {{ surveiShowingFrom + index }}
+                      No.
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] font-semibold text-[#3b3f46]">
-                      {{ row.templateSurvei }}
+                      Template Survei
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] text-[#3f4551]">
-                      {{ row.description }}
+                      Deskripsi
                     </td>
                     <td class="border-b border-[#e8edf3] px-4 py-4 text-[1rem] text-[#3f4551]">
-                      {{ row.target }}
+                      Mahasiwa
                     </td>
                   </tr>
 
-                  <tr v-if="paginatedSurveiRows.length === 0">
+                  <tr>
                     <td colspan="4" class="px-4 py-8 text-center text-[1rem] text-[#7a8392]">
                       Belum ada data survei.
                     </td>
@@ -1080,15 +1051,13 @@ watch(
 
             <div class="mt-4 flex flex-col gap-3 border-t border-[#e3e7ee] pt-4 md:flex-row md:items-center md:justify-between">
               <p class="text-[clamp(1rem,1.1vw,1.2rem)] text-[#5d6778]">
-                Menampilkan <strong>{{ surveiShowingFrom }}-{{ surveiShowingTo }}</strong> dari <strong>{{ filteredSurveiRows.length }}</strong> data
+                Menampilkan <strong>1-10</strong> dari <strong>1</strong> data
               </p>
 
               <div class="flex items-center gap-2">
                 <button
                   type="button"
                   class="rounded-[14px] border border-[#d8dde5] px-5 py-2 text-[0.875rem] text-[#9ca5b4] transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="surveiCurrentPage === 1"
-                  @click="surveiCurrentPage = Math.max(1, surveiCurrentPage - 1)"
                 >
                   Previous
                 </button>
@@ -1097,14 +1066,12 @@ watch(
                   type="button"
                   class="rounded-[14px] bg-[#e30000] px-5 py-2 text-[0.875rem] font-semibold text-white"
                 >
-                  {{ surveiCurrentPage }}
+                1
                 </button>
 
                 <button
                   type="button"
                   class="rounded-[14px] border border-[#d8dde5] px-5 py-2 text-[0.875rem] text-[#9ca5b4] transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="surveiCurrentPage === surveiTotalPages"
-                  @click="surveiCurrentPage = Math.min(surveiTotalPages, surveiCurrentPage + 1)"
                 >
                   Next
                 </button>

@@ -1,224 +1,121 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { navigateTo, useRoute } from '#imports'
-import { useUser } from '../composables/useUser'
-import { useUserApi } from '../services/user.api'
-import UserForm from './UserForm.vue'
+import { onMounted, watch, ref } from 'vue'
 import UserTable from './UserTable.vue'
-import type { UserFormInput, UserRecord } from '../types/user'
+import { useUserStore } from '#stores/user'
+import { useI18n } from 'vue-i18n'
+import { useRoleStore } from '#stores/role'
+import { useDasborStore } from '#stores/dashboard'
 
-type UserPageMode = 'list' | 'create' | 'detail' | 'edit'
+const localePath = useLocalePath()
+const { locale } = useI18n()
+const roleStore = useRoleStore()
+const userStore = useUserStore()
+const dasborStore = useDasborStore()
 
-const props = defineProps<{
-  mode: UserPageMode
-}>()
+const search = ref('')
+const order = ref<'asc' | 'desc'>('asc')
+const page = ref(1)
 
-const route = useRoute()
-const userApi = useUserApi()
-const {
-  rows,
-  loading,
-  error,
-  fetchUsers,
-  saveUser,
-  deleteUser,
-} = useUser()
+let lastRequestId = 0
 
-const detailUser = ref<UserRecord | null>(null)
-const detailLoading = ref(false)
-const formModel = ref<Partial<UserFormInput>>({})
-const submitError = ref<string | null>(null)
+const roleId = ref<string | undefined>(undefined)
 
-function normalizeRouteParam(value: string | string[] | undefined): string | null {
-  if (!value) return null
-  if (Array.isArray(value)) return value[0] ?? null
-  return value
-}
-
-const userId = computed(() =>
-  normalizeRouteParam(route.params.user_id as string | string[] | undefined)
-)
-
-const pageTitle = computed(() => {
-  if (props.mode === 'list') return 'Manajemen User'
-  if (props.mode === 'create') return 'Tambah User'
-  if (props.mode === 'detail') return 'Detail User'
-  return 'Edit User'
-})
-
-async function loadDetail() {
-  if (!userId.value) return
-
-  detailLoading.value = true
-  submitError.value = null
-
-  const result = await userApi.getUser(userId.value)
-  detailUser.value = result
-
-  if (!result) {
-    submitError.value = 'Data user tidak ditemukan.'
-  }
-
-  detailLoading.value = false
-}
-
-async function loadEditForm() {
-  await loadDetail()
-  if (!detailUser.value) return
-
-  formModel.value = {
-    name: detailUser.value.name,
-    email: detailUser.value.email,
-    role: detailUser.value.role,
-    status: detailUser.value.status,
-    password: '',
-  }
-}
-
-async function handleSubmit(payload: UserFormInput) {
-  submitError.value = null
-
-  const result = await saveUser(payload, props.mode === 'edit' ? userId.value ?? undefined : undefined)
-
-  if (!result) {
-    submitError.value = 'Gagal menyimpan data user.'
-    return
-  }
-
-  if (props.mode === 'create') {
-    await navigateTo('/dashboard/manajemen-user')
-    return
-  }
-
-  await navigateTo(`/dashboard/manajemen-user/${userId.value}`)
-}
-
-async function handleRemove(id: string) {
-  if (import.meta.client) {
-    const confirmed = window.confirm('Hapus user ini?')
-    if (!confirmed) return
-  }
-
-  await deleteUser(id)
-  await fetchUsers()
-}
-
-function openCreatePage() {
-  navigateTo('/dashboard/manajemen-user/create')
-}
-
-function openDetailPage(id: string) {
-  navigateTo(`/dashboard/manajemen-user/${id}`)
-}
-
-function openEditPage(id: string) {
-  navigateTo(`/dashboard/manajemen-user/${id}/edit`)
-}
-
+// fetch role + user
 onMounted(async () => {
-  if (props.mode === 'list') {
-    await fetchUsers()
-    return
-  }
-
-  if (props.mode === 'detail') {
-    await loadDetail()
-    return
-  }
-
-  if (props.mode === 'edit') {
-    await loadEditForm()
-  }
+  await roleStore.fetchRoles(locale.value as lang)
+  await fetchData()
+  await dasborStore.fetchUserDasbor(locale.value as lang)
 })
+
+// update fetch
+const fetchData = async () => {
+  const requestId = ++lastRequestId
+
+  await userStore.fetchUsers(locale.value as any, {
+    page: page.value,
+    search: search.value,
+    order: order.value,
+    roleId: roleId.value,
+  })
+
+  if (requestId !== lastRequestId) return
+}
+
+// reset page kalau filter berubah
+watch([search, roleId], () => {
+  page.value = 1
+})
+
+// watch semua
+watch([search, order, page, locale, roleId], fetchData)
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-5xl space-y-5 px-4 py-5 sm:px-6">
-    <header class="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-      <h1 class="text-xl font-semibold text-slate-800">
-        {{ pageTitle }}
-      </h1>
-      <p class="mt-1 text-sm text-slate-500">
-        Kelola data user dashboard sesuai kebutuhan operasional.
-      </p>
-    </header>
+  <section class="mx-auto w-full max-w-5xl space-y-5 px-4 py-5">
 
-    <article
-      v-if="props.mode === 'list'"
-      class="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-    >
-      <div class="flex items-center justify-between gap-3">
-        <p class="text-sm text-slate-600">
-          Total data: <strong>{{ rows.length }}</strong>
-        </p>
-        <button
-          type="button"
-          class="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white"
-          @click="openCreatePage"
-        >
-          Tambah User
-        </button>
-      </div>
-
-      <p v-if="error" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-        {{ error }}
-      </p>
-
-      <p v-if="loading" class="text-sm text-slate-500">
-        Memuat data user...
-      </p>
-
-      <UserTable
-        v-else
-        :rows="rows"
-        @detail="openDetailPage"
-        @edit="openEditPage"
-        @remove="handleRemove"
-      />
-    </article>
-
-    <article
-      v-if="props.mode === 'create' || props.mode === 'edit'"
-      class="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-    >
-      <p v-if="submitError" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-        {{ submitError }}
-      </p>
-
-      <UserForm
-        :model-value="formModel"
-        @submit="handleSubmit"
-      />
-    </article>
-
-    <article
-      v-if="props.mode === 'detail'"
-      class="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-    >
-      <p v-if="detailLoading" class="text-sm text-slate-500">
-        Memuat detail user...
-      </p>
-
-      <p v-else-if="submitError" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-        {{ submitError }}
-      </p>
-
-      <div v-else-if="detailUser" class="space-y-2 text-sm text-slate-700">
-        <p><strong>Nama:</strong> {{ detailUser.name }}</p>
-        <p><strong>Email:</strong> {{ detailUser.email }}</p>
-        <p><strong>Role:</strong> {{ detailUser.role }}</p>
-        <p><strong>Status:</strong> {{ detailUser.status }}</p>
-
-        <div class="pt-2">
-          <button
-            type="button"
-            class="rounded-lg bg-amber-500 px-3 py-2 text-sm font-semibold text-white"
-            @click="openEditPage(detailUser.id)"
-          >
-            Edit User
-          </button>
+    <!-- HEADER -->
+    <section class="rounded-xl bg-white p-5 shadow-sm">
+      <div class="flex flex-col gap-6 xl:flex-row xl:justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold text-[#11141b]">
+            {{ $t('manajemen_user.nama') }}
+          </h1>
+          <p class="mt-2 text-[#556173]">
+            {{ $t('manajemen_user.deskripsi') }}
+          </p>
         </div>
+
+        <NuxtLink :to="localePath('/dashboard/manajemen-user/create')"
+          class="rounded-xl bg-[#e30000] px-6 py-2 text-white font-semibold hover:bg-[#c70000] h-full w-max flex items-center justify-center transition-colors">
+          {{ $t('manajemen_user.buat') }}
+        </NuxtLink>
       </div>
-    </article>
+    </section>
+
+    <!-- STAT -->
+    <section class="rounded-xl bg-white p-6 shadow-sm">
+      <h2 class="font-semibold text-gray-700">Detail</h2>
+
+      <div class="mt-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
+
+        <!-- TOTAL USER -->
+        <article class="shadow p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Total User</p>
+          <h3 class="text-2xl font-bold text-right">
+            {{ dasborStore.isLoading ? '...' : dasborStore.userDasbor?.total_user ?? 0 }}
+          </h3>
+        </article>
+
+        <!-- USER AKTIF -->
+        <article class="shadow p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">User Aktif</p>
+          <h3 class="text-2xl font-bold text-right">
+            {{ dasborStore.isLoading ? '...' : dasborStore.userDasbor?.total_user_aktif ?? 0 }}
+          </h3>
+        </article>
+
+        <!-- TOTAL ROLE -->
+        <article class="shadow p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Total Role</p>
+          <h3 class="text-2xl font-bold text-right">
+            {{ dasborStore.isLoading ? '...' : dasborStore.userDasbor?.total_role ?? 0 }}
+          </h3>
+        </article>
+
+        <!-- ROLE TERBANYAK -->
+        <article class="shadow p-4 rounded-xl bg-gray-50">
+          <p class="text-sm text-gray-500">Role Terbanyak</p>
+          <h3 class="text-lg font-bold text-right truncate">
+            {{ dasborStore.isLoading ? '...' : dasborStore.userDasbor?.role_user_terbanyak ?? '-' }}
+          </h3>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <UserTable :rows="userStore.users" :loading="userStore.isLoading" :meta="userStore.meta" :roles="roleStore.roles"
+      @search="search = $event" @order="order = $event" @page="page = $event" @role="roleId = $event" />
+
   </section>
 </template>

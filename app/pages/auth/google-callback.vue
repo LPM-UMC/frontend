@@ -1,37 +1,34 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useAuthStore } from '#stores/auth'
-import type { User } from '#types/user'
 
-const route = useRoute()
-const config = useRuntimeConfig()
 const auth = useAuthStore()
 
-const email = (route.query.email as string) || ''
-const google_id = (route.query.google_id as string) || ''
+onMounted(async () => {
+  try {
+    await auth.refreshToken()
+    await auth.fetchMe()
 
-// Kalau backend belum mengirim query param, kamu akan mental balik login.
-if (!email && !google_id) {
-  await navigateTo('/login?error=callback')
-}
+    auth.isInitialized = true
 
-// Ambil data user dari mock server
-try {
-  const res = await $fetch<{ data: User }>(
-    `${config.public.mockBase}/api/users?email=${encodeURIComponent(email)}&google_id=${encodeURIComponent(google_id)}`
-  )
+    await navigateTo('/dashboard')
 
-  // Simpan login state
-  auth.$patch({ user: res.data })
+  } catch {
+    auth.accessToken = null
+    auth.user = null
+    auth.isInitialized = true
 
-  // Masuk dashboard/admin
-  await navigateTo('/dashboard')
-} catch {
-  await navigateTo('/login?error=not-registered')
-}
+    await navigateTo('/login?error=callback')
+  }
+})
 </script>
 
 <template>
   <div class="min-h-screen flex items-center justify-center">
-    <p>Memproses login Google...</p>
+    <svg class="animate-spin h-10 w-10 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+      viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
   </div>
 </template>

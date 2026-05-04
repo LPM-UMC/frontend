@@ -5,10 +5,10 @@ export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  
+
   app: {
     // Ganti 'nama-repo' dengan nama repositori Anda di GitHub
-    baseURL: '/frontend/' 
+    // baseURL: '/frontend/' 
   },
   nitro: {
     // preset: 'github-pages'
@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     '#config': fileURLToPath(new URL('./config', import.meta.url)),
     '#stores': fileURLToPath(new URL('./stores', import.meta.url)),
     '#types': fileURLToPath(new URL('./types', import.meta.url)),
+    '#utils': fileURLToPath(new URL('./utils', import.meta.url)),
     '#composables': fileURLToPath(new URL('./composables', import.meta.url)),
   },
 
@@ -39,8 +40,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
     '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
+    'nuxt-lucide-icons',
   ],
 
   i18n: {

@@ -2,12 +2,11 @@
 import DashboardModulListPage from '#features/modul/pages/DashboardModulListPage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: "manajemen-modul",
+  requiresAuth: true,
 })
 </script>
 
 <template>
   <DashboardModulListPage />
 </template>
-
-

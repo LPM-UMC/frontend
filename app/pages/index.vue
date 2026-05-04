@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import HeroSection from '~/components/home/HeroSection.vue'
+import AcademicCalendarSection from '~/components/home/KalenderAkademik.vue'
+</script>
+
 <!-- pages/index.vue -->
 <template>
   <div class="overflow-x-hidden">
@@ -7,8 +12,3 @@
     <AcademicCalendarSection />
   </div>
 </template>
-
-<script setup lang="ts">
-import HeroSection from '~/components/home/HeroSection.vue'
-import AcademicCalendarSection from '~/components/home/KalenderAkademik.vue'
-</script>
