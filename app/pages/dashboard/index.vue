@@ -2,6 +2,7 @@
 import DashboardHomePage from '#features/dashboard/pages/DashboardHomePages.vue'
 
 definePageMeta({
+  requiresAuth: true,
   layout: 'dashboard',
 })
 </script>

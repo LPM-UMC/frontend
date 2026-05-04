@@ -1,143 +1,168 @@
-import axios from "axios";
-import type { AxiosInstance } from "axios";
-import { StatusCodes } from "http-status-codes";
-import { defineStore } from "pinia";
-import type { User } from "../types/user";
+import { defineStore } from "pinia"
+import type { lang } from "../types/lang"
+import type { UserResponse } from "../types/user"
+import type { RoleResponse } from "../types/role"
+import { useRuntimeConfig, navigateTo } from "nuxt/app"
+import type { AccessTokenResponse } from "../types/auth"
 
-export const useAuthStore = defineStore("authStore", {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
-    isLoading: false,
-    status: null as number | null,
+    isInitialized: false as boolean,
+
+    accessToken: null as string | null,
+    expiresIn: null as number | null,
+    refreshTimeout: null as ReturnType<typeof setTimeout> | null,
+    refreshPromise: null as Promise<void> | null,
+
+    user: null as UserResponse | null,
+    roles: [] as RoleResponse[],
+    activeRole: null as RoleResponse | null,
+
+    isLoading: false as boolean,
     error: null as string | null,
-
-    token: null as string | null,
-    type: null as string | null,
-    user: null as User | null,
   }),
-  persist: {
-    storage: sessionStorage
-  },
+
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isAuthenticated: (state): boolean =>
+      !!state.accessToken && !!state.user,
   },
+
   actions: {
-    setup(): void {
-      this.isLoading = true;
-      this.status = null;
-      this.error = null;
+    loginWithGoogle() {
+      const config = useRuntimeConfig()
+
+      return navigateTo(
+        `${config.public.apiBase}/api/auth/google`,
+        { external: true }
+      )
     },
-    clearState(): void {
-      this.token = null;
-      this.type = null;
-      this.user = null;
+
+    clearAuth() {
+      this.accessToken = null
+      this.user = null
+      this.roles = []
+      this.activeRole = null
+      this.expiresIn = null
+
+      if (this.refreshTimeout) {
+        clearTimeout(this.refreshTimeout)
+        this.refreshTimeout = null
+      }
+
+      this.refreshPromise = null
     },
-    setUser(user: User): void {
-      this.user = user;
+
+    scheduleTokenRefresh() {
+      if (!this.expiresIn || !import.meta.client) return
+
+      if (this.refreshTimeout) {
+        clearTimeout(this.refreshTimeout)
+      }
+
+      const buffer = 20
+      const safeExpires = Math.max(this.expiresIn - buffer, 1)
+      const refreshTime = safeExpires * 1000
+
+      this.refreshTimeout = setTimeout(async () => {
+        await this.refreshToken()
+      }, refreshTime)
     },
-    async login() {
-      const config = useRuntimeConfig();
-      this.setup();
 
-      window.location.href = config.public.apiBase + "/auth/google";
-    },
-    async refresh(): Promise<boolean> {
-      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
+    async refreshToken() {
+      if (this.refreshPromise) return this.refreshPromise
 
-      this.setup();
+      this.refreshPromise = (async () => {
+        try {
+          const config = useRuntimeConfig()
 
-      try {
-        const response = await $axios.get("/auth/refresh");
+          const res = await $fetch<{ data: AccessTokenResponse }>(
+            `${config.public.apiBase}/api/auth/refresh`,
+            { credentials: "include" }
+          )
 
-        const data = response.data.data;
+          this.accessToken = res.data.token
+          this.expiresIn = res.data.expires_in
 
-        this.status = response.status;
-        this.token = data.token;
-        this.type = data.type;
+          this.scheduleTokenRefresh()
 
-        return true;
+        } catch {
+          this.clearAuth()
 
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          this.status = error.response?.status || StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = error.response?.data?.errors || "Internal server error. Coba lagi nanti";
-          this.clearState();
-          return false;
-
-        } else {
-          this.status = StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = "Internal server error. Coba lagi nanti";
-          this.clearState();
-          return false;
+        } finally {
+          this.refreshPromise = null
 
         }
+      })()
 
-      } finally {
-        this.isLoading = false;
-      }
+      return this.refreshPromise
     },
-    async getCurrentUser() {
-      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
-      this.setup();
+
+    async fetchMe(lang: lang = "id") {
+      if (!this.accessToken) throw new Error("NO_TOKEN")
 
       try {
-        const response = await $axios.get(`/en/auth/me`, {
-          headers: {
-            Authorization: `${this.type} ${this.token}`,
+        const config = useRuntimeConfig()
+
+        const res = await $fetch<{ data: UserResponse }>(
+          `${config.public.apiBase}/api/${lang}/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+            },
           }
-        });
+        )
 
-        const data = response.data.data;
-
-        this.status = response.status;
-        this.user = data;
-
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          this.status = error.response?.status || StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = error.response?.data?.errors || "Internal server error. Coba lagi nanti";
-          this.clearState();
-
-        } else {
-          this.status = StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = "Internal server error. Coba lagi nanti";
-          this.clearState();
-
-        }
-
-      } finally {
-        this.isLoading = false;
-
+        this.user = res.data
+        this.roles = res.data.roles || []
+        this.activeRole = this.roles[0] || null
+      } catch {
+        this.clearAuth()
       }
     },
-    async logout() {
-      const { $axios } = useNuxtApp() as unknown as { $axios: AxiosInstance };
 
-      this.setup();
+    async initAuth() {
+      if (this.isInitialized) return
+
+      this.isLoading = true
 
       try {
-        const response = await $axios.post("/auth/logout", {}, {
-          headers: {
-            Authorization: `${this.type} ${this.token}`,
-          },
-        });
+        await this.refreshToken()
 
-        this.status = response.status;
-
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          this.status = error.response?.status || StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = error.response?.data?.errors || "Internal server error. Coba lagi nanti";
-
-        } else {
-          this.status = StatusCodes.INTERNAL_SERVER_ERROR;
-          this.error = "Internal server error. Coba lagi nanti";
-
+        if (this.accessToken) {
+          await this.fetchMe()
         }
-
       } finally {
-        this.clearState();
-        this.isLoading = false;
+        this.isLoading = false
+        this.isInitialized = true
       }
     },
+
+    setActiveRole(role: RoleResponse) {
+      this.activeRole = role
+    },
+
+    async logout() {
+      try {
+        const config = useRuntimeConfig()
+
+        if (this.accessToken) {
+          await $fetch(`${config.public.apiBase}/api/auth/logout`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+            credentials: "include",
+          })
+        }
+      } catch {
+        // ignore error
+      } finally {
+        this.clearAuth()
+        this.isInitialized = false
+
+        await navigateTo("/")
+      }
+    },
+
   },
-});
+})

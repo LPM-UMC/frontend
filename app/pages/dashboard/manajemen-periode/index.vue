@@ -3,6 +3,7 @@ import DashboardCalendarGeneratorPage from '#features/dashboard/pages/DashboardC
 
 definePageMeta({
   layout: 'dashboard',
+  requiresAuth: true,
 })
 </script>
 

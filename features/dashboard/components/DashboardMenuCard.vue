@@ -18,15 +18,9 @@ const imageSrc = computed(() => {
 </script>
 
 <template>
-  <NuxtLink
-    :to="props.to"
-    class="group flex h-full min-h-[300px] w-full flex-col overflow-hidden rounded-[16px] border border-[#d6d9df] bg-[#efefef] p-[8px] shadow-[0_3px_10px_rgba(15,23,42,0.12)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(15,23,42,0.16)] sm:min-h-[320px] xl:min-h-[336px]"
-  >
-    <img
-      :src="imageSrc"
-      :alt="props.title"
-      class="h-[160px] w-full rounded-[12px] object-cover sm:h-[172px] xl:h-[182px]"
-    />
+  <NuxtLink :to="props.to"
+    class="group flex h-full min-h-75 w-full flex-col overflow-hidden rounded-[16px] border border-[#d6d9df] bg-[#efefef] p-2 shadow-[0_3px_10px_rgba(15,23,42,0.12)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(15,23,42,0.16)] sm:min-h-80 xl:min-h84">
+    <img :src="imageSrc" :alt="props.title" class="h-40 w-full rounded-[12px] object-cover sm:h-43 xl:h-45.5">
 
     <div class="flex flex-1 flex-col px-3 pb-3 pt-3.5 sm:px-3.5 sm:pt-4">
       <h3 class="text-[18px] font-semibold leading-tight text-[#232a35] sm:text-[19px] xl:text-[20px]">
@@ -39,8 +33,7 @@ const imageSrc = computed(() => {
 
       <div class="mt-4">
         <span
-          class="inline-flex min-h-[30px] min-w-[58px] items-center justify-center rounded-[6px] bg-[#e10600] px-3 text-[12px] font-semibold text-white"
-        >
+          class="inline-flex min-h-7.5 min-w-14.5 items-center justify-center rounded-[6px] bg-[#e10600] px-3 text-[12px] font-semibold text-white">
           {{ props.ctaLabel }}
         </span>
       </div>

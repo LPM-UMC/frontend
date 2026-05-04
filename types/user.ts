@@ -1,55 +1,37 @@
-export type Role = {
+import type { RoleResponse } from "./role";
+
+export type UserResponse = {
   id: string;
-  name: string;
-  label: string;
+  nidn?: string;
+  nama: string;
+  email?: string;
+  roles?: RoleResponse[];
+  picture?: string | null;
+  instagram?: string | null;
+  linkedin?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type Dean = {
-  id: string;
+export type CreateUserRequest = {
   nidn: string;
-  name: string;
-};
-
-export type Gkmf = {
-  id: string;
-  nidn: string;
-  name: string;
-};
-
-export type HeadOfStudyProgram = {
-  id: string;
-  nidn: string;
-  name: string;
-};
-
-export type User = {
-  id: string;
-  nid?: string | null;
-  nim?: string | null;
-  name: string;
+  nama: string;
   email: string;
-  picture?: string | null;
-  role: Role[];
-  study_program?: {
-    id: string;
-    code: string;
-    name: string;
-    degree_level: string;
-  } | null;
-  head_of_study_program: {
-    id: string;
-    code: string;
-    name: string;
-    degree_level: string;
-  }[];
-  faculty?: {
-    id: string;
-    code: string;
-    name: string;
-  } | null;
-  gkmf?: {
-    id: string;
-    code: string;
-    name: string;
-  } | null;
+  role_ids: string[];
+}
+
+export type UpdateUserRequest = {
+  email: string;
+  role_ids: string[];
+}
+
+export type UpdateProfileRequest = {
+  nama: string;
+  email: string;
+  instagram: string;
+  linkedin: string;
+}
+
+export type UpdateProfileImageRequest = {
+  picture: File;
 }
