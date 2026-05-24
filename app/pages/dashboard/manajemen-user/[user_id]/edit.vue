@@ -2,7 +2,7 @@
 import UserEditPage from '#features/manajemen-user/pages/UserEditPage.vue'
 
 definePageMeta({
-  layout: 'dashboard',
+  layout: 'modul-generator',
 })
 </script>
 

@@ -67,7 +67,7 @@ onUnmounted(() => {
 <template>
   <header class="fixed inset-x-0 top-0 z-50">
     <div class="border-b border-[#ececec] bg-white">
-      <div class="mx-auto flex h-[58px] w-full max-w-[1880px] items-center justify-between px-3 sm:h-[86px] sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div class="flex h-[66px] items-center justify-between border-b border-[#d7d7d9] bg-[#f0f1f3] px-4">
         <NuxtLink to="/dashboard" class="flex min-w-0 items-center gap-2 sm:gap-3">
           <img
             src="/img/logo-umc.jpg"
@@ -88,9 +88,6 @@ onUnmounted(() => {
             aria-label="Toggle theme"
             class="grid h-8 w-8 place-items-center rounded-full text-[#6b7280] transition hover:bg-[#f1f3f5] hover:text-[#374151]"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-[17px] w-[17px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 0111.21 3a7 7 0 109.79 9.79z" />
-            </svg>
           </button>
 
           <div ref="localeMenuRef" class="relative">

@@ -338,7 +338,7 @@ watch(totalPages, (nextTotalPage) => {
       </div>
     </section>
 
-    <section class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-4 md:p-5 xl:p-6">
+    <section class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-3 md:p-4 xl:p-5">
       <h2 class="text-[clamp(1.3rem,1.9vw,1.75rem)] font-semibold leading-tight text-[#080b12]">
         Chart Capaian
       </h2>

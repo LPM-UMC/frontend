@@ -51,6 +51,10 @@ const activeMenuId = computed(() => {
   return 'dashboard-utama'
 })
 
+const isFm6MahasiswaJawabRoute = computed(() =>
+  /\/fm6\/jawab(?:\/|$)/i.test(route.path)
+)
+
 const fmMenus = computed<FmMenuItem[]>(() => {
   const periodeId = routePeriodeModulId.value
   const unitId = routeUnitId.value
@@ -59,6 +63,16 @@ const fmMenus = computed<FmMenuItem[]>(() => {
   const buildFmPath = (fmCode: string) => {
     if (!periodeId || !unitId) return fallbackPath
     return `/dashboard/periode-modul/${encodeURIComponent(periodeId)}/unit/${encodeURIComponent(unitId)}/${fmCode}`
+  }
+
+  if (isFm6MahasiswaJawabRoute.value) {
+    return [
+      {
+        id: 'fm6',
+        label: 'FM06. Survei Mahasiswa',
+        to: buildFmPath('fm6/jawab'),
+      },
+    ]
   }
 
   return [
@@ -84,7 +98,7 @@ const fmMenus = computed<FmMenuItem[]>(() => {
     },
     {
       id: 'fm4',
-      label: 'FM04. Monitoring',
+      label: 'FM04. RTL FMEA',
       to: buildFmPath('fm4'),
     },
     {
@@ -170,7 +184,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#e4e4e6] text-slate-900">
+  <div class="min-h-screen flex flex-col bg-[#e4e4e6] text-slate-900">
     <header class="fixed inset-x-0 top-0 z-30 border-b border-[#d9d9d9] bg-[#f4f4f4]">
       <div class="mx-auto flex h-[66px] w-full max-w-[2200px] items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
         <div class="flex min-w-0 items-center gap-2.5">

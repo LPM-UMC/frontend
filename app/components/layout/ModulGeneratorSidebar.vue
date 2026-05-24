@@ -3,7 +3,7 @@ interface ModulSidebarMenuItem {
   id: string
   label: string
   to?: string
-  icon: 'home' | 'modul' | 'lingkup'
+  icon: 'home' | 'modul' | 'lingkup' | 'user' | 'role'
 }
 
 interface ModulSidebarProfile {
@@ -119,7 +119,7 @@ function handleMenuSelect(item: ModulSidebarMenuItem) {
                 </svg>
 
                 <svg
-                  v-else
+                  v-else-if="item.icon === 'lingkup'"
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-7 w-7"
                   fill="none"
@@ -128,6 +128,34 @@ function handleMenuSelect(item: ModulSidebarMenuItem) {
                   stroke-width="1.7"
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 12A4.5 4.5 0 1 1 12 16.5M7.5 12a4.5 4.5 0 0 0 7.517 3.287M7.5 12H4.75M15.017 15.287l2.233 2.233M3.5 20.5l4.096-4.096" />
+                </svg>
+
+                <svg
+                  v-else-if="item.icon === 'user'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-7 w-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                >
+                  <circle cx="9" cy="7" r="3.25" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 19.5a5.5 5.5 0 0 1 11 0" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 8.5v5M15.5 11h5" />
+                </svg>
+
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-7 w-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                >
+                  <circle cx="9" cy="7" r="3.25" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 19.5a5.5 5.5 0 0 1 7.16-5.25" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m15.5 16.75 2 2 3.5-4.25" />
                 </svg>
               </span>
 
@@ -198,7 +226,7 @@ function handleMenuSelect(item: ModulSidebarMenuItem) {
             </svg>
 
             <svg
-              v-else
+              v-else-if="item.icon === 'lingkup'"
               xmlns="http://www.w3.org/2000/svg"
               class="h-7 w-7"
               fill="none"
@@ -207,6 +235,34 @@ function handleMenuSelect(item: ModulSidebarMenuItem) {
               stroke-width="1.7"
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 12A4.5 4.5 0 1 1 12 16.5M7.5 12a4.5 4.5 0 0 0 7.517 3.287M7.5 12H4.75M15.017 15.287l2.233 2.233M3.5 20.5l4.096-4.096" />
+            </svg>
+
+            <svg
+              v-else-if="item.icon === 'user'"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.7"
+            >
+              <circle cx="9" cy="7" r="3.25" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 19.5a5.5 5.5 0 0 1 11 0" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 8.5v5M15.5 11h5" />
+            </svg>
+
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.7"
+            >
+              <circle cx="9" cy="7" r="3.25" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 19.5a5.5 5.5 0 0 1 7.16-5.25" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="m15.5 16.75 2 2 3.5-4.25" />
             </svg>
           </span>
 

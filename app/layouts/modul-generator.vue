@@ -8,7 +8,7 @@ interface ModulMenuItem {
   id: string
   label: string
   to?: string
-  icon: 'home' | 'modul' | 'lingkup'
+  icon: 'home' | 'modul' | 'lingkup' | 'user' | 'role'
 }
 
 const route = useRoute()
@@ -20,7 +20,7 @@ const isMobileSidebarOpen = ref(false)
 const localeMenuRef = ref<HTMLElement | null>(null)
 
 const layoutUser = ref({
-  name: 'Guy Hawkins',
+  name: 'Arie Utami',
   role: 'Admin',
   avatar: '/img/profil.jpg',
   isOnline: true,
@@ -35,7 +35,7 @@ const activeLocaleLabel = computed(() =>
   locale.value === 'en' ? 'ENG' : 'ID'
 )
 
-const modulMenus = computed<ModulMenuItem[]>(() => [
+const defaultMenus: ModulMenuItem[] = [
   {
     id: 'home',
     label: 'Home',
@@ -54,9 +54,42 @@ const modulMenus = computed<ModulMenuItem[]>(() => [
     to: '/dashboard/lingkup',
     icon: 'lingkup',
   },
-])
+]
+
+const userManagementMenus: ModulMenuItem[] = [
+  {
+    id: 'home',
+    label: 'Home',
+    to: '/dashboard',
+    icon: 'home',
+  },
+  {
+    id: 'manajemen-user',
+    label: 'Manajemen User',
+    to: '/dashboard/manajemen-user',
+    icon: 'user',
+  },
+  {
+    id: 'manajemen-role',
+    label: 'Manajemen Role',
+    to: '/dashboard/manajemen-role',
+    icon: 'role',
+  },
+]
+
+const sidebarMenus = computed<ModulMenuItem[]>(() => {
+  if (
+    route.path.startsWith('/dashboard/manajemen-user')
+    || route.path.startsWith('/dashboard/manajemen-role')
+  ) {
+    return userManagementMenus
+  }
+  return defaultMenus
+})
 
 const activeMenuId = computed(() => {
+  if (route.path.startsWith('/dashboard/manajemen-user')) return 'manajemen-user'
+  if (route.path.startsWith('/dashboard/manajemen-role')) return 'manajemen-role'
   if (route.path.startsWith('/dashboard/modul')) return 'modul'
   if (route.path.startsWith('/dashboard/lingkup')) return 'lingkup'
   return 'home'
@@ -216,7 +249,7 @@ onUnmounted(() => {
     </header>
 
     <ModulGeneratorSidebar
-      :menus="modulMenus"
+      :menus="sidebarMenus"
       :active-menu-id="activeMenuId"
       :is-collapsed="isSidebarCollapsed"
       :is-mobile-open="isMobileSidebarOpen"

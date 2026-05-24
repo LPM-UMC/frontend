@@ -2,7 +2,7 @@
 import UserListPage from '#features/manajemen-user/pages/UserListPage.vue'
 
 definePageMeta({
-  layout: 'dashboard',
+  layout: 'modul-generator',
 })
 </script>
 

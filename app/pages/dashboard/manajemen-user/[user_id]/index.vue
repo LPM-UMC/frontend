@@ -2,7 +2,7 @@
 import UserDetailPage from '#features/manajemen-user/pages/UserDetailPage.vue'
 
 definePageMeta({
-  layout: 'dashboard',
+  layout: 'modul-generator',
 })
 </script>
 

@@ -1,6 +1,73 @@
 {
+  "beranda": "Beranda",
   "welcome": "Selamat Datang di",
+  "dasbor_utama": "Dasbor Utama",
+  "anda_masuk_sebagai": "Anda masuk sebagai",
+  "di": "di",
+  "selamat_datang": "Selamat Datang",
+  "silahkan_login": "Silahkan Login menggunakan akun yang telah terdaftar",
+  "masuk_dengan_google": "Masuk dengan Google",
+  "mengalihkan": "Mengalihkan...",
+  "nama_app": "Sistem Informasi Penjaminan Mutu",
   "lembaga": "LEMBAGA PENJAMINAN MUTU",
   "spi": "DAN SATUAN PENGAWAS INTERNAL",
-  "univ": "Universitas Muhammadiyah Cirebon"
+  "univ": "Universitas Muhammadiyah Cirebon",
+  "profil": "Profil",
+  "deskripsi_main_hero_hompage": " Penjaminan mutu dan pengawasan internal merupakan pilar penting dalam menjalankan visi misi universitas menuju institusi pendidikan tinggi yang bermartabat dan berkualitas unggul.",
+  "tentang_kami": "Tentang Kami",
+  "dasbor": "Dasbor",
+  "kalender_akademik": "Kalender Akademik",
+  "kalender_akademik_univ": "Kalender Akademik Universitas Muhammadiyah Cirebon",
+  "deskripsi_kalender": "Kalender akademik berfungsi sebagai informasi terpadu yang menyediakan satu sumber terpercaya untuk semua tanggal dan tenggat waktu akademik penting, memungkinkan akademisi merencanakan kegiatan mereka secara efektif sepanjang semester.",
+  "not_found": "Tidak ditemukan",
+  "sistem_monitoring": "Sistem Monitoring",
+  "gunakan_email": "{'Gunakan email @umc.ac.id atau @gmail.com'}",
+  "kembali": "Kembali",
+  "footer": "Hak Cipta Dilindungi Undang-Undang 2025, Lembaga Penjaminan Mutu &amp; Satuan Pengawas Internal Universitas Muhammadiyah Cirebon",
+  "modul": {
+    "user": {
+      "nama": "Manajemen User dan Role",
+      "deskripsi": "Modul untuk mengelola pengguna, peran, dan hak akses dalam sistem penjaminan mutu."
+    },
+    "modul": {
+      "nama": "Manajemen Modul",
+      "deskripsi": "Modul untuk membuat dan mengelola modul-modul penjaminan mutu di universitas."
+    },
+    "survei": {
+      "nama": "Manajemen Survei",
+      "deskripsi": "Modul untuk membuat dan mengelola survei penjaminan mutu di universitas."
+    },
+    "periode": {
+      "nama": "Manajemen Periode",
+      "deskripsi": "Modul untuk mengelola periode penjaminan mutu dan pengawasan internal."
+    },
+    "monev": {
+      "nama": "Monitoring dan Evaluasi",
+      "deskripsi": "Modul untuk memantau dan mengevaluasi kegiatan penjaminan mutu di universitas."
+    },
+    "audit": {
+      "nama": "Audit Mutu Internal",
+      "deskripsi": "Modul untuk melakukan audit mutu internal guna memastikan standar kualitas terpenuhi."
+    }
+  },
+  "manajemen_user": {
+    "nama": "Manajemen User",
+    "deskripsi": "Modul untuk mengelola pengguna, peran, dan hak akses dalam sistem penjaminan mutu.",
+    "buat": "Buat User"
+  },
+  "manajemen_role": {
+    "nama": "Manajemen Role",
+    "deskripsi": "Modul untuk mengelola peran dan hak akses dalam sistem penjaminan mutu.",
+    "buat": "Buat Role"
+  },
+  "manajemen_modul": {
+    "nama": "Manajemen Modul",
+    "deskripsi": "Modul untuk membuat dan mengelola modul-modul penjaminan mutu di universitas.",
+    "buat": "Buat Modul"
+  },
+  "manajemen_lingkup_evaluasi": {
+    "nama": "Manajemen Lingkup",
+    "deskripsi": "Modul untuk membuat dan mengelola lingkup evaluasi penjaminan mutu di universitas.",
+    "buat": "Buat Lingkup"
+  }
 }

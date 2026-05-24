@@ -65,35 +65,35 @@ const fm01PageData: Fm01PageData = {
       },
       {
         id: 'lingkup-evaluasi',
-        label: 'FM01. Lingkup Evaluasi',
+        label: 'FM01. Monitoring',
       },
       {
         id: 'fm02-monitoring',
-        label: 'FM02. Monitoring',
+        label: 'FM02. Hasil Evaluasi',
       },
       {
         id: 'fm03-monitoring',
-        label: 'FM03. Monitoring',
+        label: 'FM03. Temuan',
       },
       {
         id: 'fm04-monitoring',
-        label: 'FM04. Monitoring',
+        label: 'FM04. Analisis FMEA',
       },
       {
         id: 'fm05-monitoring',
-        label: 'FM05. Monitoring',
+        label: 'FM05. Berita Acara',
       },
       {
         id: 'fm06-monitoring',
-        label: 'FM06. Monitoring',
+        label: 'FM06. Survei',
       },
       {
         id: 'fm07-monitoring',
-        label: 'FM07. Monitoring',
+        label: 'FM07. Laporan',
       },
     ],
     profile: {
-      name: 'Guy Hawkins',
+      name: 'Arie Utami',
       role: 'Admin',
       avatar: '/img/profil.jpg',
     },

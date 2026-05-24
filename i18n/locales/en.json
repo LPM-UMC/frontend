@@ -1,6 +1,73 @@
 {
+  "beranda": "Home",
   "welcome": "Welcome to",
+  "dasbor_utama": "Main Dashboard",
+  "di": "at",
+  "anda_masuk_sebagai": "You are logged in as",
+  "selamat_datang": "Welcome",
+  "silahkan_login": "Please login using your registered account",
+  "masuk_dengan_google": "Sign in with Google",
+  "mengalihkan": "Redirecting...",
+  "nama_app": "Quality Assurance Information System",
   "lembaga": "LEMBAGA PENJAMINAN MUTU",
   "spi": "DAN SATUAN PENGAWAS INTERNAL",
-  "univ": "Universitas Muhammadiyah Cirebon"
+  "univ": "Muhammadiyah University of Cirebon",
+  "profil": "Profile",
+  "deskripsi_main_hero_hompage": "Quality assurance and internal supervision are important pillars in realizing the vision and mission of the university towards a dignified and superior quality higher education institution.",
+  "tentang_kami": "About Us",
+  "dasbor": "Dashboard",
+  "kalender_akademik": "Academic Calendar",
+  "kalender_akademik_univ": "Academic Calendar of Muhammadiyah University of Cirebon",
+  "deskripsi_kalender": "The academic calendar serves as a unified information that provides a single trusted source for all important academic dates and deadlines, allowing academics to plan their activities effectively throughout the semester.",
+  "not_found": "Not Found",
+  "sistem_monitoring": "Monitoring System",
+  "gunakan_email": "{'Use @umc.ac.id or @gmail.com email'}",
+  "kembali": "Back",
+  "footer": "Copyright All Right Reserved 2025, Quality Assurance Institute &amp; Internal Supervision Unit of Muhammadiyah University of Cirebon",
+  "modul": {
+    "user": {
+      "nama": "User and Role Management",
+      "deskripsi": "Module for managing users, roles, and permissions in the quality assurance system."
+    },
+    "modul": {
+      "nama": "Module Management",
+      "deskripsi": "Module for creating and managing quality assurance modules at the university."
+    },
+    "survei": {
+      "nama": "Survey Management",
+      "deskripsi": "Module for creating and managing quality assurance surveys at the university."
+    },
+    "periode": {
+      "nama": "Period Management",
+      "deskripsi": "Module for managing quality assurance and internal supervision periods."
+    },
+    "monev": {
+      "nama": "Monitoring and Evaluation",
+      "deskripsi": "Module for monitoring and evaluating quality assurance activities at the university."
+    },
+    "audit": {
+      "nama": "Internal Quality Audit",
+      "deskripsi": "Module for conducting internal quality audits to ensure standards are met."
+    }
+  },
+  "manajemen_user": {
+    "nama": "User Management",
+    "deskripsi": "Module for managing users, roles, and permissions in the quality assurance system.",
+    "buat": "Create User"
+  },
+  "manajemen_role": {
+    "nama": "Role Management",
+    "deskripsi": "Module for managing roles and permissions in the quality assurance system.",
+    "buat": "Create Role"
+  },
+  "manajemen_modul": {
+    "nama": "Module Management",
+    "deskripsi": "Module for creating and managing quality assurance modules at the university.",
+    "buat": "Create Module"
+  },
+  "manajemen_lingkup_evaluasi": {
+    "nama": "Evaluation Scope Management",
+    "deskripsi": "Module for creating and managing quality assurance evaluation scopes at the university.",
+    "buat": "Create Scope"
+  }
 }
