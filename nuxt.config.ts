@@ -5,13 +5,26 @@ export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  
+
   app: {
     // Ganti 'nama-repo' dengan nama repositori Anda di GitHub
-    baseURL: '/frontend/' 
+    // baseURL: '/frontend/' 
   },
   nitro: {
     // preset: 'github-pages'
+  },
+
+  fonts: {
+    families: [
+      {
+        name: 'Noto Naskh Arabic',
+        provider: 'google',
+      },
+      {
+        name: 'Cairo',
+        provider: 'google',
+      },
+    ],
   },
 
   alias: {
@@ -22,6 +35,7 @@ export default defineNuxtConfig({
     '#stores': fileURLToPath(new URL('./stores', import.meta.url)),
     '#types': fileURLToPath(new URL('./types', import.meta.url)),
     '#composables': fileURLToPath(new URL('./composables', import.meta.url)),
+    '#utils': fileURLToPath(new URL('./utils', import.meta.url)),
   },
 
   css: [
@@ -47,8 +61,10 @@ export default defineNuxtConfig({
     defaultLocale: 'id',
     strategy: 'prefix_and_default',
     locales: [
-      { code: 'id', name: 'Bahasa', file: 'id.json' },
-      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'id', name: 'Bahasa Indonesia', file: 'id_ID.json' },
+      { code: 'en', name: 'English', file: 'en_US.json' },
+      { code: 'ar', name: 'العربية', file: 'ar_SA.json' },
+      { code: 'ja', name: '日本語', file: 'ja_JP.json' },
     ],
   },
 
@@ -70,7 +86,7 @@ export default defineNuxtConfig({
 
     public: {
       academicCalendarFileId: process.env.NUXT_ACADEMIC_CALENDAR_FILE_ID || '',
-      apiBase: process.env.API_BASE || 'http://localhost:3001',
+      apiBaseUrl: process.env.API_BASE || 'http://localhost:3001',
     },
   },
 

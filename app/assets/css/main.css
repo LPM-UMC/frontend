@@ -7,6 +7,14 @@
 @source "../../../components/**/*.{vue,ts,js}";
 @source "../../../composables/**/*.{ts,js}";
 
+.font-ar {
+  font-family:
+    "Cairo",
+    "Noto Sans Arabic",
+    system-ui,
+    sans-serif;
+}
+
 @layer base {
   html {
     font-size: 16px;

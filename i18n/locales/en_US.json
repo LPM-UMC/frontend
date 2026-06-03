@@ -1,0 +1,107 @@
+{
+  "basic": {
+    "namaAplikasi": "Integrated Monitoring and Evaluation Information System",
+    "namaKampus": "Muhammadiyah University of Cirebon"
+  },
+  "website": {
+    "umc": "Muhammadiyah University of Cirebon",
+    "siimoet": "SI-IMOET UMC",
+    "pmb": "UMC Admissions"
+  },
+  "util": {
+    "menu": "Menu",
+    "paginasi": {
+      "sebelumnya": "Previous",
+      "berikutnya": "Next"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 All Rights Reserved."
+  },
+  "navigasi": {
+    "beranda": "Home",
+    "profil": "Profile",
+    "akreditasi": "Accreditation",
+    "informasi": "Information",
+    "masuk": "Login",
+    "keluar": "Logout",
+    "dasbor": "Dashboard",
+    "pilih": "Select"
+  },
+  "beranda": {
+    "heroSection": {
+      "selamatDatang": "Welcome to",
+      "deskripsi": "Quality assurance and internal supervision are essential pillars in implementing the university's vision and mission toward a dignified and high-quality higher education institution.",
+      "infoMonev": "Monev Info",
+      "tentang": "About Us"
+    },
+    "kalenderAkademik": {
+      "judul": "Academic Calendar",
+      "deskripsi": "The academic calendar serves as an integrated information source that provides a reliable reference for all important academic dates and deadlines, enabling academics to effectively plan their activities throughout the semester.",
+      "belumTersedia": "Academic calendar is not available yet.",
+      "kalenderUniversitas": "Muhammadiyah University of Cirebon Academic Calendar"
+    }
+  },
+  "login": {
+    "welcome": "Welcome",
+    "silahkanMasuk": "Please sign in to continue",
+    "masukGoogle": "Sign in with Google",
+    "mengalihkan": "Redirecting...",
+    "kembali": "Back"
+  },
+  "dasborModul": {
+    "selamatDatang": {
+      "judul": "Welcome to the dashboard",
+      "deskripsi": "You have successfully accessed the dashboard. From here, you can access various modules, monitor data, and manage activities according to your role in the system."
+    },
+    "monev": {
+      "judul": "Monitoring and Evaluation",
+      "deskripsi": "The Monev module provides an integrated platform to monitor and evaluate the implementation of academic and institutional activities, helping users analyze performance, identify improvement opportunities, and support data-driven decision-making."
+    },
+    "ami": {
+      "judul": "Internal Quality Audit",
+      "deskripsi": "The Internal Quality Audit (AMI) module supports structured and documented internal audit processes to assess compliance with quality standards, identify improvement areas, and strengthen a culture of continuous quality enhancement."
+    },
+    "manajemenModul": {
+      "judul": "Module Management",
+      "deskripsi": "The Module Management module facilitates structured system module management, including adding, updating, and configuring modules, ensuring optimal system integration and operation."
+    },
+    "manajemenPeriode": {
+      "judul": "Period Management",
+      "deskripsi": "The Period Management module supports planned academic period management, including schedule setting and time range configuration, ensuring academic activities run in an orderly and coordinated manner."
+    },
+    "manajemenPengguna": {
+      "judul": "User Management",
+      "deskripsi": "The User Management module provides centralized tools for managing user accounts, roles, and access permissions, helping administrators maintain system security, organization, and operational efficiency."
+    }
+  },
+  "manajemenUser": {
+    "judul": "User Management",
+    "deskripsi": "The User Management module provides centralized tools for managing user accounts, roles, and access permissions, helping administrators maintain system security, organization, and operational efficiency.",
+    "create": "Create User",
+    "deskripsiCreate": "A form to create a new user with the necessary information, including name, email, and role.",
+    "formCreate": "New User Creation Form",
+    "totalUser": "Total Users",
+    "totalUserAktif": "Total Active Users",
+    "totalRole": "Total Roles",
+    "totalRoleTerbanyak": "Most Assigned Role",
+    "daftarUser": "User List",
+    "cari": "Search users by name, or email...",
+    "role": "role",
+    "no": "No",
+    "nama": "Name",
+    "email": "Email",
+    "status": "Status",
+    "tanggalBergabung": "Joined Date"
+  },
+  "manajemenRole": {
+    "judul": "Role Management",
+    "deskripsi": "The Role Management module provides centralized tools for managing roles and access permissions, helping administrators maintain system security, organization, and operational efficiency.",
+    "create": "Create Role",
+    "totalUser": "Total Users",
+    "totalUserAktif": "Total Active Users",
+    "totalRole": "Total Roles",
+    "totalRoleTerbanyak": "Most Assigned Role",
+    "cari": "Search roles by name, or description..."
+  }
+}

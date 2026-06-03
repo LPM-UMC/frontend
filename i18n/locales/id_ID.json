@@ -1,0 +1,107 @@
+{
+  "basic": {
+    "namaAplikasi": "Sistem Informasi Monitoring dan Evaluasi Terintegrasi",
+    "namaKampus": "Universitas Muhammadiyah Cirebon"
+  },
+  "website": {
+    "umc": "Universitas Muhammadiyah Cirebon",
+    "siimoet": "SI-IMOET UMC",
+    "pmb": "Penerimaan Mahasiswa Baru UMC"
+  },
+  "util": {
+    "menu": "Menu",
+    "paginasi": {
+      "sebelumnya": "Sebelumnya",
+      "berikutnya": "Berikutnya"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Semua Hak Dilindungi."
+  },
+  "navigasi": {
+    "beranda": "Beranda",
+    "profil": "Profil",
+    "akreditasi": "Akreditasi",
+    "informasi": "Informasi",
+    "masuk": "Masuk",
+    "keluar": "Keluar",
+    "dasbor": "Dasbor",
+    "pilih": "Pilih"
+  },
+  "beranda": {
+    "heroSection": {
+      "selamatDatang": "Selamat Datang di",
+      "deskripsi": "Penjaminan mutu dan pengawasan internal merupakan pilar penting dalam menjalankan visi misi universitas menuju institusi pendidikan tinggi yang bermartabat dan berkualitas unggul.",
+      "infoMonev": "Info Monev",
+      "tentang": "Tentang Kami"
+    },
+    "kalenderAkademik": {
+      "judul": "Kalender Akademik",
+      "deskripsi": "Kalender akademik berfungsi sebagai informasi terpadu yang menyediakan satu sumber terpercaya untuk semua tanggal dan tenggat waktu akademik penting, memungkinkan akademisi merencanakan kegiatan mereka secara efektif sepanjang semester.",
+      "belumTersedia": "Kalender akademik belum tersedia.",
+      "kalenderUniversitas": "Kalender Akademik Universitas Muhammadiyah Cirebon"
+    }
+  },
+  "login": {
+    "welcome": "Selamat Datang",
+    "silahkanMasuk": "Silakan masuk untuk melanjutkan",
+    "masukGoogle": "Masuk dengan Google",
+    "mengalihkan": "Mengalihkan...",
+    "kembali": "Kembali"
+  },
+  "dasborModul": {
+    "selamatDatang": {
+      "judul": "Selamat datang di dasbor",
+      "deskripsi": "Anda telah berhasil masuk ke sistem dashboard. Dari sini, Anda dapat mengakses berbagai modul, memantau data, serta mengelola aktivitas sesuai peran Anda dalam sistem."
+    },
+    "monev": {
+      "judul": "Monitoring dan Evaluasi",
+      "deskripsi": "Modul Monev menyediakan sarana terpadu untuk memantau dan mengevaluasi pelaksanaan kegiatan akademik maupun institusional, membantu pengguna menganalisis capaian, mengidentifikasi peluang perbaikan, serta mendukung pengambilan keputusan berbasis data."
+    },
+    "ami": {
+      "judul": "Audit Mutu Internal",
+      "deskripsi": "Modul AMI (Audit Mutu Internal) mendukung pelaksanaan audit internal secara terstruktur dan terdokumentasi untuk menilai kesesuaian terhadap standar mutu, mengidentifikasi area peningkatan, serta memperkuat budaya peningkatan mutu berkelanjutan."
+    },
+    "manajemenModul": {
+      "judul": "Manajemen Modul",
+      "deskripsi": "Modul Manajemen Modul memfasilitasi pengelolaan modul sistem secara terstruktur, termasuk penambahan, pembaruan, dan pengaturan modul, guna memastikan integrasi dan operasional sistem berjalan secara optimal."
+    },
+    "manajemenPeriode": {
+      "judul": "Manajemen Periode",
+      "deskripsi": "Modul Manajemen Periode mendukung pengelolaan periode akademik secara terencana, termasuk penetapan jadwal dan pengaturan rentang waktu, sehingga pelaksanaan aktivitas akademik dapat berlangsung secara tertib dan terkoordinasi."
+    },
+    "manajemenPengguna": {
+      "judul": "Manajemen Pengguna",
+      "deskripsi": "Modul Manajemen Pengguna menyediakan sarana untuk mengelola akun pengguna, peran, dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem."
+    }
+  },
+  "manajemenUser": {
+    "judul": "Manajemen Pengguna",
+    "deskripsi": "Modul Manajemen Pengguna menyediakan sarana untuk mengelola akun pengguna, peran, dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem.",
+    "create": "Buat Pengguna",
+    "deskripsiCreate": "Formulir untuk membuat pengguna baru dengan informasi yang diperlukan, termasuk nama, email, dan peran.",
+    "formCreate": "Formulir Buat Pengguna Baru",
+    "totalUser": "Total Pengguna",
+    "totalUserAktif": "Total Pengguna Aktif",
+    "totalRole": "Total Role",
+    "totalRoleTerbanyak": "Role Terbanyak",
+    "daftarUser": "Daftar Pengguna",
+    "cari": "Cari pengguna berdasarkan nama, atau email...",
+    "role": "Role",
+    "no": "No",
+    "nama": "Nama",
+    "email": "Email",
+    "status": "Status",
+    "tanggalBergabung": "Tanggal Bergabung"
+  },
+  "manajemenRole": {
+    "judul": "Manajemen Role",
+    "deskripsi": "Modul Manajemen Role menyediakan sarana untuk mengelola peran dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem.",
+    "create": "Buat Role",
+    "totalUser": "Total Pengguna",
+    "totalUserAktif": "Total Pengguna Aktif",
+    "totalRole": "Total Role",
+    "totalRoleTerbanyak": "Role Terbanyak",
+    "cari": "Cari role berdasarkan nama, atau deskripsi..."
+  }
+}
