@@ -1,4 +1,3 @@
-<!-- components/AppHeader.vue -->
 <template>
   <header :dir="'ltr'" class="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white">
     <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
@@ -150,7 +149,7 @@ v-if="openMenu === 'spmi'"
           <button
 type="button" class="cursor-pointer"
             :class="dropdownButtonClass(['/data-akreditasi', '/dokumen-akreditasi'])" @click="toggleMenu('akreditasi')">
-            {{ $t('navigasi.profil') }}
+            {{ $t('navigasi.akreditasi') }}
             <span
 class="ml-2 inline-flex items-center transition-transform duration-200"
               :class="openMenu === 'akreditasi' ? 'rotate-0' : 'rotate-180'" aria-hidden="true">
@@ -203,12 +202,12 @@ to="/informasi/semua-postingan" :class="dropdownItemClass('/informasi/semua-post
 
       <div class="flex items-center gap-2 md:gap-3">
         <NuxtLink
-v-if="!isLoggedInDummy" :to="localePath('/login')"
+v-if="!authStore.isLoading && !authStore.isAuthenticated" :to="localePath('/login')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
           {{ $t('navigasi.masuk') }}
         </NuxtLink>
         <NuxtLink
-v-else :to="localePath('/dashboard')"
+v-if="!authStore.isLoading && authStore.isAuthenticated" :to="localePath('/dashboard')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
           {{ $t('navigasi.dasbor') }}
         </NuxtLink>
@@ -268,12 +267,12 @@ v-for="link in group.links" :key="link.to" :to="link.to" :class="mobileLinkClass
               @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
 
             <NuxtLink
-v-if="!isLoggedInDummy" :to="localePath('/login')"
+v-if="!authStore.isLoading && !authStore.isAuthenticated" :to="localePath('/login')"
               class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.masuk') }}
             </NuxtLink>
             <NuxtLink
-v-else :to="localePath('/dashboard')"
+v-if="!authStore.isLoading && authStore.isAuthenticated" :to="localePath('/dashboard')"
               class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.dasbor') }}
             </NuxtLink>
@@ -287,12 +286,19 @@ v-else :to="localePath('/dashboard')"
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useRoute } from '#imports'
-import { ref, watch, computed } from 'vue'
+import { useRoute, useLocalePath } from '#imports'
+import { ref, watch, computed, onMounted } from 'vue'
 import { en, id, ar, ja } from '@nuxt/ui/locale'
+import { useAuthStore } from '#stores/auth'
 
 const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
+
+const authStore = useAuthStore()
+
+onMounted(async () => {
+  await authStore.initAuth()
+})
 
 type MenuKey =
   | 'profil'
@@ -457,6 +463,4 @@ const mobileLinkClass = (path: string) =>
   isMatch(path)
     ? 'block rounded-md bg-red-50 px-2 py-2 text-sm text-[#e30613]'
     : 'block rounded-md px-2 py-2 text-sm text-gray-700 hover:bg-gray-50'
-
-const isLoggedInDummy = ref(false)
 </script>

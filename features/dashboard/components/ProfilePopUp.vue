@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { RoleResponse } from '#types/role'
+
 interface ProfileUser {
   name: string
   email: string
@@ -7,17 +9,29 @@ interface ProfileUser {
   online?: boolean
 }
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   open: boolean
   user: ProfileUser
+  roles?: RoleResponse[]
 }>(), {
   open: false,
+  roles: () => []
 })
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'signout'): void
+  (e: 'change-role', role: RoleResponse): void
 }>()
+
+const handleRoleChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement
+  const selectedId = target.value
+  const role = props.roles.find((r) => r.id === selectedId)
+  if (role) {
+    emit('change-role', role)
+  }
+}
 </script>
 
 <template>
@@ -73,10 +87,30 @@ const emit = defineEmits<{
             </p>
 
             <div class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#f5dce8] px-3 py-1.5 text-[12px] font-medium text-[#de1874] sm:text-[13px]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.12a7.5 7.5 0 0115 0" />
               </svg>
-              <span>{{ user.role }}</span>
+              
+              <span v-if="!roles || roles.length <= 1">{{ user.role }}</span>
+              
+              <div v-else class="relative flex items-center">
+                <select 
+                  class="appearance-none bg-transparent pr-4 outline-none cursor-pointer font-medium"
+                  @change="handleRoleChange"
+                >
+                  <option 
+                    v-for="r in roles" 
+                    :key="r.id" 
+                    :value="r.id"
+                    :selected="r.nama === user.role"
+                  >
+                    {{ r.nama }}
+                  </option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 h-3 w-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
 
             <button
