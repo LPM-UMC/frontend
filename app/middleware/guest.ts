@@ -1,21 +1,18 @@
-// import { useAuthStore } from "#stores/authStore";
-//
-// export default defineNuxtRouteMiddleware(async () => {
-//   const authStore = useAuthStore();
-//
-//   if (!authStore.isAuthenticated) {
-//     try {
-//       await authStore.initialize();
-//
-//     } catch {
-//
-//       return;
-//     }
-//   }
-//
-//   if (authStore.isAuthenticated) {
-//     const localePath = useLocalePath();
-//
-//     return navigateTo(localePath("/dashboard"));
-//   }
-// });
+import { useAuthStore } from "#stores/auth";
+
+export default defineNuxtRouteMiddleware(async (to) => {
+  const auth = useAuthStore()
+
+  // 🔹 Hindari race condition
+  if (auth.isLoading) return
+
+  // 🔹 Init auth jika belum
+  if (!auth.isInitialized) {
+    await auth.initAuth()
+  }
+
+  // 🔥 Jika sudah login → redirect ke dashboard
+  if (auth.isAuthenticated) {
+    return navigateTo('/dashboard')
+  }
+})
