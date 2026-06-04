@@ -69,7 +69,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(3) }}
+            {{ formatNumber(userMeta.total) }}
           </p>
         </article>
 
@@ -81,7 +81,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(1) }}
+            {{ formatNumber(userMeta.total) }}
           </p>
         </article>
 
@@ -93,7 +93,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(1) }}
+            {{ formatNumber(roleMeta.total) }}
           </p>
         </article>
 
@@ -105,7 +105,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(1) }}
+            {{ topRoleName }}
           </p>
         </article>
 
@@ -127,24 +127,29 @@
         <div class="flex flex-col gap-2 sm:flex-row">
           <select v-model="sortOrder"
             class="h-10 min-w-24 rounded-xl border border-[#d8dde4] bg-[#f8f8f8] px-4 text-sm cursor-pointer">
-            <option value="a-z" class="cursor-pointer">A-Z</option>
-            <option value="z-a" class="cursor-pointer">Z-A</option>
+            <option value="asc" class="cursor-pointer">A-Z</option>
+            <option value="desc" class="cursor-pointer">Z-A</option>
           </select>
 
           <select v-model="roleFilter"
             class="h-10 min-w-32 rounded-xl border border-[#d8dde4] bg-[#f8f8f8] px-4 text-sm cursor-pointer">
-            <option disabled selected value="rolee" class="cursor-pointer">
+            <option value="" class="cursor-pointer">
               {{ $t('manajemenUser.role') }}
             </option>
-            <option value="role" class="cursor-pointer">
-              Role lainnya
+            <option v-for="role in roleOptions" :key="role.id" :value="role.id" class="cursor-pointer">
+              {{ role.nama }}
             </option>
           </select>
         </div>
       </div>
 
+      <!-- Loading -->
+      <div v-if="userLoading" class="mt-6 flex justify-center py-8">
+        <p class="text-sm text-[#6b7280]">Memuat data...</p>
+      </div>
+
       <!-- Table -->
-      <div class="mt-4 overflow-x-auto rounded-xl border border-[#dce1e8] bg-white">
+      <div v-else class="mt-4 overflow-x-auto rounded-xl border border-[#dce1e8] bg-white">
         <table class="w-full min-w-220 text-sm">
           <thead>
             <tr class="bg-[#f1f3f6] text-[#2f3744]">
@@ -152,13 +157,12 @@
               <th class="px-3 py-3 text-left">{{ $t('manajemenUser.model.nama') }}</th>
               <th class="px-3 py-3 text-left">{{ $t('manajemenUser.model.email') }}</th>
               <th class="px-3 py-3 text-left">{{ $t('manajemenUser.model.role') }}</th>
-              <th class="px-3 py-3 text-left">{{ $t('manajemenUser.model.status') }}</th>
               <th class="px-3 py-3 text-left">{{ $t('manajemenUser.model.tanggalBergabung') }}</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="(row, index) in paginatedRows" :key="row.id" @click="goToEditPage(row.id)">
+            <tr v-for="(row, index) in userRows" :key="row.id">
               <td class="px-3 py-3">
                 {{ formatNumber(showingFrom + index) }}
               </td>
@@ -166,7 +170,7 @@
               <td class="px-3 py-3 font-semibold">
                 <NuxtLink :to="localePath(`/dashboard/manajemen-user/${encodeURIComponent(row.id)}/edit`)"
                   class="text-red-600 underline hover:text-red-800 transition">
-                  {{ row.name }}
+                  {{ row.nama }}
                 </NuxtLink>
               </td>
 
@@ -175,18 +179,17 @@
               </td>
 
               <td class="px-3 py-3">
-                {{ row.tableRoleLabel }}
+                {{ row.roles?.map(r => r.nama).join(', ') || '-' }}
               </td>
 
               <td class="px-3 py-3">
-                <span class="inline-flex rounded-xl px-3 py-1 text-xs sm:text-sm font-semibold"
-                  :class="resolveStatusClass(row.status)">
-                  {{ row.status }}
-                </span>
+                {{ formatDate(row.created_at) }}
               </td>
+            </tr>
 
-              <td class="px-3 py-3">
-                {{ row.joinedAt }}
+            <tr v-if="userRows.length === 0">
+              <td colspan="5" class="px-3 py-8 text-center text-sm text-[#7a8392]">
+                Data user tidak ditemukan.
               </td>
             </tr>
           </tbody>
@@ -198,7 +201,7 @@
         <div class="flex gap-2 text-sm">
           <button :disabled="currentPage === 1"
             class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="currentPage--">
+            @click="goToPage(currentPage - 1)">
             {{ $t('util.paginasi.sebelumnya') }}
           </button>
 
@@ -208,7 +211,7 @@
 
           <button :disabled="currentPage === totalPages"
             class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="currentPage++">
+            @click="goToPage(currentPage + 1)">
             {{ $t('util.paginasi.berikutnya') }}
           </button>
         </div>
@@ -218,10 +221,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { navigateTo } from '#imports'
 import { useI18n } from 'vue-i18n'
-
+import { useUser } from '../composables/useUser'
+import { useRole } from '#features/manajemen-role/composables/useRole'
 
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
@@ -239,282 +243,113 @@ function formatNumber(value: number) {
           : 'id-ID'
   ).format(value)
 }
-/* =========================
- * TYPES
- * ========================= */
 
-type DashboardUserStatus =
-  | 'Aktif'
-  | 'Non Aktif'
+function formatDate(dateStr?: string) {
+  if (!dateStr) return '-'
 
-type DashboardUserSortOrder =
-  | 'a-z'
-  | 'z-a'
+  try {
+    const date = new Date(dateStr)
 
-interface DashboardUserRow {
-  id: string
-  name: string
-  email: string
-  tableRoleLabel: string
-  selectedRoleValues: string[]
-  status: DashboardUserStatus
-  joinedAt: string
+    return date.toLocaleDateString(
+      locale.value === 'ar' ? 'ar-SA'
+        : locale.value === 'ja' ? 'ja-JP'
+          : locale.value === 'en' ? 'en-US'
+            : 'id-ID',
+      { day: '2-digit', month: 'short', year: 'numeric' },
+    )
+  } catch {
+    return dateStr
+  }
 }
 
 /* =========================
- * DUMMY DATA
+ * COMPOSABLES
  * ========================= */
 
-const pageSize = 5
+const {
+  rows: userRows,
+  meta: userMeta,
+  loading: userLoading,
+  fetchUsers,
+} = useUser()
 
-const rows = ref<
-  DashboardUserRow[]
->([
-  {
-    id: 'USR001',
-    name: 'Ahmad Fauzan',
-    email: 'ahmad@umc.ac.id',
-    tableRoleLabel:
-      'Admin',
-    selectedRoleValues: [
-      'admin',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '12 Jan 2026',
-  },
-  {
-    id: 'USR002',
-    name: 'Siti Rahma',
-    email: 'siti@umc.ac.id',
-    tableRoleLabel:
-      'Auditor',
-    selectedRoleValues: [
-      'auditor',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '18 Jan 2026',
-  },
-  {
-    id: 'USR003',
-    name: 'Rizki Saputra',
-    email: 'rizki@umc.ac.id',
-    tableRoleLabel:
-      'Operator',
-    selectedRoleValues: [
-      'operator',
-    ],
-    status:
-      'Non Aktif',
-    joinedAt:
-      '03 Feb 2026',
-  },
-  {
-    id: 'USR004',
-    name: 'Dewi Lestari',
-    email: 'dewi@umc.ac.id',
-    tableRoleLabel:
-      'Admin, Auditor',
-    selectedRoleValues: [
-      'admin',
-      'auditor',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '09 Feb 2026',
-  },
-  {
-    id: 'USR005',
-    name: 'Budi Santoso',
-    email: 'budi@umc.ac.id',
-    tableRoleLabel:
-      'Operator',
-    selectedRoleValues: [
-      'operator',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '15 Feb 2026',
-  },
-  {
-    id: 'USR006',
-    name: 'Rina Putri',
-    email: 'rina@umc.ac.id',
-    tableRoleLabel:
-      'Auditor',
-    selectedRoleValues: [
-      'auditor',
-    ],
-    status:
-      'Non Aktif',
-    joinedAt:
-      '20 Feb 2026',
-  },
-])
+const {
+  rows: roleRows,
+  meta: roleMeta,
+  fetchRoles,
+} = useRole()
 
 /* =========================
  * STATE
  * ========================= */
 
-const searchQuery =
-  ref('')
+const pageSize = 10
 
-const sortOrder =
-  ref<DashboardUserSortOrder>(
-    'a-z'
-  )
-
-const roleFilter =
-  ref('all')
-
-const currentPage =
-  ref(1)
+const searchQuery = ref('')
+const sortOrder = ref<'asc' | 'desc'>('asc')
+const roleFilter = ref('')
+const currentPage = ref(1)
 
 /* =========================
- * HELPERS
+ * COMPUTED
  * ========================= */
 
-function sortRows(
-  data: DashboardUserRow[],
-  order: DashboardUserSortOrder
-) {
-  return [...data].sort(
-    (a, b) => {
-      const compare =
-        a.name.localeCompare(
-          b.name
-        )
+const roleOptions = computed(() => roleRows.value)
 
-      return order === 'a-z'
-        ? compare
-        : -compare
-    }
-  )
+const topRoleName = computed(() => {
+  if (roleRows.value.length === 0) return '-'
+
+  const sorted = [...roleRows.value]
+    .filter(r => (r.jumlah_user ?? 0) > 0)
+    .sort((a, b) => (b.jumlah_user ?? 0) - (a.jumlah_user ?? 0))
+
+  return sorted[0]?.nama ?? '-'
+})
+
+const totalPages = computed(() =>
+  Math.max(1, userMeta.value.total_pages),
+)
+
+const showingFrom = computed(() => {
+  if (userRows.value.length === 0) return 0
+  return (currentPage.value - 1) * pageSize + 1
+})
+
+/* =========================
+ * FETCH
+ * ========================= */
+
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
+
+async function loadUsers() {
+  await fetchUsers({
+    page: currentPage.value,
+    size: pageSize,
+    search: searchQuery.value.trim() || undefined,
+    order: sortOrder.value,
+    roleId: roleFilter.value || undefined,
+  })
 }
 
-/* =========================
- * FILTER TABLE
- * ========================= */
-
-const filteredRows =
-  computed(() => {
-    const query =
-      searchQuery.value
-        .trim()
-        .toLowerCase()
-
-    const sorted =
-      sortRows(
-        rows.value,
-        sortOrder.value
-      )
-
-    return sorted.filter(
-      (row) => {
-        const text = `
-          ${row.name}
-          ${row.email}
-          ${row.tableRoleLabel}
-          ${row.status}
-        `.toLowerCase()
-
-        const matchesSearch =
-          !query ||
-          text.includes(
-            query
-          )
-
-        const matchesRole =
-          roleFilter.value ===
-          'all' ||
-          row.selectedRoleValues.includes(
-            roleFilter.value
-          )
-
-        return (
-          matchesSearch &&
-          matchesRole
-        )
-      }
-    )
-  })
-
-/* =========================
- * PAGINATION
- * ========================= */
-
-const totalPages =
-  computed(() =>
-    Math.max(
-      1,
-      Math.ceil(
-        filteredRows.value
-          .length /
-        pageSize
-      )
-    )
-  )
-
-const paginatedRows =
-  computed(() => {
-    const start =
-      (
-        currentPage.value -
-        1
-      ) * pageSize
-
-    return filteredRows.value.slice(
-      start,
-      start +
-      pageSize
-    )
-  })
-
-const showingFrom =
-  computed(() => {
-    if (
-      !filteredRows.value
-        .length
-    ) {
-      return 0
-    }
-
-    return (
-      (
-        currentPage.value -
-        1
-      ) *
-      pageSize +
-      1
-    )
-  })
-
-/* =========================
- * STYLE
- * ========================= */
-
-function resolveStatusClass(
-  status: DashboardUserStatus
-) {
-  if (
-    status === 'Aktif'
-  ) {
-    return 'bg-[#9DE8A1] text-[#128b1f]'
-  }
-
-  return 'bg-[#DEE4EC] text-[#495363]'
+async function loadRoles() {
+  await fetchRoles({ size: 100 })
 }
+
+function goToPage(page: number) {
+  currentPage.value = page
+}
+
+onMounted(async () => {
+  await Promise.all([loadUsers(), loadRoles()])
+})
 
 /* =========================
  * NAVIGATION
  * ========================= */
 
-async function goToEditPage(
-  id: string
-) {
+async function goToEditPage(id: string) {
   await navigateTo(
-    `/dashboard/manajemen-user/${encodeURIComponent(id)}/edit`
+    `/dashboard/manajemen-user/${encodeURIComponent(id)}/edit`,
   )
 }
 
@@ -523,30 +358,42 @@ async function goToEditPage(
  * ========================= */
 
 watch(
-  [
-    searchQuery,
-    sortOrder,
-    roleFilter,
-  ],
+  searchQuery,
   () => {
-    currentPage.value = 1
-  }
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer)
+
+    searchDebounceTimer = setTimeout(() => {
+      currentPage.value = 1
+      loadUsers()
+    }, 400)
+  },
 )
 
 watch(
-  totalPages,
-  (
-    nextTotalPage
-  ) => {
-    if (
-      currentPage.value >
-      nextTotalPage
-    ) {
-      currentPage.value =
-        nextTotalPage
-    }
+  [sortOrder, roleFilter],
+  () => {
+    currentPage.value = 1
+    loadUsers()
+  },
+)
+
+watch(
+  currentPage,
+  () => {
+    loadUsers()
+  },
+)
+
+watch(
+  locale,
+  () => {
+    loadUsers()
   }
 )
+
+/* =========================
+ * BREADCRUMB
+ * ========================= */
 
 const breadcrumbItems = [
   {

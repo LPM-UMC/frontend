@@ -69,7 +69,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(3) }}
+            {{ formatNumber(totalUsersFromRoles) }}
           </p>
         </article>
 
@@ -81,7 +81,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(3) }}
+            {{ formatNumber(totalUsersFromRoles) }}
           </p>
         </article>
 
@@ -93,7 +93,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(3) }}
+            {{ formatNumber(roleMeta.total) }}
           </p>
         </article>
 
@@ -105,7 +105,7 @@
 
           <p class="mt-2 text-xl sm:text-3xl font-bold text-red-800 text-end"
             :class="isRTL ? 'text-left' : 'text-right'">
-            {{ formatNumber(3) }}
+            {{ topRoleName }}
           </p>
         </article>
 
@@ -127,14 +127,19 @@
         <div class="flex flex-col gap-2 sm:flex-row">
           <select v-model="sortOrder"
             class="h-10 min-w-24 rounded-xl border border-[#d8dde4] bg-[#f8f8f8] px-4 text-sm cursor-pointer">
-            <option value="a-z" class="cursor-pointer">A-Z</option>
-            <option value="z-a" class="cursor-pointer">Z-A</option>
+            <option value="asc" class="cursor-pointer">A-Z</option>
+            <option value="desc" class="cursor-pointer">Z-A</option>
           </select>
         </div>
       </div>
 
+      <!-- Loading -->
+      <div v-if="roleLoading" class="mt-6 flex justify-center py-8">
+        <p class="text-sm text-[#6b7280]">Memuat data...</p>
+      </div>
+
       <!-- Table -->
-      <div class="mt-4 overflow-x-auto rounded-xl border border-[#dce1e8] bg-white">
+      <div v-else class="mt-4 overflow-x-auto rounded-xl border border-[#dce1e8] bg-white">
         <table class="w-full min-w-220 text-sm">
           <thead>
             <tr class="bg-[#f1f3f6] text-[#2f3744]">
@@ -147,7 +152,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="(row, index) in paginatedRows" :key="row.id" class="" @click="goToEditPage(row.id)">
+            <tr v-for="(row, index) in roleRows" :key="row.id">
               <td class="px-3 py-3">
                 {{ formatNumber(showingFrom + index) }}
               </td>
@@ -156,20 +161,26 @@
                 <NuxtLink :to="localePath(
                   `/dashboard/manajemen-role/${encodeURIComponent(row.id)}/edit`
                 )" class="text-red-600 underline hover:text-red-800">
-                  {{ row.name }}
+                  {{ row.nama }}
                 </NuxtLink>
               </td>
 
               <td class="px-3 py-3 line-clamp-2">
-                {{ row.description }}
+                {{ row.deskripsi }}
               </td>
 
               <td class="px-3 py-3">
-                {{ formatNumber(row.userCount) }}
+                {{ formatNumber(row.jumlah_user ?? 0) }}
               </td>
 
               <td class="px-3 py-3">
-                {{ row.createdAt }}
+                {{ formatDate(row.created_at) }}
+              </td>
+            </tr>
+
+            <tr v-if="roleRows.length === 0">
+              <td colspan="5" class="px-3 py-8 text-center text-sm text-[#7a8392]">
+                Data role tidak ditemukan.
               </td>
             </tr>
           </tbody>
@@ -181,7 +192,7 @@
         <div class="flex gap-2 text-sm">
           <button :disabled="currentPage === 1"
             class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="currentPage--">
+            @click="goToPage(currentPage - 1)">
             {{ $t('util.paginasi.sebelumnya') }}
           </button>
 
@@ -191,7 +202,7 @@
 
           <button :disabled="currentPage === totalPages"
             class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="currentPage++">
+            @click="goToPage(currentPage + 1)">
             {{ $t('util.paginasi.berikutnya') }}
           </button>
         </div>
@@ -202,8 +213,9 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ref, watch, } from 'vue'
-import { navigateTo, useLocalePath, } from '#imports'
+import { computed, ref, watch, onMounted } from 'vue'
+import { navigateTo, useLocalePath } from '#imports'
+import { useRole } from '../composables/useRole'
 
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
@@ -222,221 +234,96 @@ function formatNumber(value: number) {
   ).format(value)
 }
 
-/* =========================
- * TYPES
- * ========================= */
+function formatDate(dateStr?: string) {
+  if (!dateStr) return '-'
 
-type DashboardRoleSortOrder =
-  | 'a-z'
-  | 'z-a'
+  try {
+    const date = new Date(dateStr)
 
-interface DashboardRoleRow {
-  id: string
-  name: string
-  description: string
-  userCount: number
-  createdAt: string
+    return date.toLocaleDateString(
+      locale.value === 'ar' ? 'ar-SA'
+        : locale.value === 'ja' ? 'ja-JP'
+          : locale.value === 'en' ? 'en-US'
+            : 'id-ID',
+      { day: '2-digit', month: 'short', year: 'numeric' },
+    )
+  } catch {
+    return dateStr
+  }
 }
 
 /* =========================
- * DUMMY DATA
+ * COMPOSABLE
  * ========================= */
 
-const pageSize = 5
-
-const rows = ref<
-  DashboardRoleRow[]
->([
-  {
-    id: 'ROL001',
-    name: 'Administrator',
-    description:
-      'Memiliki akses penuh terhadap seluruh fitur sistem.',
-    userCount: 8,
-    createdAt:
-      '12 Jan 2026',
-  },
-  {
-    id: 'ROL002',
-    name: 'Auditor',
-    description:
-      'Melakukan audit dan verifikasi data evaluasi.',
-    userCount: 15,
-    createdAt:
-      '15 Jan 2026',
-  },
-  {
-    id: 'ROL003',
-    name: 'Operator',
-    description:
-      'Mengelola data operasional dan administrasi.',
-    userCount: 12,
-    createdAt:
-      '20 Jan 2026',
-  },
-  {
-    id: 'ROL004',
-    name: 'Reviewer',
-    description:
-      'Melakukan peninjauan dan validasi dokumen.',
-    userCount: 6,
-    createdAt:
-      '25 Jan 2026',
-  },
-  {
-    id: 'ROL005',
-    name: 'Pimpinan',
-    description:
-      'Memantau laporan dan hasil evaluasi.',
-    userCount: 3,
-    createdAt:
-      '01 Feb 2026',
-  },
-  {
-    id: 'ROL006',
-    name: 'Dosen',
-    description:
-      'Mengakses dan mengelola data akademik.',
-    userCount: 85,
-    createdAt:
-      '05 Feb 2026',
-  },
-  {
-    id: 'ROL007',
-    name: 'Mahasiswa',
-    description:
-      'Mengakses layanan dan informasi akademik.',
-    userCount: 1240,
-    createdAt:
-      '08 Feb 2026',
-  },
-])
+const {
+  rows: roleRows,
+  meta: roleMeta,
+  loading: roleLoading,
+  fetchRoles,
+} = useRole()
 
 /* =========================
  * STATE
  * ========================= */
 
-const searchQuery =
-  ref('')
-
-const sortOrder =
-  ref<DashboardRoleSortOrder>(
-    'a-z',
-  )
-
-const currentPage =
-  ref(1)
+const pageSize = 10
+const searchQuery = ref('')
+const sortOrder = ref<'asc' | 'desc'>('asc')
+const currentPage = ref(1)
 
 /* =========================
- * STATISTIC
+ * COMPUTED
  * ========================= */
+
+const totalUsersFromRoles = computed(() => {
+  return roleRows.value.reduce(
+    (sum, r) => sum + (r.jumlah_user ?? 0),
+    0,
+  )
+})
+
+const topRoleName = computed(() => {
+  if (roleRows.value.length === 0) return '-'
+
+  const sorted = [...roleRows.value]
+    .filter(r => (r.jumlah_user ?? 0) > 0)
+    .sort((a, b) => (b.jumlah_user ?? 0) - (a.jumlah_user ?? 0))
+
+  return sorted[0]?.nama ?? '-'
+})
+
+const totalPages = computed(() =>
+  Math.max(1, roleMeta.value.total_pages),
+)
+
+const showingFrom = computed(() => {
+  if (roleRows.value.length === 0) return 0
+  return (currentPage.value - 1) * pageSize + 1
+})
 
 /* =========================
- * HELPERS
+ * FETCH
  * ========================= */
 
-function sortRows(
-  data: DashboardRoleRow[],
-  order: DashboardRoleSortOrder,
-) {
-  return [...data].sort(
-    (a, b) => {
-      const compare =
-        a.name.localeCompare(
-          b.name,
-        )
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
 
-      return order ===
-        'a-z'
-        ? compare
-        : -compare
-    },
-  )
+async function loadRoles() {
+  await fetchRoles({
+    page: currentPage.value,
+    size: pageSize,
+    search: searchQuery.value.trim() || undefined,
+    order: sortOrder.value,
+  })
 }
 
-/* =========================
- * FILTER
- * ========================= */
+function goToPage(page: number) {
+  currentPage.value = page
+}
 
-const filteredRows =
-  computed(() => {
-    const query =
-      searchQuery.value
-        .trim()
-        .toLowerCase()
-
-    const sorted =
-      sortRows(
-        rows.value,
-        sortOrder.value,
-      )
-
-    return sorted.filter(
-      row => {
-        const text = `
-          ${row.name}
-          ${row.description}
-        `.toLowerCase()
-
-        return (
-          !query ||
-          text.includes(
-            query,
-          )
-        )
-      },
-    )
-  })
-
-/* =========================
- * PAGINATION
- * ========================= */
-
-const totalPages =
-  computed(() =>
-    Math.max(
-      1,
-      Math.ceil(
-        filteredRows.value
-          .length /
-        pageSize,
-      ),
-    ),
-  )
-
-const paginatedRows =
-  computed(() => {
-    const start =
-      (
-        currentPage.value -
-        1
-      ) * pageSize
-
-    return filteredRows.value.slice(
-      start,
-      start +
-      pageSize,
-    )
-  })
-
-const showingFrom =
-  computed(() => {
-    if (
-      !filteredRows.value
-        .length
-    ) {
-      return 0
-    }
-
-    return (
-      (
-        currentPage.value -
-        1
-      ) *
-      pageSize +
-      1
-    )
-  })
+onMounted(async () => {
+  await loadRoles()
+})
 
 /* =========================
  * NAVIGATION
@@ -455,26 +342,37 @@ async function goToEditPage(
  * ========================= */
 
 watch(
-  [
-    searchQuery,
-    sortOrder,
-  ],
+  searchQuery,
   () => {
-    currentPage.value = 1
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer)
+
+    searchDebounceTimer = setTimeout(() => {
+      currentPage.value = 1
+      loadRoles()
+    }, 400)
   },
 )
 
 watch(
-  totalPages,
-  nextTotalPage => {
-    if (
-      currentPage.value >
-      nextTotalPage
-    ) {
-      currentPage.value =
-        nextTotalPage
-    }
+  sortOrder,
+  () => {
+    currentPage.value = 1
+    loadRoles()
   },
+)
+
+watch(
+  currentPage,
+  () => {
+    loadRoles()
+  },
+)
+
+watch(
+  locale,
+  () => {
+    loadRoles()
+  }
 )
 
 /* =========================

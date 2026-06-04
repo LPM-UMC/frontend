@@ -110,19 +110,24 @@
 
         </div>
 
+        <!-- Server Error -->
+        <p v-if="serverError" class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+          {{ serverError }}
+        </p>
+
         <div class="mt-6 flex justify-center gap-3">
           <NuxtLink :to="localePath('/dashboard/manajemen-role')"
             class="inline-flex h-10 min-w-28 items-center justify-center rounded-xl border border-[#d7dbe4] bg-[#f3f4f6] px-5 text-sm font-semibold text-[#1f2634] transition hover:bg-[#e0e0e0] cursor-pointer sm:h-11 sm:min-w-32 sm:px-6 sm:text-base">
             {{ t('util.batal') }}
           </NuxtLink>
 
-          <button type="submit" :disabled="!isFormValid" :class="[
+          <button type="submit" :disabled="!isFormValid || submitting" :class="[
             'inline-flex h-10 min-w-28 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base',
-            isFormValid
+            isFormValid && !submitting
               ? 'bg-[#e30000] hover:bg-[#c90000] cursor-pointer'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
           ]">
-            {{ t('manajemenRole.create.tombol') }}
+            {{ submitting ? '...' : t('manajemenRole.create.tombol') }}
           </button>
         </div>
 
@@ -133,9 +138,10 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, reactive, watch, } from 'vue'
-import { navigateTo, useLocalePath, useToast, } from '#imports'
+import { computed, reactive, ref, watch } from 'vue'
+import { navigateTo, useLocalePath, useToast } from '#imports'
 import { createRoleValidation } from '#validations/role-validation'
+import { useRole } from '../composables/useRole'
 
 const localePath = useLocalePath()
 
@@ -165,8 +171,17 @@ function formatNumber(
 }
 
 /* =========================
- * FORM
+ * COMPOSABLE
  * ========================= */
+
+const { createRole } = useRole()
+
+/* =========================
+ * STATE
+ * ========================= */
+
+const submitting = ref(false)
+const serverError = ref('')
 
 const form = reactive({
   nama: '',
@@ -337,21 +352,47 @@ async function handleSubmit() {
     return
   }
 
-  toast.add({
-    title:
-      t('util.berhasil'),
-    description:
-      t('manajemenRole.create.validasi.berhasil'),
-    color: 'success',
-  })
+  submitting.value = true
+  serverError.value = ''
 
-  setTimeout(
-    async () => {
-      await navigateTo(
-        '/dashboard/manajemen-role',
+  try {
+    const result = await createRole({
+      nama: form.nama,
+      deskripsi: form.deskripsi,
+    })
+
+    if (result) {
+      toast.add({
+        title: t('util.berhasil'),
+        description: t('manajemenRole.create.validasi.berhasil'),
+        color: 'success',
+      })
+
+      setTimeout(
+        async () => {
+          await navigateTo(
+            '/dashboard/manajemen-role',
+          )
+        },
+        1000,
       )
-    },
-    1000,
-  )
+    } else {
+      serverError.value = 'Gagal membuat role. Silakan coba lagi.'
+      toast.add({
+        title: t('util.gagal'),
+        description: 'Gagal membuat role. Silakan coba lagi.',
+        color: 'error',
+      })
+    }
+  } catch {
+    serverError.value = 'Terjadi kesalahan. Silakan coba lagi.'
+    toast.add({
+      title: t('util.gagal'),
+      description: 'Terjadi kesalahan.',
+      color: 'error',
+    })
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

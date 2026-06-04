@@ -26,26 +26,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import DashboardMenuCard from '../components/DashboardMenuCard.vue'
-// import { useAuthStore } from '#stores/auth'
-import { useI18n } from '#imports'
+import { useAuthStore } from '#stores/auth'
+import { useI18n, useLocalePath } from '#imports'
 
 const { t } = useI18n()
-// const auth = useAuthStore()
+const auth = useAuthStore()
 const localePath = useLocalePath()
 
-// ================= INIT =================
-// onMounted(async () => {
-//   if (!auth.isInitialized) {
-//     await auth.initAuth()
-//   }
-// })
-
-// ================= USER =================
-// const userName = computed(() => auth.user?.nama ?? '-')
-// const roleName = computed(() => auth.activeRole?.nama ?? '-')
-
 // ================= ALL MENUS =================
-const menus = computed(() => [
+const allMenus = computed(() => [
   {
     id: 'monev',
     key: 'monev',
@@ -88,48 +77,25 @@ const menus = computed(() => [
   },
 ])
 
-// ================= RULES =================
-// const monevBlacklist = ['ketua-spi', 'admin-spi', 'spi']
-// const auditBlacklist = ['ketua-lpm', 'admin-lpm', 'lpm']
-//
-// const modulWhitelist = [
-//   'ketua-lpm',
-//   'admin-lpm',
-//   'ketua-spi',
-//   'admin-spi',
-// ]
-
 // ================= FILTER =================
-// const menus = computed(() => {
-//   const roleCode = auth.activeRole?.kode
-//
-//   if (!roleCode) return []
-//
-//   return allMenus.value
-//     .filter(menu => {
-//       switch (menu.key) {
-//         case 'monev':
-//           return !monevBlacklist.includes(roleCode)
-//
-//         case 'audit':
-//           return !auditBlacklist.includes(roleCode)
-//
-//         case 'modul':
-//           return modulWhitelist.includes(roleCode)
-//
-//         case 'periode':
-//           return modulWhitelist.includes(roleCode)
-//
-//         case 'user':
-//           return modulWhitelist.includes(roleCode)
-//
-//         default:
-//           return false
-//       }
-//     })
-//     .map(menu => ({
-//       ...menu,
-//       ctaLabel: 'Masuk',
-//     }))
-// })
+const menus = computed(() => {
+  const roleCode = auth.activeRole?.kode
+
+  if (!roleCode) return []
+
+  return allMenus.value
+    .filter(menu => {
+      // Logic from requirements
+      if (menu.key === 'user') {
+        return roleCode === 'admin-lpm' || roleCode === 'admin-spi'
+      }
+
+      // Keep default visibility for other menus for now
+      return true
+    })
+    .map(menu => ({
+      ...menu,
+      ctaLabel: 'Masuk',
+    }))
+})
 </script>

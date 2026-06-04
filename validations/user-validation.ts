@@ -9,7 +9,7 @@ import type {
 } from "../types/user";
 
 export const createUserValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<CreateUserRequest> =>
   z.object({
     nidn: z
@@ -46,7 +46,7 @@ export const createUserValidation = (
   });
 
 export const updateUserValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<UpdateUserRequest> =>
   z.object({
     email: z
@@ -66,7 +66,7 @@ export const updateUserValidation = (
   });
 
 export const updateProfileValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<UpdateProfileRequest> =>
   z.object({
     nama: z
@@ -98,7 +98,7 @@ export const updateProfileValidation = (
   });
 
 export const updateProfileImageValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<UpdateProfileImageRequest> =>
   z.object({
     picture: z
@@ -120,7 +120,7 @@ export const updateProfileImageValidation = (
   });
 
 export const updatePasswordValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<UpdatePasswordRequest> =>
   z.object({
     password: z

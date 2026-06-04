@@ -3,7 +3,7 @@ import type { ComposerTranslation } from "vue-i18n";
 import type { CreateRoleRequest, UpdateRoleRequest } from "../types/role";
 
 export const createRoleValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<CreateRoleRequest> =>
   z.object({
     nama: z
@@ -18,7 +18,7 @@ export const createRoleValidation = (
   })
 
 export const updateRoleValidation = (
-  t: ComposerTranslation,
+  t: any,
 ): z.ZodType<UpdateRoleRequest> =>
   z.object({
     deskripsi: z

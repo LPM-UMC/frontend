@@ -57,8 +57,29 @@
 
         <div class="mt-5 space-y-4">
 
-          <!-- NIDN -->
+          <!-- Tipe Identitas -->
           <div>
+            <label class="text-sm font-semibold text-[#3f4b5f] sm:text-base">
+              Tipe Identitas
+            </label>
+            <div class="mt-2 flex flex-wrap gap-4">
+              <label class="flex cursor-pointer items-center gap-2">
+                <input v-model="identitasTipe" type="radio" value="nidn" class="h-4 w-4 accent-[#e30000]" />
+                <span class="text-sm text-[#3f4b5f] sm:text-base">NIDN (Dosen)</span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-2">
+                <input v-model="identitasTipe" type="radio" value="nim" class="h-4 w-4 accent-[#e30000]" />
+                <span class="text-sm text-[#3f4b5f] sm:text-base">NIM (Mahasiswa)</span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-2">
+                <input v-model="identitasTipe" type="radio" value="lainnya" class="h-4 w-4 accent-[#e30000]" />
+                <span class="text-sm text-[#3f4b5f] sm:text-base">Umum / Lainnya</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- NIDN -->
+          <div v-if="identitasTipe === 'nidn'">
             <label class="text-sm font-semibold text-[#3f4b5f] sm:text-base">
               NIDN
             </label>
@@ -77,7 +98,7 @@
           </div>
 
           <!-- NIM -->
-          <div>
+          <div v-if="identitasTipe === 'nim'">
             <label class="text-sm font-semibold text-[#3f4b5f] sm:text-base">
               NIM
             </label>
@@ -146,14 +167,16 @@
               {{ $t('manajemenUser.create.validasi.roleIds.max') }}
             </p>
 
-            <div class="mt-3 grid gap-2 sm:gap-3 md:grid-cols-2">
-              <label v-for="role in roleOptions" :key="role.value"
+            <div v-if="roleLoading" class="mt-3 text-sm text-[#6b7280]">Memuat role...</div>
+
+            <div v-else class="mt-3 grid gap-2 sm:gap-3 md:grid-cols-2">
+              <label v-for="role in roleOptions" :key="role.id"
                 class="flex cursor-pointer items-start gap-2 rounded-lg p-2 hover:bg-[#f3f4f6]">
-                <input type="checkbox" :checked="isRoleSelected(role.value)"
-                  class="mt-0.5 h-4 w-4 accent-[#e30000] sm:h-5 sm:w-5" @change="toggleRole(role.value)">
+                <input type="checkbox" :checked="isRoleSelected(role.id)"
+                  class="mt-0.5 h-4 w-4 accent-[#e30000] sm:h-5 sm:w-5" @change="toggleRole(role.id)">
 
                 <span class="text-sm font-medium text-[#1f2634] sm:text-base">
-                  {{ role.label }}
+                  {{ role.nama }}
                 </span>
               </label>
             </div>
@@ -169,18 +192,23 @@
 
         </div>
 
+        <!-- Server Error -->
+        <p v-if="serverError" class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+          {{ serverError }}
+        </p>
+
         <div class="mt-6 flex justify-center gap-3">
           <NuxtLink :to="localePath('/dashboard/manajemen-user')"
             class="inline-flex h-10 min-w-28 items-center justify-center rounded-xl border border-[#d7dbe4] bg-[#f3f4f6] px-5 text-sm font-semibold text-[#1f2634] transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base hover:bg-[#e0e0e0] cursor-pointer">
             {{ t('util.batal') }}
           </NuxtLink>
-          <button type="submit" :disabled="!isFormValid" :class="[
+          <button type="submit" :disabled="!isFormValid || submitting" :class="[
             'inline-flex h-10 min-w-28 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base',
-            isFormValid
+            isFormValid && !submitting
               ? 'bg-[#e30000] hover:bg-[#c90000] cursor-pointer'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
           ]">
-            {{ t('util.buat') }}
+            {{ submitting ? '...' : t('util.buat') }}
           </button>
         </div>
 
@@ -190,11 +218,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch, onMounted } from 'vue'
 import { navigateTo, useLocalePath, useToast } from '#imports'
 import { useI18n } from 'vue-i18n'
 import { createUserValidation } from '#validations/user-validation'
-import { getDashboardUserRoleOptions } from '../data/dashboardManajemenUserDummy'
+import { useUser } from '../composables/useUser'
+import { useRole } from '#features/manajemen-role/composables/useRole'
 
 const localePath = useLocalePath()
 const toast = useToast()
@@ -205,9 +234,28 @@ const isRTL = computed(() =>
   locale.value.startsWith('ar'),
 )
 
-const roleOptions = ref(
-  getDashboardUserRoleOptions(),
-)
+/* =========================
+ * COMPOSABLES
+ * ========================= */
+
+const { createUser } = useUser()
+
+const {
+  rows: roleRows,
+  loading: roleLoading,
+  fetchRoles,
+} = useRole()
+
+const roleOptions = computed(() => roleRows.value)
+
+/* =========================
+ * STATE
+ * ========================= */
+
+const submitting = ref(false)
+const serverError = ref('')
+
+const identitasTipe = ref<'nidn' | 'nim' | 'lainnya'>('nidn')
 
 const form = reactive({
   nidn: '',
@@ -225,6 +273,33 @@ const formErrors = reactive({
   role_ids: '',
 })
 
+watch(identitasTipe, (newVal) => {
+  if (newVal === 'nidn') {
+    form.nim = ''
+    formErrors.nim = ''
+  } else if (newVal === 'nim') {
+    form.nidn = ''
+    formErrors.nidn = ''
+  } else {
+    form.nidn = ''
+    form.nim = ''
+    formErrors.nidn = ''
+    formErrors.nim = ''
+  }
+})
+
+/* =========================
+ * LOAD ROLES
+ * ========================= */
+
+onMounted(async () => {
+  await fetchRoles({ size: 100 })
+})
+
+/* =========================
+ * BREADCRUMB
+ * ========================= */
+
 const breadcrumbItems = computed(() => [
   {
     label: t('navigasi.dasbor'),
@@ -240,6 +315,16 @@ const breadcrumbItems = computed(() => [
   },
 ])
 
+/* =========================
+ * VALIDATION
+ * ========================= */
+
+const formDataToValidate = computed(() => ({
+  ...form,
+  nidn: form.nidn || undefined,
+  nim: form.nim || undefined,
+}))
+
 function resetFieldError(
   field: keyof typeof formErrors,
 ) {
@@ -253,7 +338,7 @@ function validateField(
 
   const schema = createUserValidation(t)
 
-  const result = schema.safeParse(form)
+  const result = schema.safeParse(formDataToValidate.value)
 
   if (result.success) {
     return
@@ -275,7 +360,7 @@ function validateForm() {
 
   const schema = createUserValidation(t)
 
-  const result = schema.safeParse(form)
+  const result = schema.safeParse(formDataToValidate.value)
 
   if (result.success) {
     return true
@@ -349,12 +434,15 @@ function toggleRole(
 const isFormValid = computed(() => {
   const schema = createUserValidation(t)
 
-  return schema.safeParse(form).success
+  return schema.safeParse(formDataToValidate.value).success
 })
 
+/* =========================
+ * SUBMIT
+ * ========================= */
+
 async function handleSubmit() {
-  const isValid =
-    validateForm()
+  const isValid = validateForm()
 
   if (!isValid) {
     toast.add({
@@ -368,18 +456,51 @@ async function handleSubmit() {
     return
   }
 
-  toast.add({
-    title: t('util.berhasil'),
-    description: t(
-      'manajemenUser.validations.create.berhasil',
-    ),
-    color: 'success',
-  })
+  submitting.value = true
+  serverError.value = ''
 
-  setTimeout(async () => {
-    await navigateTo(
-      '/dashboard/manajemen-user',
-    )
-  }, 1000)
+  try {
+    const payload = {
+      nama: form.nama,
+      email: form.email,
+      role_ids: form.role_ids,
+      ...(form.nidn ? { nidn: form.nidn } : {}),
+      ...(form.nim ? { nim: form.nim } : {}),
+    }
+
+    const result = await createUser(payload)
+
+    if (result) {
+      toast.add({
+        title: t('util.berhasil'),
+        description: t(
+          'manajemenUser.create.validasi.berhasil',
+        ),
+        color: 'success',
+      })
+
+      setTimeout(async () => {
+        await navigateTo(
+          '/dashboard/manajemen-user',
+        )
+      }, 1000)
+    } else {
+      serverError.value = 'Gagal membuat user. Silakan coba lagi.'
+      toast.add({
+        title: t('util.gagal'),
+        description: 'Gagal membuat user. Silakan coba lagi.',
+        color: 'error',
+      })
+    }
+  } catch {
+    serverError.value = 'Terjadi kesalahan. Silakan coba lagi.'
+    toast.add({
+      title: t('util.gagal'),
+      description: 'Terjadi kesalahan.',
+      color: 'error',
+    })
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

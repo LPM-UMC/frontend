@@ -104,14 +104,14 @@
             {{ t('util.batal') }}
           </NuxtLink>
 
-          <button type="submit" :disabled="!isFormValid" :class="[
+          <button type="submit" :disabled="!isFormValid || submitting" :class="[
             'inline-flex h-10 min-w-28 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base',
-            isFormValid
+            isFormValid && !submitting
               ? 'bg-[#e30000] hover:bg-[#c90000] cursor-pointer'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
           ]">
 
-            {{ t('manajemenRole.update.tombol') }}
+            {{ submitting ? '...' : t('manajemenRole.update.tombol') }}
 
           </button>
 
@@ -126,6 +126,7 @@
 import {
   computed,
   reactive,
+  ref,
   watch,
   onMounted,
 } from 'vue'
@@ -142,6 +143,8 @@ import { useI18n } from 'vue-i18n'
 import {
   updateRoleValidation,
 } from '#validations/role-validation'
+
+import { useRole } from '../composables/useRole'
 
 const route = useRoute()
 
@@ -163,62 +166,37 @@ const isRTL =
   )
 
 /* =========================
- * DUMMY DATA
+ * COMPOSABLE
  * ========================= */
 
-interface RoleDetail {
-  id: string
-  nama: string
-  deskripsi: string
-}
-
-const roles: RoleDetail[] = [
-  {
-    id: 'ROL001',
-    nama: 'Administrator',
-    deskripsi:
-      'Memiliki akses penuh terhadap seluruh fitur sistem.',
-  },
-  {
-    id: 'ROL002',
-    nama: 'Auditor',
-    deskripsi:
-      'Melakukan audit dan verifikasi data evaluasi.',
-  },
-  {
-    id: 'ROL003',
-    nama: 'Operator',
-    deskripsi:
-      'Mengelola data operasional dan administrasi.',
-  },
-  {
-    id: 'ROL004',
-    nama: 'Reviewer',
-    deskripsi:
-      'Melakukan peninjauan dan validasi dokumen.',
-  },
-]
+const {
+  rows: roleRows,
+  fetchRoles,
+  updateRole,
+} = useRole()
 
 /* =========================
- * ROLE DETAIL
+ * STATE
  * ========================= */
 
 const roleId =
   computed(
     () =>
       String(
-        route.params.id,
+        route.params.role_id ?? '',
       ),
   )
 
 const roleData =
   computed(() =>
-    roles.find(
+    roleRows.value.find(
       role =>
         role.id ===
         roleId.value,
     ),
   )
+
+const submitting = ref(false)
 
 /* =========================
  * FORM
@@ -264,17 +242,28 @@ const breadcrumbItems =
  * ========================= */
 
 onMounted(async () => {
-  // if ( !roleData.value) {
-  //   await navigateTo(
-  //     '/dashboard/manajemen-role',
-  //   )
-  //
-  //   return
-  // }
+  await fetchRoles({ size: 100 })
+
+  if (!roleData.value) {
+    toast.add({
+      title: t(
+        'util.gagal',
+      ),
+      description:
+        'Role tidak ditemukan.',
+      color: 'error',
+    })
+
+    await navigateTo(
+      '/dashboard/manajemen-role',
+    )
+
+    return
+  }
 
   form.deskripsi =
     roleData.value
-      .deskripsi
+      .deskripsi ?? ''
 })
 
 /* =========================
@@ -414,23 +403,58 @@ async function handleSubmit() {
     return
   }
 
-  toast.add({
-    title: t(
-      'util.berhasil',
-    ),
-    description: t(
-      'manajemenRole.update.validasi.berhasil',
-    ),
-    color: 'success',
-  })
+  submitting.value = true
 
-  setTimeout(
-    async () => {
-      await navigateTo(
-        '/dashboard/manajemen-role',
+  try {
+    const result =
+      await updateRole(
+        roleId.value,
+        {
+          deskripsi:
+            form.deskripsi,
+        },
       )
-    },
-    1000,
-  )
+
+    if (result) {
+      toast.add({
+        title: t(
+          'util.berhasil',
+        ),
+        description: t(
+          'manajemenRole.update.validasi.berhasil',
+        ),
+        color: 'success',
+      })
+
+      setTimeout(
+        async () => {
+          await navigateTo(
+            '/dashboard/manajemen-role',
+          )
+        },
+        1000,
+      )
+    } else {
+      toast.add({
+        title: t(
+          'util.gagal',
+        ),
+        description:
+          'Gagal memperbarui role.',
+        color: 'error',
+      })
+    }
+  } catch {
+    toast.add({
+      title: t(
+        'util.gagal',
+      ),
+      description:
+        'Terjadi kesalahan.',
+      color: 'error',
+    })
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
