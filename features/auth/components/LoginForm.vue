@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAuthStore } from '#stores/auth'
+import { useRoute } from '#imports'
 
 const authStore = useAuthStore()
 const route = useRoute()
@@ -25,7 +26,7 @@ async function handleLogin() {
 	isSubmitting.value = true
 
 	try {
-		await authStore.login()
+		authStore.loginWithGoogle()
 	} catch {
 		submitError.value = 'Gagal memulai proses login. Coba lagi beberapa saat lagi.'
 		isSubmitting.value = false
