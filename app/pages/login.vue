@@ -55,7 +55,7 @@
           <div class="mt-8">
             <button
               class="w-full h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center gap-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              type="button" :disabled="loading">
+              type="button" :disabled="loading" @click="handleLogin">
               <img src="https://developers.google.com/identity/images/g-logo.png" class="w-5 h-5">
               <span>{{ loading ? $t('login.mengalihkan') : $t('login.masukGoogle') }}</span>
             </button>
@@ -67,7 +67,17 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: false })
+import { ref } from 'vue'
+import { useAuthStore } from '#stores/auth'
+
+definePageMeta({ layout: false, middleware: 'guest' })
 
 const localePath = useLocalePath()
+const authStore = useAuthStore()
+const loading = ref(false)
+
+const handleLogin = () => {
+  loading.value = true
+  authStore.loginWithGoogle()
+}
 </script>
