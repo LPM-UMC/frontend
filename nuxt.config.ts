@@ -88,6 +88,7 @@ export default defineNuxtConfig({
     public: {
       academicCalendarFileId: process.env.NUXT_ACADEMIC_CALENDAR_FILE_ID || '',
       apiBaseUrl: process.env.API_BASE || 'http://localhost:3001',
+      apiBase: process.env.API_BASE || 'http://localhost:3001',
     },
   },
 
