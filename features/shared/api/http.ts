@@ -28,7 +28,7 @@ export function useApiRequest() {
   ): Promise<T | null> {
     try {
       const headers: Record<string, string> = {
-        ...(options?.headers as Record<string, string> ?? {}),
+        ...((options as any)?.headers as Record<string, string> ?? {}),
       }
 
       if (auth.accessToken) {
