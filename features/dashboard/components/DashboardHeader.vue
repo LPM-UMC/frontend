@@ -171,11 +171,12 @@ onUnmounted(() => {
   <ProfilePopUp
     :open="isProfileOpen"
     :user="{
-      name: user.name,
+      nama: user.name,
       email: user.email,
-      role: authStore.activeRole?.nama || 'User',
+      roles: user.roles,
       avatar: user.avatar,
       online: user.isOnline,
+      activeRole: authStore.activeRole,
     }"
     :roles="authStore.roles"
     @change-role="handleChangeRole"
