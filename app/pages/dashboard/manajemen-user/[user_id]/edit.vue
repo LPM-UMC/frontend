@@ -2,11 +2,10 @@
 import UserEditPage from '#features/manajemen-user/pages/UserEditPage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: 'manajemen-user-role',
 })
 </script>
 
 <template>
   <UserEditPage />
 </template>
-

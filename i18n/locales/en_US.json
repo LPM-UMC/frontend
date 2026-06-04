@@ -13,7 +13,15 @@
     "paginasi": {
       "sebelumnya": "Previous",
       "berikutnya": "Next"
-    }
+    },
+    "buat": "Create",
+    "edit": "Edit",
+    "hapus": "Delete",
+    "lihat": "View",
+    "kembali": "Back",
+    "simpan": "Save",
+    "batal": "Cancel",
+    "berhasil": "Success"
   },
   "footer": {
     "copyright": "© 2026 All Rights Reserved."
@@ -77,31 +85,321 @@
   },
   "manajemenUser": {
     "judul": "User Management",
-    "deskripsi": "The User Management module provides centralized tools for managing user accounts, roles, and access permissions, helping administrators maintain system security, organization, and operational efficiency.",
-    "create": "Create User",
-    "deskripsiCreate": "A form to create a new user with the necessary information, including name, email, and role.",
-    "formCreate": "New User Creation Form",
-    "totalUser": "Total Users",
-    "totalUserAktif": "Total Active Users",
-    "totalRole": "Total Roles",
-    "totalRoleTerbanyak": "Most Assigned Role",
+    "deskripsi": "The User Management module provides a centralized means to manage user accounts, roles, and access permissions, helping administrators maintain system security, order, and efficiency.",
     "daftarUser": "User List",
-    "cari": "Search users by name, or email...",
-    "role": "role",
-    "no": "No",
-    "nama": "Name",
-    "email": "Email",
-    "status": "Status",
-    "tanggalBergabung": "Joined Date"
+    "card": {
+      "totalUser": "Total Users",
+      "totalUserAktif": "Total Active Users",
+      "totalRole": "Total Roles",
+      "totalRoleTerbanyak": "Most Common Role"
+    },
+    "placeholder": {
+      "cari": "Search users by name, email, or role...",
+      "nama": "Enter user name",
+      "email": "Enter user email",
+      "role": "Select user role",
+      "nidn": "Enter NIDN (for lecturers)",
+      "nim": "Enter NIM (for students)"
+    },
+    "nonaktif": {
+      "judul": "Deactivate User",
+      "deskripsi": "Deactivating a user will restrict their access to the system and prevent them from performing any actions. This action is typically taken when a user leaves the organization or no longer requires access.",
+      "tombol": "Deactivate User"
+    },
+    "create": {
+      "judul": "Create New User",
+      "deskripsi": "Form to create a new user with the required information, including name, email, and role.",
+      "judulForm": "Create New User Form",
+      "tombol": "Create User",
+      "validasi": {
+        "berhasil": "User successfully created",
+        "nidn": {
+          "required": "NIDN cannot be empty",
+          "max": "NIDN must be a maximum of 20 characters"
+        },
+        "nim": {
+          "required": "NIM cannot be empty",
+          "max": "NIM must be a maximum of 20 characters"
+        },
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 30 characters"
+        },
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "roleIds": {
+          "min": "You must select at least 1 role",
+          "max": "Maximum of 10 roles",
+          "invalid": "Invalid role ID"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit User",
+      "deskripsi": "Form to edit existing user information, including name, email, and role.",
+      "judulForm": "Edit User Form",
+      "tombol": "Update User",
+      "validasi": {
+        "berhasil": "User successfully updated",
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "roleIds": {
+          "min": "You must select at least 1 role",
+          "max": "Maximum of 10 roles",
+          "invalid": "Invalid role ID"
+        }
+      }
+    },
+    "updateProfile": {
+      "judul": "Edit Profile",
+      "deskripsi": "Form to edit user profile, including name, email, and other contact information.",
+      "judulForm": "Edit Profile Form",
+      "tombol": "Update Profile",
+      "validasi": {
+        "berhasil": "Profile successfully updated",
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 255 characters"
+        },
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "instagram": {
+          "required": "Instagram cannot be empty",
+          "max": "Instagram must be a maximum of 255 characters"
+        },
+        "linkedin": {
+          "required": "LinkedIn cannot be empty",
+          "max": "LinkedIn must be a maximum of 255 characters"
+        }
+      }
+    },
+    "updateProfileImage": {
+      "judul": "Change Profile Picture",
+      "deskripsi": "Form to change user profile picture.",
+      "judulForm": "Change Profile Picture Form",
+      "tombol": "Update Profile Picture",
+      "validasi": {
+        "berhasil": "Profile picture successfully updated",
+        "picture": {
+          "required": "Image file must be uploaded",
+          "maxSize": "Maximum image size is 5 MB",
+          "invalidType": "File must be an image"
+        }
+      }
+    },
+    "updatePassword": {
+      "judul": "Change Password",
+      "deskripsi": "Form to change user password.",
+      "judulForm": "Change Password Form",
+      "tombol": "Update Password",
+      "validasi": {
+        "berhasil": "Password successfully updated",
+        "password": {
+          "required": "Password cannot be empty",
+          "min": "Password must be at least 8 characters",
+          "max": "Password must be a maximum of 128 characters"
+        }
+      }
+    },
+    "model": {
+      "role": "Role",
+      "no": "No",
+      "nama": "Name",
+      "email": "Email",
+      "status": "Status",
+      "tanggalBergabung": "Date Joined"
+    }
   },
   "manajemenRole": {
     "judul": "Role Management",
-    "deskripsi": "The Role Management module provides centralized tools for managing roles and access permissions, helping administrators maintain system security, organization, and operational efficiency.",
-    "create": "Create Role",
-    "totalUser": "Total Users",
-    "totalUserAktif": "Total Active Users",
-    "totalRole": "Total Roles",
-    "totalRoleTerbanyak": "Most Assigned Role",
-    "cari": "Search roles by name, or description..."
+    "deskripsi": "The Role Management module facilitates role administration within the system, including creating, updating, and configuring access permissions to ensure an effective role structure that aligns with organizational needs.",
+    "list": "Role List",
+    "card": {
+      "totalUser": "Total Users",
+      "totalUserAktif": "Active Users",
+      "totalRole": "Total Roles",
+      "totalRoleTerbanyak": "Most Assigned Role"
+    },
+    "placeholder": {
+      "cari": "Search roles by name or description...",
+      "nama": "Enter role name",
+      "deskripsi": "Enter role description"
+    },
+    "create": {
+      "judul": "Create New Role",
+      "deskripsi": "Form for creating a new role with the required information, including role name and description.",
+      "judulForm": "Create New Role Form",
+      "tombol": "Create Role",
+      "validasi": {
+        "berhasil": "Role created successfully",
+        "nama": {
+          "required": "Name is required",
+          "max": "Name must not exceed 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description is required",
+          "max": "Description must not exceed 255 characters"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Role",
+      "deskripsi": "Form for editing an existing role, including its name and description.",
+      "judulForm": "Edit Role Form",
+      "tombol": "Update Role",
+      "validasi": {
+        "berhasil": "Role updated successfully",
+        "nama": {
+          "required": "Name is required",
+          "max": "Name must not exceed 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description is required",
+          "max": "Description must not exceed 255 characters"
+        }
+      }
+    },
+    "nonaktif": {
+      "judul": "Deactivate Role",
+      "deskripsi": "Are you sure you want to deactivate this role? Deactivated roles can no longer be assigned to users, but the role data will remain available for future reference.",
+      "tombol": "Deactivate Role"
+    },
+    "model": {
+      "no": "No",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "jumlahUser": "User Count",
+      "tanggalDibuat": "Created Date"
+    }
+  },
+  "manajemenPeriode": {
+    "judul": "Period Management",
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "create": {
+      "judul": "Create New Period",
+      "tombol": "Create",
+      "form": {
+        "periode": "Period",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Example: 2023/2024"
+      }
+    },
+    "update": {
+      "judul": "Current Period",
+      "tombolUpdate": "Update",
+      "tombolNonaktif": "Deactivate",
+      "form": {
+        "periode": "Period",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Example: 2023/2024"
+      }
+    },
+    "upload": {
+      "judul": "Upload Calendar PDF",
+      "hintDragDrop": "Drag and drop your PDF here, or click to browse",
+      "hintMaksimal": "Supports PDF files up to 5 MB",
+      "tombolBrowse": "Browse Files"
+    },
+    "list": {
+      "judul": "Period List",
+      "tabel": {
+        "no": "No",
+        "tahun": "Year",
+        "semester": "Semester",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "status": "Status",
+        "kalender": "Calendar",
+        "tombolDownload": "Download",
+        "kosong": "No period data available."
+      },
+      "pagination": {
+        "info": "Showing {shownFrom}-{shownTo} of {totalItems} entries",
+        "tombolSebelumnya": "Previous",
+        "tombolSelanjutnya": "Next"
+      }
+    }
+  },
+  "manajemenModul": {
+    "judul": "Module Management",
+    "deskripsi": "A module is a monitoring and evaluation framework that regulates assessment aspects, evaluated objects, as well as the scope and evaluation indicators within a period. Modules serve as the foundation for M&E implementation to ensure the assessment process runs in a structured, measurable, and consistent manner.",
+    "list": "Module List",
+    "card": {
+      "totalModul": "Total Modules",
+      "totalModulAktif": "Total Active Modules",
+      "ModulTerbanyakDibuka": "Most Opened Modules",
+      "ModulTerakhirDibuka": "Last Opened Module"
+    },
+    "placeholder": {
+      "cari": "Search module by name or description...",
+      "nama": "Enter module name",
+      "deskripsi": "Enter module description"
+    },
+    "create": {
+      "judul": "Create New Module",
+      "deskripsi": "Form to create a new module with the required information, including name, evaluation scope, and description.",
+      "judulForm": "Create New Module Form",
+      "tombol": "Create Module",
+      "pilihLingkup": "Select Evaluation Scope",
+      "validasi": {
+        "berhasil": "Module successfully created",
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description cannot be empty",
+          "max": "Description must be a maximum of 255 characters"
+        },
+        "lingkupId": {
+          "required": "Evaluation scope must be selected",
+          "invalid": "Invalid evaluation scope ID"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Module",
+      "deskripsi": "Form to edit existing module information.",
+      "judulForm": "Edit Module Form",
+      "tombol": "Update Module",
+      "validasi": {
+        "berhasil": "Module successfully updated",
+        "deskripsi": {
+          "required": "Description cannot be empty",
+          "max": "Description must be a maximum of 255 characters"
+        }
+      }
+    },
+    "model": {
+      "no": "No",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "lingkup": "Evaluation Scope",
+      "totalAspek": "Total Aspects",
+      "status": "Status",
+      "tanggalDibuat": "Date Created"
+    }
+  },
+  "manajemenLingkup": {
+    "judul": "Scope Management"
   }
 }

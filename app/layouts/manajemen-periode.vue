@@ -146,24 +146,14 @@ const modulMenus =
         icon: 'home',
       },
       {
-        id: 'user',
+        id: 'manajemen-periode',
         label: t(
-          'manajemenUser.judul'
+          'manajemenPeriode.judul'
         ),
         to: localePath(
-          '/dashboard/manajemen-user'
+          '/dashboard/manajemen-periode'
         ),
-        icon: 'user',
-      },
-      {
-        id: 'role',
-        label: t(
-          'manajemenRole.judul'
-        ),
-        to: localePath(
-          '/dashboard/manajemen-role'
-        ),
-        icon: 'role',
+        icon: 'calendar',
       },
     ]
   )

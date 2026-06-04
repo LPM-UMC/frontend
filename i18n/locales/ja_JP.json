@@ -13,7 +13,15 @@
     "paginasi": {
       "sebelumnya": "前へ",
       "berikutnya": "次へ"
-    }
+    },
+    "buat": "作成",
+    "edit": "編集",
+    "hapus": "削除",
+    "lihat": "表示",
+    "kembali": "戻る",
+    "simpan": "保存",
+    "batal": "キャンセル",
+    "berhasil": "成功"
   },
   "footer": {
     "copyright": "© 2026 無断転載を禁じます。"
@@ -77,31 +85,321 @@
   },
   "manajemenUser": {
     "judul": "ユーザー管理",
-    "deskripsi": "ユーザー管理モジュールは、ユーザーアカウント、役割、およびアクセス権を一元的に管理する手段を提供し、管理者がシステムの安全性、秩序、および効率性を維持できるようにします。",
-    "create": "ユーザーの作成",
-    "deskripsiCreate": "必要な情報（名前、メール、役割など）を入力して新しいユーザーを作成するためのフォーム。",
-    "formCreate": "新しいユーザー作成フォーム",
-    "totalUser": "総ユーザー数",
-    "totalUserAktif": "アクティブユーザー数",
-    "totalRole": "総役割数",
-    "totalRoleTerbanyak": "最も割り当てられた役割",
-    "daftarUser": "ユーザーリスト",
-    "cari": "ユーザーを名前やメールで検索...",
-    "role": "役割",
-    "no": "No",
-    "nama": "名前",
-    "email": "メール",
-    "status": "ステータス",
-    "tanggalBergabung": "参加日"
+    "deskripsi": "ユーザー管理モジュールは、ユーザーアカウント、役割（ロール）、およびアクセス権限を一元的に管理する手段を提供し、管理者がシステムのセキュリティ、秩序、および管理効率を維持するのを支援します。",
+    "daftarUser": "ユーザー一覧",
+    "card": {
+      "totalUser": "総ユーザー数",
+      "totalUserAktif": "アクティブユーザー数",
+      "totalRole": "総役割数",
+      "totalRoleTerbanyak": "最多の役割"
+    },
+    "placeholder": {
+      "cari": "名前、メールアドレス、または役割でユーザーを検索...",
+      "nama": "ユーザー名を入力",
+      "email": "ユーザーメールを入力",
+      "role": "ユーザーの役割を選択",
+      "nidn": "ユーザーのNIDNを入力",
+      "nim": "ユーザーのNIMを入力"
+    },
+    "nonaktif": {
+      "judul": "ユーザーの非アクティブ化",
+      "deskripsi": "ユーザーを非アクティブ化すると、そのユーザーのシステムへのアクセスが制限され、アクションを実行できなくなります。この操作は、ユーザーが組織を離れた場合や、もはやアクセスが必要でない場合に通常行われます。",
+      "tombol": "ユーザーを非アクティブ化"
+    },
+    "create": {
+      "judul": "新規ユーザー作成",
+      "deskripsi": "名前、メールアドレス、役割など、必要な情報を入力して新規ユーザーを作成するフォームです。",
+      "judulForm": "新規ユーザー作成フォーム",
+      "tombol": "ユーザーを作成",
+      "validasi": {
+        "berhasil": "ユーザーが正常に作成されました",
+        "nidn": {
+          "required": "NIDNは必須項目です",
+          "max": "NIDNは最大20文字までです"
+        },
+        "nim": {
+          "required": "NIMは必須項目です",
+          "max": "NIMは最大20文字までです"
+        },
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大30文字までです"
+        },
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "roleIds": {
+          "min": "少なくとも1つの役割を選択してください",
+          "max": "役割は最大10個までです",
+          "invalid": "無効な役割IDです"
+        }
+      }
+    },
+    "update": {
+      "judul": "ユーザー編集",
+      "deskripsi": "名前、メールアドレス、役割など、既存のユーザー情報を編集するフォームです。",
+      "judulForm": "ユーザー編集フォーム",
+      "tombol": "ユーザーを更新",
+      "validasi": {
+        "berhasil": "ユーザー情報が正常に更新されました",
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "roleIds": {
+          "min": "少なくとも1つの役割を選択してください",
+          "max": "役割は最大10個までです",
+          "invalid": "無効な役割IDです"
+        }
+      }
+    },
+    "updateProfile": {
+      "judul": "プロフィール編集",
+      "deskripsi": "名前、メールアドレス、その他の連絡先情報など、ユーザーのプロフィールを編集するフォームです。",
+      "judulForm": "プロフィール編集フォーム",
+      "tombol": "プロフィールを更新",
+      "validasi": {
+        "berhasil": "プロフィールが正常に更新されました",
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大255文字までです"
+        },
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "instagram": {
+          "required": "Instagramは必須項目です",
+          "max": "Instagramは最大255文字までです"
+        },
+        "linkedin": {
+          "required": "LinkedInは必須項目です",
+          "max": "LinkedInは最大255文字までです"
+        }
+      }
+    },
+    "updateProfileImage": {
+      "judul": "プロフィール写真変更",
+      "deskripsi": "ユーザーのプロフィール写真を変更するフォームです。",
+      "judulForm": "プロフィール写真変更フォーム",
+      "tombol": "プロフィール写真を更新",
+      "validasi": {
+        "berhasil": "プロフィール写真が正常に更新されました",
+        "picture": {
+          "required": "画像ファイルをアップロードしてください",
+          "maxSize": "画像の最大サイズは5MBです",
+          "invalidType": "ファイルは画像形式である必要があります"
+        }
+      }
+    },
+    "updatePassword": {
+      "judul": "パスワード変更",
+      "deskripsi": "ユーザーのパスワードを変更するフォームです。",
+      "judulForm": "パスワード変更フォーム",
+      "tombol": "パスワードを更新",
+      "validasi": {
+        "berhasil": "パスワードが正常に更新されました",
+        "password": {
+          "required": "パスワードは必須項目です",
+          "min": "パスワードは8文字以上である必要があります",
+          "max": "パスワードは最大128文字までです"
+        }
+      }
+    },
+    "model": {
+      "role": "役割",
+      "no": "番号",
+      "nama": "名前",
+      "email": "メールアドレス",
+      "status": "ステータス",
+      "tanggalBergabung": "参加日"
+    }
   },
   "manajemenRole": {
     "judul": "ロール管理",
-    "deskripsi": "ロール管理モジュールは、役割とアクセス権を一元的に管理する手段を提供し、管理者がシステムの安全性、秩序、および効率性を維持できるようにします。",
-    "create": "ロールの作成",
-    "totalUser": "総ユーザー数",
-    "totalUserAktif": "アクティブユーザー数",
-    "totalRole": "総役割数",
-    "totalRoleTerbanyak": "最も割り当てられた役割",
-    "cari": "役割を名前や説明で検索..."
+    "deskripsi": "ロール管理モジュールでは、ロールの作成、更新、およびアクセス権限の設定を行い、組織のニーズに適した効果的なロール構造を維持できます。",
+    "list": "ロール一覧",
+    "card": {
+      "totalUser": "総ユーザー数",
+      "totalUserAktif": "アクティブユーザー数",
+      "totalRole": "総ロール数",
+      "totalRoleTerbanyak": "最も利用されているロール"
+    },
+    "placeholder": {
+      "cari": "名前または説明でロールを検索...",
+      "nama": "ロール名を入力",
+      "deskripsi": "ロールの説明を入力"
+    },
+    "create": {
+      "judul": "新しいロールを作成",
+      "deskripsi": "ロール名や説明など、必要な情報を入力して新しいロールを作成します。",
+      "judulForm": "新規ロール作成フォーム",
+      "tombol": "ロールを作成",
+      "validasi": {
+        "berhasil": "ロールが正常に作成されました",
+        "nama": {
+          "required": "名前は必須です",
+          "max": "名前は30文字以内で入力してください"
+        },
+        "deskripsi": {
+          "required": "説明は必須です",
+          "max": "説明は255文字以内で入力してください"
+        }
+      }
+    },
+    "update": {
+      "judul": "ロール編集",
+      "deskripsi": "既存のロール情報（名前や説明など）を編集するためのフォームです。",
+      "judulForm": "ロール編集フォーム",
+      "tombol": "ロールを更新",
+      "validasi": {
+        "berhasil": "ロールが正常に更新されました",
+        "nama": {
+          "required": "名前は必須です",
+          "max": "名前は30文字以内で入力してください"
+        },
+        "deskripsi": {
+          "required": "説明は必須です",
+          "max": "説明は255文字以内で入力してください"
+        }
+      }
+    },
+    "nonaktif": {
+      "judul": "ロールを無効化",
+      "deskripsi": "このロールを無効化してもよろしいですか？無効化されたロールはユーザーへの権限付与に使用できなくなりますが、ロール情報は将来の参照のため保持されます。",
+      "tombol": "ロールを無効化"
+    },
+    "model": {
+      "no": "番号",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "jumlahUser": "ユーザー数",
+      "tanggalDibuat": "作成日"
+    }
+  },
+  "manajemenPeriode": {
+    "judul": "期間管理",
+    "breadcrumb": {
+      "home": "ホーム"
+    },
+    "create": {
+      "judul": "新規期間作成",
+      "tombol": "作成",
+      "form": {
+        "periode": "期間",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "semester": "学期"
+      },
+      "placeholder": {
+        "periode": "例: 2023/2024"
+      }
+    },
+    "update": {
+      "judul": "現在の期間",
+      "tombolUpdate": "更新",
+      "tombolNonaktif": "無効化",
+      "form": {
+        "periode": "期間",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "semester": "学期"
+      },
+      "placeholder": {
+        "periode": "例: 2023/2024"
+      }
+    },
+    "upload": {
+      "judul": "カレンダーPDFのアップロード",
+      "hintDragDrop": "ここにPDFをドラッグ＆ドロップするか、クリックして選択してください",
+      "hintMaksimal": "最大5MBまでのPDFファイルをサポートしています",
+      "tombolBrowse": "ファイルを参照"
+    },
+    "list": {
+      "judul": "期間一覧",
+      "tabel": {
+        "no": "番号",
+        "tahun": "年度",
+        "semester": "学期",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "status": "ステータス",
+        "kalender": "カレンダー",
+        "tombolDownload": "ダウンロード",
+        "kosong": "期間データがありません。"
+      },
+      "pagination": {
+        "info": "{totalItems} 件中 {shownFrom} から {shownTo} まで表示",
+        "tombolSebelumnya": "前へ",
+        "tombolSelanjutnya": "次へ"
+      }
+    }
+  },
+  "manajemenModul": {
+    "judul": "モジュール管理",
+    "deskripsi": "モジュールとは、一定期間内における評価の観点、評価対象、ならびに評価の範囲および指標を規定するモニタリング・評価（M&E）の枠組みです。評価プロセスが構造化され、測定可能かつ一貫性のある形で進行するよう、M&E実施の基盤となります。",
+    "list": "モジュール一覧",
+    "card": {
+      "totalModul": "総モジュール数",
+      "totalModulAktif": "有効な総モジュール数",
+      "ModulTerbanyakDibuka": "最も多く開かれたモジュール",
+      "ModulTerakhirDibuka": "最後に開いたモジュール"
+    },
+    "placeholder": {
+      "cari": "名前または説明でモジュールを検索...",
+      "nama": "モジュール名を入力してください",
+      "deskripsi": "モジュールの説明を入力してください"
+    },
+    "create": {
+      "judul": "新規モジュール作成",
+      "deskripsi": "名前、評価範囲、説明などの必要な情報を入力して、新しいモジュールを作成するためのフォームです。",
+      "judulForm": "新規モジュール作成フォーム",
+      "tombol": "モジュールを作成",
+      "pilihLingkup": "評価範囲を選択",
+      "validasi": {
+        "berhasil": "モジュールが正常に作成されました",
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大30文字までです"
+        },
+        "deskripsi": {
+          "required": "説明は必須項目です",
+          "max": "説明は最大255文字までです"
+        },
+        "lingkupId": {
+          "required": "評価範囲を選択してください",
+          "invalid": "無効な評価範囲IDです"
+        }
+      }
+    },
+    "update": {
+      "judul": "モジュール編集",
+      "deskripsi": "既存のモジュール情報を編集するためのフォームです。",
+      "judulForm": "モジュール編集フォーム",
+      "tombol": "モジュールを更新",
+      "validasi": {
+        "berhasil": "モジュールが正常に更新されました",
+        "deskripsi": {
+          "required": "説明は必須項目です",
+          "max": "説明は最大255文字までです"
+        }
+      }
+    },
+    "model": {
+      "no": "No.",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "lingkup": "評価範囲",
+      "totalAspek": "総観点数",
+      "status": "ステータス",
+      "tanggalDibuat": "作成日時"
+    }
+  },
+  "manajemenLingkup": {
+    "judul": "範囲管理"
   }
 }

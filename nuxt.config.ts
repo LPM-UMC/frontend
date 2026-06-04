@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     '#types': fileURLToPath(new URL('./types', import.meta.url)),
     '#composables': fileURLToPath(new URL('./composables', import.meta.url)),
     '#utils': fileURLToPath(new URL('./utils', import.meta.url)),
+    '#validations': fileURLToPath(new URL('./validations', import.meta.url)),
   },
 
   css: [

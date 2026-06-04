@@ -68,7 +68,7 @@ function createDataset(): DashboardUserDataset {
   return {
     defaultLastSavedAt: '15 Feb 2026, 14:30',
     roleOptions: [
-      { value: 'lpm', label: 'LPM (Lembaga Penjaminan Mutu)' },
+      { value: '716b4ecb-9d3d-41b0-bdd1-e2f530905758', label: 'LPM (Lembaga Penjaminan Mutu)' },
       { value: 'spi', label: 'SPI (Satuan Pengawas Internal)' },
       { value: 'gkmf', label: 'GKMF (Gugus Kendali Mutu Fakultas)' },
       { value: 'wr-1', label: 'WR 1 (Wakil Rektor 1)' },

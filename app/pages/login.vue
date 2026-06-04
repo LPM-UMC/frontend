@@ -34,8 +34,7 @@
           <button
             class="cursor-pointer transition absolute -top-2 left-0 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 px-2 py-2 rounded-xl hover:bg-gray-50">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" />
             </svg>
             {{ $t('login.kembali') }}
@@ -56,7 +55,7 @@ d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round
           <div class="mt-8">
             <button
               class="w-full h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center gap-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              type="button" :disabled="loading" @click="handleLogin">
+              type="button" :disabled="loading">
               <img src="https://developers.google.com/identity/images/g-logo.png" class="w-5 h-5">
               <span>{{ loading ? $t('login.mengalihkan') : $t('login.masukGoogle') }}</span>
             </button>

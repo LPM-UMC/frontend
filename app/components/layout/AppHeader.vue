@@ -1,9 +1,6 @@
 <!-- components/AppHeader.vue -->
 <template>
-  <header
-    :dir="'ltr'"
-    class="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white"
-  >
+  <header :dir="'ltr'" class="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white">
     <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
       <NuxtLink to="/" class="flex min-w-0 items-center gap-3" @click="closeMobileMenu">
         <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
@@ -28,14 +25,13 @@
         </div>
 
         <div class="relative">
-          <button 
-            type="button" 
-            class="cursor-pointer"
+          <button
+type="button" class="cursor-pointer"
             :class="dropdownButtonClass(['/profile', '/struktur-organisasi', '/visi-misi'])"
             @click="toggleMenu('profil')">
             {{ $t('navigasi.profil') }}
-            <span 
-              class="ml-2 inline-flex items-center transition-transform duration-200"
+            <span
+class="ml-2 inline-flex items-center transition-transform duration-200"
               :class="openMenu === 'profil' ? 'rotate-0' : 'rotate-180'" aria-hidden="true">
               <img src="/img/admin/icon/dashboard/dropdown.png" alt="" class="h-3 w-3 object-contain opacity-70">
             </span>
@@ -59,10 +55,8 @@ to="/profile/struktur-organisasi" :class="dropdownItemClass('/profile/struktur-o
         </div>
 
         <div class="relative">
-          <button 
-            type="button"
-            class="cursor-pointer"
-            :class="dropdownButtonClass(['/gambaran-spi', '/dokumen-spi'])"
+          <button
+type="button" class="cursor-pointer" :class="dropdownButtonClass(['/gambaran-spi', '/dokumen-spi'])"
             @click="toggleMenu('spi')">
             SPI
             <span
@@ -85,10 +79,8 @@ v-if="openMenu === 'spi'"
         </div>
 
         <div class="relative">
-          <button 
-            type="button"
-            class="cursor-pointer"
-            :class="dropdownButtonClass([
+          <button
+type="button" class="cursor-pointer" :class="dropdownButtonClass([
             '/ami',
             '/monev-pembelajaran',
             '/survei-kepuasan',
@@ -103,27 +95,27 @@ class="ml-2 inline-flex items-center transition-transform duration-200"
             </span>
           </button>
 
-          <div 
-            v-if="openMenu === 'penjaminan'"
+          <div
+v-if="openMenu === 'penjaminan'"
             class="absolute left-0 mt-2 w-72 rounded-xl border border-gray-200 bg-white py-2 shadow-[0_20px_40px_rgba(15,23,42,0.18)]">
             <NuxtLink to="/penjaminan-mutu/ami" :class="dropdownItemClass('/penjaminan-mutu/ami')" @click="closeMenu">
               Audit Mutu Internal (AMI)
             </NuxtLink>
-            <NuxtLink 
-              to="/penjaminan-mutu/monev-pembelajaran"
+            <NuxtLink
+to="/penjaminan-mutu/monev-pembelajaran"
               :class="dropdownItemClass('/penjaminan-mutu/monev-pembelajaran')" @click="closeMenu">
               Monev Pembelajaran
             </NuxtLink>
-            <NuxtLink 
-              to="/penjaminan-mutu/survei-kepuasan"
+            <NuxtLink
+to="/penjaminan-mutu/survei-kepuasan"
               :class="dropdownItemClass('/penjaminan-mutu/survei-kepuasan')" @click="closeMenu">
               Survei Kepuasan
             </NuxtLink>
             <NuxtLink to="/penjaminan-mutu/rtm" :class="dropdownItemClass('/penjaminan-mutu/rtm')" @click="closeMenu">
               Rapat Tinjauan Manajemen (RTM)
             </NuxtLink>
-            <NuxtLink 
-              to="/penjaminan-mutu/external-benchmarking"
+            <NuxtLink
+to="/penjaminan-mutu/external-benchmarking"
               :class="dropdownItemClass('/penjaminan-mutu/external-benchmarking')" @click="closeMenu">
               External Benchmarking
             </NuxtLink>
@@ -131,10 +123,8 @@ class="ml-2 inline-flex items-center transition-transform duration-200"
         </div>
 
         <div class="relative">
-          <button 
-            type="button"
-            class="cursor-pointer"
-            :class="dropdownButtonClass(['/gambaran-spmi', '/dokumen-spmi'])"
+          <button
+type="button" class="cursor-pointer" :class="dropdownButtonClass(['/gambaran-spmi', '/dokumen-spmi'])"
             @click="toggleMenu('spmi')">
             SPMI
             <span
@@ -144,8 +134,8 @@ class="ml-2 inline-flex items-center transition-transform duration-200"
             </span>
           </button>
 
-          <div 
-            v-if="openMenu === 'spmi'"
+          <div
+v-if="openMenu === 'spmi'"
             class="absolute left-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white py-2 shadow-[0_20px_40px_rgba(15,23,42,0.18)]">
             <NuxtLink to="/gambaran-spmi" :class="dropdownItemClass('/gambaran-spmi')" @click="closeMenu">
               Gambaran SPMI
@@ -157,24 +147,22 @@ class="ml-2 inline-flex items-center transition-transform duration-200"
         </div>
 
         <div class="relative">
-          <button 
-            type="button"
-            class="cursor-pointer"
-            :class="dropdownButtonClass(['/data-akreditasi', '/dokumen-akreditasi'])"
-            @click="toggleMenu('akreditasi')">
+          <button
+type="button" class="cursor-pointer"
+            :class="dropdownButtonClass(['/data-akreditasi', '/dokumen-akreditasi'])" @click="toggleMenu('akreditasi')">
             {{ $t('navigasi.profil') }}
-            <span 
-              class="ml-2 inline-flex items-center transition-transform duration-200"
+            <span
+class="ml-2 inline-flex items-center transition-transform duration-200"
               :class="openMenu === 'akreditasi' ? 'rotate-0' : 'rotate-180'" aria-hidden="true">
               <img src="/img/admin/icon/dashboard/dropdown.png" alt="" class="h-3 w-3 object-contain opacity-70">
             </span>
           </button>
 
-          <div 
-            v-if="openMenu === 'akreditasi'"
+          <div
+v-if="openMenu === 'akreditasi'"
             class="cursor-pointer absolute left-0 mt-2 w-60 rounded-xl border border-gray-200 bg-white py-2 shadow-[0_20px_40px_rgba(15,23,42,0.18)]">
-            <NuxtLink 
-              to="/akreditasi/data-akreditasi" :class="dropdownItemClass('/akreditasi/data-akreditasi')"
+            <NuxtLink
+to="/akreditasi/data-akreditasi" :class="dropdownItemClass('/akreditasi/data-akreditasi')"
               @click="closeMenu">
               Data Akreditasi
             </NuxtLink>
@@ -187,10 +175,8 @@ to="/akreditasi/dokumen-akreditasi" :class="dropdownItemClass('/akreditasi/dokum
         </div>
 
         <div class="relative">
-          <button 
-            type="button"
-            class="cursor-pointer"
-            :class="dropdownButtonClass(['/semua-postingan', '/kategori'])"
+          <button
+type="button" class="cursor-pointer" :class="dropdownButtonClass(['/semua-postingan', '/kategori'])"
             @click="toggleMenu('informasi')">
             {{ $t('navigasi.informasi') }}
             <span
@@ -217,22 +203,20 @@ to="/informasi/semua-postingan" :class="dropdownItemClass('/informasi/semua-post
 
       <div class="flex items-center gap-2 md:gap-3">
         <NuxtLink
-          v-if="!authStore.isLoggedIn"
-          :to="localePath('/login')"
+v-if="!isLoggedInDummy" :to="localePath('/login')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
-            {{ $t('navigasi.masuk') }}
+          {{ $t('navigasi.masuk') }}
         </NuxtLink>
-        <NuxtLink 
-          v-else
-            :to="localePath('/dashboard')"
+        <NuxtLink
+v-else :to="localePath('/dashboard')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
-            {{ $t('navigasi.dasbor') }}
+          {{ $t('navigasi.dasbor') }}
         </NuxtLink>
 
         <ULocaleSelect
 class="hidden md:block" :model-value="locale" :locales="locales"
           @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
-  
+
         <button
 type="button"
           class="grid h-9 w-9 place-items-center rounded-md border border-gray-200 text-gray-700 transition hover:bg-gray-100 md:hidden cursor-pointer"
@@ -280,23 +264,19 @@ v-for="link in group.links" :key="link.to" :to="link.to" :class="mobileLinkClass
 
           <div class="flex gap-4 px-2 pt-4 mt-2 border-t border-gray-200 justify-end">
             <ULocaleSelect
-              :model-value="locale"
-              :locales="locales"
-              class="cursor-pointer"
+:model-value="locale" :locales="locales" class="cursor-pointer"
               @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
 
-          <NuxtLink 
-              v-if="!authStore.isLoggedIn" 
-            :to="localePath('/login')"
-            class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
+            <NuxtLink
+v-if="!isLoggedInDummy" :to="localePath('/login')"
+              class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.masuk') }}
-          </NuxtLink>
-          <NuxtLink 
-              v-else
-            :to="localePath('/dashboard')"
-            class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
+            </NuxtLink>
+            <NuxtLink
+v-else :to="localePath('/dashboard')"
+              class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.dasbor') }}
-          </NuxtLink>
+            </NuxtLink>
           </div>
 
         </div>
@@ -306,14 +286,12 @@ v-for="link in group.links" :key="link.to" :to="link.to" :class="mobileLinkClass
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import { useRoute } from '#imports'
-import { en, id, ar, ja } from '@nuxt/ui/locale'
-import { useAuthStore } from '#stores/auth'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from '#imports'
+import { ref, watch, computed } from 'vue'
+import { en, id, ar, ja } from '@nuxt/ui/locale'
 
 const { locale, setLocale, t } = useI18n()
-const authStore = useAuthStore()
 const localePath = useLocalePath()
 
 type MenuKey =
@@ -479,4 +457,6 @@ const mobileLinkClass = (path: string) =>
   isMatch(path)
     ? 'block rounded-md bg-red-50 px-2 py-2 text-sm text-[#e30613]'
     : 'block rounded-md px-2 py-2 text-sm text-gray-700 hover:bg-gray-50'
+
+const isLoggedInDummy = ref(false)
 </script>

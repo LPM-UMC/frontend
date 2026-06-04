@@ -13,7 +13,15 @@
     "paginasi": {
       "sebelumnya": "Sebelumnya",
       "berikutnya": "Berikutnya"
-    }
+    },
+    "buat": "Buat",
+    "edit": "Edit",
+    "hapus": "Hapus",
+    "lihat": "Lihat",
+    "kembali": "Kembali",
+    "simpan": "Simpan",
+    "batal": "Batal",
+    "berhasil": "Berhasil"
   },
   "footer": {
     "copyright": "© 2026 Semua Hak Dilindungi."
@@ -78,30 +86,320 @@
   "manajemenUser": {
     "judul": "Manajemen Pengguna",
     "deskripsi": "Modul Manajemen Pengguna menyediakan sarana untuk mengelola akun pengguna, peran, dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem.",
-    "create": "Buat Pengguna",
-    "deskripsiCreate": "Formulir untuk membuat pengguna baru dengan informasi yang diperlukan, termasuk nama, email, dan peran.",
-    "formCreate": "Formulir Buat Pengguna Baru",
-    "totalUser": "Total Pengguna",
-    "totalUserAktif": "Total Pengguna Aktif",
-    "totalRole": "Total Role",
-    "totalRoleTerbanyak": "Role Terbanyak",
     "daftarUser": "Daftar Pengguna",
-    "cari": "Cari pengguna berdasarkan nama, atau email...",
-    "role": "Role",
-    "no": "No",
-    "nama": "Nama",
-    "email": "Email",
-    "status": "Status",
-    "tanggalBergabung": "Tanggal Bergabung"
+    "card": {
+      "totalUser": "Total Pengguna",
+      "totalUserAktif": "Total Pengguna Aktif",
+      "totalRole": "Total Role",
+      "totalRoleTerbanyak": "Role Terbanyak"
+    },
+    "placeholder": {
+      "cari": "Cari pengguna berdasarkan nama, email, atau peran...",
+      "nama": "Masukkan nama pengguna",
+      "email": "Masukkan email pengguna",
+      "role": "Pilih role pengguna",
+      "nidn": "Masukkan NIDN (untuk dosen)",
+      "nim": "Masukkan NIM (untuk mahasiswa)"
+    },
+    "nonaktif": {
+      "judul": "Nonaktifkan Pengguna",
+      "deskripsi": "Apakah Anda yakin ingin menonaktifkan pengguna ini? Pengguna yang dinonaktifkan tidak akan dapat mengakses sistem, tetapi data mereka akan tetap tersimpan untuk referensi di masa mendatang.",
+      "tombol": "Nonaktifkan Pengguna"
+    },
+    "create": {
+      "judul": "Buat Pengguna Baru",
+      "deskripsi": "Formulir untuk membuat pengguna baru dengan informasi yang diperlukan, termasuk nama, email, dan peran.",
+      "judulForm": "Formulir Buat Pengguna Baru",
+      "tombol": "Buat Pengguna",
+      "validasi": {
+        "berhasil": "Pengguna berhasil dibuat",
+        "nidn": {
+          "required": "NIDN tidak boleh kosong",
+          "max": "NIDN maksimal 20 karakter"
+        },
+        "nim": {
+          "required": "NIM tidak boleh kosong",
+          "max": "NIM maksimal 20 karakter"
+        },
+        "nama": {
+          "required": "Nama tidak boleh kosong",
+          "max": "Nama maksimal 30 karakter"
+        },
+        "email": {
+          "required": "Email tidak boleh kosong",
+          "max": "Email maksimal 255 karakter",
+          "invalid": "Format email tidak valid"
+        },
+        "roleIds": {
+          "min": "Minimal harus memilih 1 role",
+          "max": "Maksimal 10 role",
+          "invalid": "ID role tidak valid"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Pengguna",
+      "deskripsi": "Formulir untuk mengedit informasi pengguna yang sudah ada, termasuk nama, email, dan peran.",
+      "judulForm": "Formulir Edit Pengguna",
+      "tombol": "Perbarui Pengguna",
+      "validasi": {
+        "berhasil": "Pengguna berhasil diperbarui",
+        "email": {
+          "required": "Email tidak boleh kosong",
+          "max": "Email maksimal 255 karakter",
+          "invalid": "Format email tidak valid"
+        },
+        "roleIds": {
+          "min": "Minimal harus memilih 1 role",
+          "max": "Maksimal 10 role",
+          "invalid": "ID role tidak valid"
+        }
+      }
+    },
+    "updateProfile": {
+      "judul": "Edit Profil",
+      "deskripsi": "Formulir untuk mengedit profil pengguna, termasuk nama, email, dan informasi kontak lainnya.",
+      "judulForm": "Formulir Edit Profil",
+      "tombol": "Perbarui Profil",
+      "validasi": {
+        "berhasil": "Profil berhasil diperbarui",
+        "nama": {
+          "required": "Nama tidak boleh kosong",
+          "max": "Nama maksimal 255 karakter"
+        },
+        "email": {
+          "required": "Email tidak boleh kosong",
+          "max": "Email maksimal 255 karakter",
+          "invalid": "Format email tidak valid"
+        },
+        "instagram": {
+          "required": "Instagram tidak boleh kosong",
+          "max": "Instagram maksimal 255 karakter"
+        },
+        "linkedin": {
+          "required": "LinkedIn tidak boleh kosong",
+          "max": "LinkedIn maksimal 255 karakter"
+        }
+      }
+    },
+    "updateProfileImage": {
+      "judul": "Ubah Foto Profil",
+      "deskripsi": "Formulir untuk mengubah foto profil pengguna.",
+      "judulForm": "Formulir Ubah Foto Profil",
+      "tombol": "Perbarui Foto Profil",
+      "validasi": {
+        "berhasil": "Foto profil berhasil diperbarui",
+        "picture": {
+          "required": "File gambar wajib diunggah",
+          "maxSize": "Ukuran gambar maksimal 5 MB",
+          "invalidType": "File harus berupa gambar"
+        }
+      }
+    },
+    "updatePassword": {
+      "judul": "Ubah Password",
+      "deskripsi": "Formulir untuk mengubah password pengguna.",
+      "judulForm": "Formulir Ubah Password",
+      "tombol": "Perbarui Password",
+      "validasi": {
+        "berhasil": "Password berhasil diperbarui",
+        "password": {
+          "required": "Password tidak boleh kosong",
+          "min": "Password minimal 8 karakter",
+          "max": "Password maksimal 128 karakter"
+        }
+      }
+    },
+    "model": {
+      "role": "Role",
+      "no": "No",
+      "nama": "Nama",
+      "email": "Email",
+      "status": "Status",
+      "tanggalBergabung": "Tanggal Bergabung"
+    }
   },
   "manajemenRole": {
     "judul": "Manajemen Role",
-    "deskripsi": "Modul Manajemen Role menyediakan sarana untuk mengelola peran dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem.",
-    "create": "Buat Role",
-    "totalUser": "Total Pengguna",
-    "totalUserAktif": "Total Pengguna Aktif",
-    "totalRole": "Total Role",
-    "totalRoleTerbanyak": "Role Terbanyak",
-    "cari": "Cari role berdasarkan nama, atau deskripsi..."
+    "deskripsi": "Modul Manajemen Role memfasilitasi pengelolaan peran dalam sistem, termasuk penambahan, pembaruan, dan pengaturan hak akses, guna memastikan struktur peran yang efektif dan sesuai dengan kebutuhan organisasi.",
+    "list": "Daftar Role",
+    "card": {
+      "totalUser": "Total Pengguna",
+      "totalUserAktif": "Total Pengguna Aktif",
+      "totalRole": "Total Role",
+      "totalRoleTerbanyak": "Role Terbanyak"
+    },
+    "placeholder": {
+      "cari": "Cari role berdasarkan nama atau deskripsi...",
+      "nama": "Masukkan nama role",
+      "deskripsi": "Masukkan deskripsi role"
+    },
+    "create": {
+      "judul": "Buat Role Baru",
+      "deskripsi": "Formulir untuk membuat role baru dengan informasi yang diperlukan, termasuk nama dan deskripsi.",
+      "judulForm": "Formulir Buat Role Baru",
+      "tombol": "Buat Role",
+      "validasi": {
+        "berhasil": "Role berhasil dibuat",
+        "nama": {
+          "required": "Nama tidak boleh kosong",
+          "max": "Nama maksimal 30 karakter"
+        },
+        "deskripsi": {
+          "required": "Deskripsi tidak boleh kosong",
+          "max": "Deskripsi maksimal 255 karakter"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Role",
+      "deskripsi": "Formulir untuk mengedit informasi role yang sudah ada, termasuk nama dan deskripsi.",
+      "judulForm": "Formulir Edit Role",
+      "tombol": "Perbarui Role",
+      "validasi": {
+        "berhasil": "Role berhasil diperbarui",
+        "nama": {
+          "required": "Nama tidak boleh kosong",
+          "max": "Nama maksimal 30 karakter"
+        },
+        "deskripsi": {
+          "required": "Deskripsi tidak boleh kosong",
+          "max": "Deskripsi maksimal 255 karakter"
+        }
+      }
+    },
+    "nonaktif": {
+      "judul": "Nonaktifkan Role",
+      "deskripsi": "Apakah Anda yakin ingin menonaktifkan role ini? Role yang dinonaktifkan tidak akan dapat digunakan untuk menetapkan hak akses kepada pengguna, tetapi data role tersebut akan tetap tersimpan untuk referensi di masa mendatang.",
+      "tombol": "Nonaktifkan Role"
+    },
+    "model": {
+      "no": "No",
+      "nama": "Nama",
+      "deskripsi": "Deskripsi",
+      "jumlahUser": "Jumlah Pengguna",
+      "tanggalDibuat": "Tanggal Dibuat"
+    }
+  },
+  "manajemenPeriode": {
+    "judul": "Manajemen Periode",
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "create": {
+      "judul": "Buat Periode Baru",
+      "tombol": "Buat",
+      "form": {
+        "periode": "Periode",
+        "tanggalMulai": "Tanggal Mulai",
+        "tanggalSelesai": "Tanggal Selesai",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Contoh: 2023/2024"
+      }
+    },
+    "update": {
+      "judul": "Periode Berjalan",
+      "tombolUpdate": "Update",
+      "tombolNonaktif": "Nonaktifkan",
+      "form": {
+        "periode": "Periode",
+        "tanggalMulai": "Tanggal Mulai",
+        "tanggalSelesai": "Tanggal Selesai",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Contoh: 2023/2024"
+      }
+    },
+    "upload": {
+      "judul": "Upload PDF Kalender",
+      "hintDragDrop": "Drag and drop your PDF here, or click to browse",
+      "hintMaksimal": "Supports PDF files up to 5 MB",
+      "tombolBrowse": "Browse Files"
+    },
+    "list": {
+      "judul": "Daftar periode",
+      "tabel": {
+        "no": "No",
+        "tahun": "Tahun",
+        "semester": "Semester",
+        "tanggalMulai": "Tanggal Mulai",
+        "tanggalSelesai": "Tanggal Selesai",
+        "status": "Status",
+        "kalender": "Kalender",
+        "tombolDownload": "Download",
+        "kosong": "Belum ada data Periode."
+      },
+      "pagination": {
+        "info": "Menampilkan {shownFrom}-{shownTo} dari {totalItems} data",
+        "tombolSebelumnya": "Previous",
+        "tombolSelanjutnya": "Next"
+      }
+    }
+  },
+  "manajemenModul": {
+    "judul": "Manajemen Modul",
+    "deskripsi": "Modul merupakan kerangka kerja monitoring dan evaluasi yang mengatur aspek penilaian, objek yang dievaluasi, serta ruang lingkup dan indikator evaluasi dalam suatu periode. Modul menjadi dasar pelaksanaan monev agar proses penilaian berjalan terstruktur, terukur, dan konsisten.",
+    "list": "Daftar Modul",
+    "card": {
+      "totalModul": "Total Modul",
+      "totalModulAktif": "Total Modul Aktif",
+      "ModulTerbanyakDibuka": "Modul Terbanyak Dibuka",
+      "ModulTerakhirDibuka": "Modul Terakhir Dibuka"
+    },
+    "placeholder": {
+      "cari": "Cari modul berdasarkan nama atau deskripsi...",
+      "nama": "Masukkan nama modul",
+      "deskripsi": "Masukkan deskripsi modul"
+    },
+    "create": {
+      "judul": "Buat Modul Baru",
+      "deskripsi": "Formulir untuk membuat modul baru dengan informasi yang diperlukan, termasuk nama, lingkup evaluasi, dan deskripsi.",
+      "judulForm": "Formulir Buat Modul Baru",
+      "tombol": "Buat Modul",
+      "pilihLingkup": "Pilih Lingkup Evaluasi",
+      "validasi": {
+        "berhasil": "Modul berhasil dibuat",
+        "nama": {
+          "required": "Nama tidak boleh kosong",
+          "max": "Nama maksimal 30 karakter"
+        },
+        "deskripsi": {
+          "required": "Deskripsi tidak boleh kosong",
+          "max": "Deskripsi maksimal 255 karakter"
+        },
+        "lingkupId": {
+          "required": "Lingkup evaluasi harus dipilih",
+          "invalid": "ID lingkup evaluasi tidak valid"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Modul",
+      "deskripsi": "Formulir untuk mengedit informasi modul yang sudah ada.",
+      "judulForm": "Formulir Edit Modul",
+      "tombol": "Perbarui Modul",
+      "validasi": {
+        "berhasil": "Modul berhasil diperbarui",
+        "deskripsi": {
+          "required": "Deskripsi tidak boleh kosong",
+          "max": "Deskripsi maksimal 255 karakter"
+        }
+      }
+    },
+    "model": {
+      "no": "No",
+      "nama": "Nama",
+      "deskripsi": "Deskripsi",
+      "lingkup": "Lingkup Evaluasi",
+      "totalAspek": "Total Aspek",
+      "status": "Status",
+      "tanggalDibuat": "Tanggal Dibuat"
+    }
+  },
+  "manajemenLingkup": {
+    "judul": "Manajemen Lingkup"
   }
 }

@@ -2,7 +2,7 @@
 import RoleCreatePage from '#features/manajemen-role/pages/RoleCreatePage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: 'manajemen-user-role',
 })
 </script>
 

@@ -182,9 +182,8 @@ type MenuItem = {
 
 const iconMap: Record<string, string> = {
   home: 'i-lucide-home',
-  user: 'i-lucide-user',
-  role: 'i-lucide-shield',
   modul: 'i-lucide-layout-grid',
+  lingkup: 'i-lucide-layers',
   calendar: 'i-lucide-calendar',
 }
 
