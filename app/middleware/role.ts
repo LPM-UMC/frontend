@@ -8,4 +8,8 @@ export default defineNuxtRouteMiddleware(async () => {
   if (!auth.isAuthenticated) {
     return navigateTo("/login");
   }
+
+  if (auth.currentRole?.nama !== "Admin") {
+    return navigateTo("/403");
+  }
 });

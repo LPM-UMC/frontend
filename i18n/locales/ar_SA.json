@@ -8,6 +8,10 @@
     "siimoet": "SI-IMOET UMC",
     "pmb": "القبول الجامعي بجامعة UMC"
   },
+  "sedangTahapPengembangan": {
+    "judul": "هذه الصفحة قيد التطوير",
+    "deskripsi": "نعتذر، هذه الصفحة لا تزال قيد التطوير. نحن نعمل جاهدين لإحضار تجربة أفضل لك قريبًا. شكراً لصبرك وتفهمك."
+  },
   "util": {
     "menu": "القائمة",
     "paginasi": {
@@ -401,5 +405,42 @@
   },
   "manajemenLingkup": {
     "judul": "إدارة النطاقات"
+  },
+  "monev": {
+    "judul": "المتابعة والتقييم",
+    "lihatEvaluasiTerbaru": "عرض أحدث التقييمات",
+    "placeholder": {
+      "cari": "البحث عن التقييمات بالاسم أو الوصف..."
+    }
+  },
+  "ami": {
+    "judul": "التدقيق الداخلي للجودة",
+    "lihatAuditTerbaru": "عرض أحدث عمليات التدقيق",
+    "placeholder": {
+      "cari": "البحث عن عمليات التدقيق بالاسم أو الوصف..."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "المراقبة"
+    },
+    "hasilEvaluasi": {
+      "judul": "نتائج التقييم"
+    },
+    "temuan": {
+      "judul": "النتائج"
+    },
+    "rtl": {
+      "judul": "خطة العمل التصحيحية"
+    },
+    "beritaAcara": {
+      "judul": "محضر الاجتماع"
+    },
+    "survei": {
+      "judul": "الاستبيان"
+    },
+    "laporan": {
+      "judul": "التقارير"
+    }
   }
 }

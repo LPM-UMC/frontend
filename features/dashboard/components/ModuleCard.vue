@@ -1,68 +1,82 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
-  title: string
-  description: string
-  to: string
-  ctaLabel?: string
-  accentVariant?: 'wave' | 'curve'
-  surfaceColor?: string
-}>(), {
-  ctaLabel: 'Learn more',
-  accentVariant: 'wave',
-  surfaceColor: '#ffffff',
-})
+const props = withDefaults(
+  defineProps<{
+    title: string
+    description: string
+    periodeModulId?: string | number | null
+    unitLingkupPeriodeModulId?: string | number | null
+    aspekPeriodeModulId?: string | number | null
+    accentVariant?: 'wave' | 'curve' | 'corner'
+    surfaceColor?: string
+  }>(),
+  {
+    accentVariant: 'wave',
+    surfaceColor: '#ffffff',
+  },
+)
+
+const toast = useToast()
+const router = useRouter()
+
+function handleClick() {
+  if (!props.periodeModulId || !props.unitLingkupPeriodeModulId) {
+    toast.add({
+      title: 'Data tidak ditemukan',
+      description: 'Modul belum tersedia.',
+      color: 'error',
+    })
+
+    return
+  }
+
+  router.push(
+    `/dashboard/periode-modul/${props.periodeModulId}/unit/${props.unitLingkupPeriodeModulId}/fm1/aspek/${props.aspekPeriodeModulId}`,
+  )
+}
 </script>
 
 <template>
-  <NuxtLink
-    :to="props.to"
-    class="group relative block min-h-[224px] overflow-hidden rounded-[12px] border border-[#e2e5eb] px-4 pb-4 pt-3.5 shadow-[0_2px_10px_rgba(15,23,42,0.09)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(15,23,42,0.16)] sm:min-h-[240px] sm:px-5 xl:min-h-[256px]"
-    :style="{ backgroundColor: props.surfaceColor }"
-  >
-    <div class="relative z-10 pr-7 sm:pr-8">
-      <h3 class="max-w-[75%] text-[18px] font-semibold leading-[1.3] text-[#252525] sm:text-[19px] xl:text-[20px]">
+  <div role="button" tabindex="0"
+    class="group relative block min-h-[200px] cursor-pointer overflow-hidden rounded-[12px] border border-[#e2e5eb] bg-white px-4 pb-4 pt-3 shadow-[0_2px_10px_rgba(15,23,42,0.09)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(15,23,42,0.15)] sm:min-h-[220px]"
+    :style="{ backgroundColor: props.surfaceColor }" @click="handleClick" @keydown.enter="handleClick">
+    <div class="relative z-10 flex h-full flex-col pr-6">
+      <!-- Title -->
+      <h3 class="max-w-[78%] text-[16px] font-semibold leading-[1.3] text-[#252525] sm:text-[17px] xl:text-[18px]">
         {{ props.title }}
       </h3>
 
-      <p class="mt-2.5 max-w-[78%] text-[12px] leading-[1.6] text-[#6c7684] sm:mt-3 sm:text-[13px]">
+      <!-- Description -->
+      <p class="mt-2 flex-1 max-w-[80%] overflow-hidden text-[12px] leading-[1.55] text-[#6c7684] line-clamp-4">
         {{ props.description }}
       </p>
 
-      <span class="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#e1121b] sm:mt-5">
-        {{ props.ctaLabel }}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-[14px] w-[14px] transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <!-- CTA -->
+      <span dir="ltr" class="mt-auto inline-flex items-center gap-1 pt-3 text-[12px] font-semibold text-[#e1121b]">
+        {{ $t('monev.lihatEvaluasiTerbaru') }}
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-0.5" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6" />
         </svg>
       </span>
     </div>
 
-    <div class="pointer-events-none absolute bottom-0 right-0 h-[80px] w-[132px] overflow-hidden sm:h-[92px] sm:w-[152px]">
-      <svg
-        v-if="props.accentVariant === 'wave'"
-        class="h-full w-full"
-        viewBox="0 0 160 96"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        preserveAspectRatio="none"
-      >
-        <path d="M58 96C76 85 88 72 103 64C115 58 126 56 136 56C145 56 153 53 160 47V96H58Z" fill="#ef232a" />
-        <path d="M78 96C92 87 103 75 116 69C126 64 136 62 145 62C152 62 157 59 160 56V96H78Z" fill="#c9141d" />
-        <path d="M100 96C112 89 121 79 132 74C140 70 148 68 154 69C157 69 159 68 160 66V96H100Z" fill="#f2464c" />
+    <!-- Accent -->
+    <div
+      class="pointer-events-none absolute bottom-0 right-0 h-[56px] w-[96px] overflow-hidden sm:h-[68px] sm:w-[116px]">
+      <svg v-if="props.accentVariant === 'wave'" class="h-full w-full" viewBox="0 0 120 80" fill="none"
+        xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M30 80C48 74 58 63 69 55C78 49 88 46 98 46C107 46 114 43 120 38V80H30Z" fill="#ef232a" />
+        <path d="M50 80C63 73 73 64 83 58C91 53 100 50 108 50C114 50 118 48 120 46V80H50Z" fill="#c9141d" />
       </svg>
-      <svg
-        v-else
-        class="h-full w-full"
-        viewBox="0 0 160 96"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        preserveAspectRatio="none"
-      >
-        <path d="M72 96C95 90 115 80 128 62C138 48 148 38 160 32V96H72Z" fill="#ef232a" />
-        <path d="M90 96C108 90 124 82 135 68C143 58 151 51 160 46V96H90Z" fill="#c9141d" />
-        <path d="M114 96C128 90 140 83 148 73C153 67 157 63 160 60V96H114Z" fill="#f2464c" />
+
+      <svg v-else class="h-full w-full" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none">
+        <path d="M60 80C74 74 88 66 98 54C106 44 113 35 120 30V80H60Z" fill="#ef232a" />
+        <path d="M80 80C91 75 101 68 108 58C113 50 117 45 120 42V80H80Z" fill="#c9141d" />
+        <path d="M100 80C107 76 113 71 117 65C119 62 120 60 120 58V80H100Z" fill="#f2464c" />
       </svg>
     </div>
-  </NuxtLink>
+  </div>
 </template>

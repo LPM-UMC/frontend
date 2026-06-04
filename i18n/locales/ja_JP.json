@@ -8,6 +8,10 @@
     "siimoet": "SI-IMOET UMC",
     "pmb": "UMC入学案内"
   },
+  "sedangTahapPengembangan": {
+    "judul": "ページは開発中です",
+    "deskripsi": "申し訳ありませんが、このページは現在開発中です。より良い体験を提供するために一生懸命取り組んでいます。後ほど再度ご確認いただくか、当サイトの他のセクションを探索してください。"
+  },
   "util": {
     "menu": "メニュー",
     "paginasi": {
@@ -401,5 +405,42 @@
   },
   "manajemenLingkup": {
     "judul": "範囲管理"
+  },
+  "monev": {
+    "judul": "モニタリング・評価",
+    "lihatEvaluasiTerbaru": "最新の評価を見る",
+    "placeholder": {
+      "cari": "名前または説明で評価を検索..."
+    }
+  },
+  "ami": {
+    "judul": "内部品質監査",
+    "lihatAuditTerbaru": "最新の監査を見る",
+    "placeholder": {
+      "cari": "名前または説明で監査を検索..."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "モニタリング"
+    },
+    "hasilEvaluasi": {
+      "judul": "評価結果"
+    },
+    "temuan": {
+      "judul": "所見"
+    },
+    "rtl": {
+      "judul": "是正措置計画"
+    },
+    "beritaAcara": {
+      "judul": "議事録"
+    },
+    "survei": {
+      "judul": "アンケート"
+    },
+    "laporan": {
+      "judul": "レポート"
+    }
   }
 }

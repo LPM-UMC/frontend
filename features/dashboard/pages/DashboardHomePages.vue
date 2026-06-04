@@ -60,7 +60,7 @@ const menus = computed(() => [
     title: t('dasborModul.ami.judul'),
     description: t('dasborModul.ami.deskripsi'),
     image: '/img/gedung-umc.jpg',
-    to: localePath('/dashboard/audit'),
+    to: localePath('/dashboard/ami'),
   },
   {
     id: 'modul',
