@@ -6,7 +6,7 @@ import Fm4KaprodiDashboardPage from '#features/periode-modul/pages/fm4/Fm4Kaprod
 import Fm4OtherRoleDashboardPage from '#features/periode-modul/pages/fm4/Fm4OtherRoleDashboardPage.vue'
 
 definePageMeta({
-  layout: 'monev',
+  layout: 'periode-modul',
 })
 
 const route = useRoute()

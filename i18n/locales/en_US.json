@@ -8,6 +8,10 @@
     "siimoet": "SI-IMOET UMC",
     "pmb": "UMC Admissions"
   },
+  "sedangTahapPengembangan": {
+    "judul": "Page Under Development",
+    "deskripsi": "We apologize, but this page is currently under development. We are working hard to bring you a better experience. Please check back later or explore other sections of our website."
+  },
   "util": {
     "menu": "Menu",
     "paginasi": {
@@ -401,5 +405,42 @@
   },
   "manajemenLingkup": {
     "judul": "Scope Management"
+  },
+  "monev": {
+    "judul": "Monitoring and Evaluation",
+    "lihatEvaluasiTerbaru": "View Latest Evaluations",
+    "placeholder": {
+      "cari": "Search evaluations by name or description..."
+    }
+  },
+  "ami": {
+    "judul": "Internal Quality Audit",
+    "lihatAuditTerbaru": "View Latest Audits",
+    "placeholder": {
+      "cari": "Search audits by name or description..."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "Monitoring"
+    },
+    "hasilEvaluasi": {
+      "judul": "Evaluation Results"
+    },
+    "temuan": {
+      "judul": "Findings"
+    },
+    "rtl": {
+      "judul": "Follow-up Plan"
+    },
+    "beritaAcara": {
+      "judul": "Minutes of Meeting"
+    },
+    "survei": {
+      "judul": "Survey"
+    },
+    "laporan": {
+      "judul": "Report"
+    }
   }
 }

@@ -8,6 +8,10 @@
     "siimoet": "SI-IMOET UMC",
     "pmb": "Penerimaan Mahasiswa Baru UMC"
   },
+  "sedangTahapPengembangan": {
+    "judul": "Tahap Pengembangan",
+    "deskripsi": "Maaf, halaman ini sedang dalam tahap pengembangan. Kami sedang bekerja keras untuk menyelesaikannya secepat mungkin. Terima kasih atas kesabaran Anda."
+  },
   "util": {
     "menu": "Menu",
     "paginasi": {
@@ -401,5 +405,42 @@
   },
   "manajemenLingkup": {
     "judul": "Manajemen Lingkup"
+  },
+  "monev": {
+    "judul": "Monitoring dan Evaluasi",
+    "lihatEvaluasiTerbaru": "Lihat Evaluasi Terbaru",
+    "placeholder": {
+      "cari": "Cari modul monev berdasarkan nama atau deskripsi..."
+    }
+  },
+  "ami": {
+    "judul": "Audit Mutu Internal",
+    "lihatAuditTerbaru": "Lihat Audit Terbaru",
+    "placeholder": {
+      "cari": "Cari modul AMI berdasarkan nama atau deskripsi..."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "Monitoring"
+    },
+    "hasilEvaluasi": {
+      "judul": "Hasil Evaluasi"
+    },
+    "temuan": {
+      "judul": "Temuan"
+    },
+    "rtl": {
+      "judul": "Rencana Tindak Lanjut"
+    },
+    "beritaAcara": {
+      "judul": "Berita Acara"
+    },
+    "survei": {
+      "judul": "Survei"
+    },
+    "laporan": {
+      "judul": "Laporan"
+    }
   }
 }
