@@ -9,7 +9,16 @@ export default defineNuxtRouteMiddleware((to) => {
   const isRestricted = restrictedPaths.some(path => to.path.startsWith(path))
 
   if (isRestricted) {
-    if (roleCode !== 'admin-lpm' && roleCode !== 'admin-spi') {
+    if (roleCode !== 'admin-lpm' && roleCode !== 'admin-spi' && roleCode !== 'ketua-lpm' && roleCode !== 'ketua-spi') {
+      return navigateTo('/dashboard')
+    }
+  }
+
+  const periodeRestrictedPaths = ['/dashboard/manajemen-periode']
+  const isPeriodeRestricted = periodeRestrictedPaths.some(path => to.path.startsWith(path))
+
+  if (isPeriodeRestricted) {
+    if (roleCode !== 'admin-lpm' && roleCode !== 'admin-spi' && roleCode !== 'ketua-lpm' && roleCode !== 'ketua-spi') {
       return navigateTo('/dashboard')
     }
   }

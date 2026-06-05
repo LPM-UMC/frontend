@@ -321,6 +321,11 @@
     },
     "list": {
       "judul": "Period List",
+      "searchPlaceholder": "Search academic year...",
+      "sorting": {
+        "terbaru": "Newest",
+        "terlama": "Oldest"
+      },
       "tabel": {
         "no": "No",
         "tahun": "Year",
@@ -328,6 +333,8 @@
         "tanggalMulai": "Start Date",
         "tanggalSelesai": "End Date",
         "status": "Status",
+        "statusAktif": "Active",
+        "statusSelesai": "Finished",
         "kalender": "Calendar",
         "tombolDownload": "Download",
         "kosong": "No period data available."

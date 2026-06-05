@@ -321,6 +321,11 @@
     },
     "list": {
       "judul": "قائمة الفترات",
+      "searchPlaceholder": "البحث عن السنة الأكاديمية...",
+      "sorting": {
+        "terbaru": "الأحدث",
+        "terlama": "الأقدم"
+      },
       "tabel": {
         "no": "الرقم",
         "tahun": "السنة",
@@ -328,6 +333,8 @@
         "tanggalMulai": "تاريخ البدء",
         "tanggalSelesai": "تاريخ الانتهاء",
         "status": "الحالة",
+        "statusAktif": "نشط",
+        "statusSelesai": "مكتمل",
         "kalender": "التقويم",
         "tombolDownload": "تنزيل",
         "kosong": "لا توجد بيانات للفترات بعد."

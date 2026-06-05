@@ -321,6 +321,11 @@
     },
     "list": {
       "judul": "Daftar periode",
+      "searchPlaceholder": "Cari tahun ajaran...",
+      "sorting": {
+        "terbaru": "Terbaru",
+        "terlama": "Terlama"
+      },
       "tabel": {
         "no": "No",
         "tahun": "Tahun",
@@ -328,6 +333,8 @@
         "tanggalMulai": "Tanggal Mulai",
         "tanggalSelesai": "Tanggal Selesai",
         "status": "Status",
+        "statusAktif": "Aktif",
+        "statusSelesai": "Telah Selesai",
         "kalender": "Kalender",
         "tombolDownload": "Download",
         "kosong": "Belum ada data Periode."

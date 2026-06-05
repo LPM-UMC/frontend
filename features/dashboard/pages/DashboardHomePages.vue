@@ -87,7 +87,11 @@ const menus = computed(() => {
     .filter(menu => {
       // Logic from requirements
       if (menu.key === 'user') {
-        return roleCode === 'admin-lpm' || roleCode === 'admin-spi'
+        return roleCode === 'admin-lpm' || roleCode === 'admin-spi' || roleCode === 'ketua-lpm' || roleCode === 'ketua-spi'
+      }
+
+      if (menu.key === 'periode') {
+        return roleCode === 'admin-lpm' || roleCode === 'admin-spi' || roleCode === 'ketua-lpm' || roleCode === 'ketua-spi'
       }
 
       // Keep default visibility for other menus for now

@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import type { lang } from "../types/lang"
 import type { UserResponse } from "../types/user"
 import type { RoleResponse } from "../types/role"
-import { useRuntimeConfig, navigateTo } from "nuxt/app"
+import { useRuntimeConfig, navigateTo, useCookie } from "nuxt/app"
 import type { AccessTokenResponse } from "../types/auth"
 
 export const useAuthStore = defineStore("auth", {
@@ -43,6 +43,9 @@ export const useAuthStore = defineStore("auth", {
       this.roles = []
       this.activeRole = null
       this.expiresIn = null
+
+      const activeRoleIdCookie = useCookie<string | null>("active_role_id")
+      activeRoleIdCookie.value = null
 
       if (this.refreshTimeout) {
         clearTimeout(this.refreshTimeout)
@@ -117,7 +120,18 @@ export const useAuthStore = defineStore("auth", {
 
         this.user = res.data
         this.roles = res.data.roles || []
-        this.activeRole = this.roles[0] || null
+
+        const activeRoleIdCookie = useCookie<string | null>("active_role_id")
+        const savedRole = this.roles.find((r) => r.id === activeRoleIdCookie.value)
+
+        if (savedRole) {
+          this.activeRole = savedRole
+        } else {
+          this.activeRole = this.roles[0] || null
+          if (this.activeRole) {
+            activeRoleIdCookie.value = this.activeRole.id
+          }
+        }
       } catch {
         this.clearAuth()
       }
@@ -142,6 +156,8 @@ export const useAuthStore = defineStore("auth", {
 
     setActiveRole(role: RoleResponse) {
       this.activeRole = role
+      const activeRoleIdCookie = useCookie<string | null>("active_role_id")
+      activeRoleIdCookie.value = role.id
     },
 
     async logout() {

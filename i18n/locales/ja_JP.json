@@ -321,6 +321,11 @@
     },
     "list": {
       "judul": "期間一覧",
+      "searchPlaceholder": "年度を検索...",
+      "sorting": {
+        "terbaru": "最新",
+        "terlama": "最古"
+      },
       "tabel": {
         "no": "番号",
         "tahun": "年度",
@@ -328,6 +333,8 @@
         "tanggalMulai": "開始日",
         "tanggalSelesai": "終了日",
         "status": "ステータス",
+        "statusAktif": "アクティブ",
+        "statusSelesai": "完了",
         "kalender": "カレンダー",
         "tombolDownload": "ダウンロード",
         "kosong": "期間データがありません。"

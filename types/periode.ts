@@ -5,6 +5,7 @@ export type kalenderResponse = {
   nama: string;
   size?: number;
   tipe?: string;
+  url?: string;
 }
 
 export type PeriodeResponse = {

@@ -166,12 +166,8 @@
               <span class="text-[13px] font-medium text-[#4a515d]">
                 {{ $t('manajemenPeriode.update.form.semester') }} <span class="text-[#e1121b]">*</span>
               </span>
-              <select v-model="updateForm.semester" disabled
-                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] cursor-not-allowed">
-                <option v-for="semester in semesterOptions" :key="semester" :value="semester">
-                  {{ semester }}
-                </option>
-              </select>
+              <input v-model="updateForm.semester" type="text" disabled
+                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-gray-100 px-3 text-[13px] text-[#2f3744] outline-none cursor-not-allowed">
             </label>
           </div>
 
@@ -242,12 +238,17 @@
             </h2>
           </div>
 
-          <select v-model="sortOrder"
-            class="h-9 w-full rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] sm:w-[150px]">
-            <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-              {{ option.label }}
-            </option>
-          </select>
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <input v-model="search" type="text" :placeholder="$t('manajemenPeriode.list.searchPlaceholder')"
+              class="h-9 w-full rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] sm:w-[200px]">
+
+            <select v-model="sortOrder"
+              class="h-9 w-full rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] sm:w-[150px]">
+              <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <div class="overflow-x-auto rounded-[10px] border border-[#e5e7eb]">
@@ -273,10 +274,10 @@
                 <td class="px-3 py-2.5">{{ item.endDate }}</td>
                 <td class="px-3 py-2.5">{{ item.status }}</td>
                 <td class="px-3 py-2.5">
-                  <a :href="item.fileUrl" target="_blank" rel="noopener noreferrer"
+                  <button type="button" @click.prevent="downloadKalender(item.id)"
                     class="inline-flex h-7 items-center justify-center rounded-full bg-[#e1121b] px-3 text-[12px] font-semibold text-white transition hover:bg-[#cc0f17]">
                     {{ $t('manajemenPeriode.list.tabel.tombolDownload') }}
-                  </a>
+                  </button>
                 </td>
               </tr>
 
@@ -321,59 +322,70 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { useApi } from '#composables/useApi'
+import { useRuntimeConfig, useI18n } from '#imports'
+import type { PeriodeResponse } from '#types/periode'
 
 definePageMeta({
   layout: 'manajemen-periode',
 })
 
-/* =========================
- * TYPES
- * ========================= */
+const { apiFetch } = useApi()
+const toast = useToast()
+const { t } = useI18n()
+const config = useRuntimeConfig()
 
-interface PeriodeItem {
-  id: string
-  tahun_ajaran: string
-  semester: 'GANJIL' | 'GENAP'
-  tanggal_mulai: string
-  tanggal_selesai: string
-  is_aktif: boolean
-  fileUrl: string
+// State
+const isLoading = ref(false)
+const periodes = ref<PeriodeResponse[]>([])
+const totalItems = ref(0)
+const totalPages = ref(1)
+
+// Pagination & Filter
+const page = ref(1)
+const size = ref(10)
+const sortOrder = ref<'asc' | 'desc'>('asc')
+const search = ref('')
+
+const fetchPeriodes = async () => {
+  try {
+    isLoading.value = true
+    const res = await apiFetch<{ data: PeriodeResponse[], meta: any }>(`/api/periode?page=${page.value}&size=${size.value}&order=${sortOrder.value}&search=${search.value}`)
+    periodes.value = res.data
+    totalItems.value = res.meta.total
+    totalPages.value = res.meta.total_pages
+  } catch (err: any) {
+    toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
+  } finally {
+    isLoading.value = false
+  }
 }
 
-/* =========================
- * DUMMY DATA
- * ========================= */
+const periodeAktif = ref<PeriodeResponse | null>(null)
+const fetchPeriodeAktif = async () => {
+  try {
+    const res = await apiFetch<{ data: PeriodeResponse | null }>('/api/periode/aktif')
+    periodeAktif.value = res.data
+    if (res.data) {
+      updateForm.tahun_ajaran = res.data.tahun_ajaran
+      updateForm.semester = res.data.semester
+      updateForm.tanggal_mulai = res.data.tanggal_mulai?.split('T')[0] || ''
+      updateForm.tanggal_selesai = res.data.tanggal_selesai?.split('T')[0] || ''
+    }
+  } catch (err) {
+    // Ignore error
+  }
+}
 
-const periodes = ref<PeriodeItem[]>([
-  {
-    id: 'PER001',
-    tahun_ajaran: '2025/2026',
-    semester: 'GANJIL',
-    tanggal_mulai: '2025-08-01',
-    tanggal_selesai: '2025-12-31',
-    is_aktif: false,
-    fileUrl: '#',
-  },
-  {
-    id: 'PER002',
-    tahun_ajaran: '2025/2026',
-    semester: 'GENAP',
-    tanggal_mulai: '2026-01-15',
-    tanggal_selesai: '2026-06-30',
-    is_aktif: true,
-    fileUrl: '#',
-  },
-  {
-    id: 'PER003',
-    tahun_ajaran: '2026/2027',
-    semester: 'GANJIL',
-    tanggal_mulai: '2026-08-01',
-    tanggal_selesai: '2026-12-31',
-    is_aktif: false,
-    fileUrl: '#',
-  },
-])
+watch([page, sortOrder, search], () => {
+  fetchPeriodes()
+})
+
+onMounted(() => {
+  fetchPeriodes()
+  fetchPeriodeAktif()
+})
 
 /* =========================
  * FORM CREATE
@@ -390,71 +402,31 @@ const createForm = reactive({
  * FORM UPDATE
  * ========================= */
 
-const periodeAktif = computed(() =>
-  periodes.value.find(
-    item => item.is_aktif,
-  ),
-)
-
 const updateForm = reactive({
-  tahun_ajaran:
-    periodeAktif.value?.tahun_ajaran ??
-    '',
-  semester:
-    periodeAktif.value?.semester ??
-    'GANJIL',
-  tanggal_mulai:
-    periodeAktif.value?.tanggal_mulai ??
-    '',
-  tanggal_selesai:
-    periodeAktif.value?.tanggal_selesai ??
-    '',
+  tahun_ajaran: '',
+  semester: 'GANJIL',
+  tanggal_mulai: '',
+  tanggal_selesai: '',
 })
 
 /* =========================
  * FILE
  * ========================= */
 
-const selectedFile =
-  ref<File | null>(null)
+const selectedFile = ref<File | null>(null)
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const isDragActive = ref(false)
 
-const fileInputRef =
-  ref<HTMLInputElement | null>(
-    null,
-  )
-
-const isDragActive =
-  ref(false)
-
-const triggerFilePicker =
-  () =>
-    fileInputRef.value?.click()
-
-const onFileInputChange = (
-  e: Event,
-) => {
-  const file = (
-    e.target as HTMLInputElement
-  ).files?.[0]
-
-  if (file) {
-    selectedFile.value = file
-  }
+const triggerFilePicker = () => fileInputRef.value?.click()
+const onFileInputChange = (e: Event) => {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (file) selectedFile.value = file
 }
-
-const onFileDrop = (
-  e: DragEvent,
-) => {
+const onFileDrop = (e: DragEvent) => {
   isDragActive.value = false
-
-  const file =
-    e.dataTransfer?.files?.[0]
-
-  if (file) {
-    selectedFile.value = file
-  }
+  const file = e.dataTransfer?.files?.[0]
+  if (file) selectedFile.value = file
 }
-
 const onDragLeave = () => {
   isDragActive.value = false
 }
@@ -463,151 +435,36 @@ const onDragLeave = () => {
  * OPTIONS
  * ========================= */
 
-const semesterOptions = [
-  'GANJIL',
-  'GENAP',
-]
-
-const sortOptions = [
-  {
-    label: 'Terlama',
-    value: 'asc',
-  },
-  {
-    label: 'Terbaru',
-    value: 'desc',
-  },
-]
+const semesterOptions = ['GANJIL', 'GENAP']
+const sortOptions = computed(() => [
+  { label: t('manajemenPeriode.list.sorting.terlama'), value: 'asc' },
+  { label: t('manajemenPeriode.list.sorting.terbaru'), value: 'desc' },
+])
 
 /* =========================
  * PAGINATION
  * ========================= */
 
-const page = ref(1)
+const pagedCalendars = computed(() => {
+  return periodes.value.map(item => ({
+    id: item.id,
+    period: item.tahun_ajaran,
+    semester: item.semester,
+    startDate: item.tanggal_mulai?.split('T')[0],
+    endDate: item.tanggal_selesai?.split('T')[0],
+    status: item.is_aktif ? t('manajemenPeriode.list.tabel.statusAktif') : t('manajemenPeriode.list.tabel.statusSelesai'),
+  }))
+})
 
-const size = ref(10)
+const currentPage = computed(() => page.value)
+const rowStartIndex = computed(() => (page.value - 1) * size.value)
+const shownFrom = computed(() => totalItems.value === 0 ? 0 : rowStartIndex.value + 1)
+const shownTo = computed(() => Math.min(rowStartIndex.value + size.value, totalItems.value))
+const pageNumbers = computed(() => Array.from({ length: totalPages.value }, (_, i) => i + 1))
 
-const sortOrder = ref<
-  'asc' | 'desc'
->('asc')
-
-const sortedData =
-  computed(() => {
-    return [
-      ...periodes.value,
-    ].sort((a, b) => {
-      const aDate =
-        new Date(
-          a.tanggal_mulai,
-        ).getTime()
-
-      const bDate =
-        new Date(
-          b.tanggal_mulai,
-        ).getTime()
-
-      return sortOrder.value ===
-        'asc'
-        ? aDate - bDate
-        : bDate - aDate
-    })
-  })
-
-const totalItems =
-  computed(
-    () =>
-      sortedData.value.length,
-  )
-
-const totalPages =
-  computed(() =>
-    Math.max(
-      1,
-      Math.ceil(
-        totalItems.value /
-        size.value,
-      ),
-    ),
-  )
-
-const pagedCalendars =
-  computed(() => {
-    const start =
-      (page.value - 1) *
-      size.value
-
-    return sortedData.value
-      .slice(
-        start,
-        start + size.value,
-      )
-      .map(item => ({
-        id: item.id,
-        period:
-          item.tahun_ajaran,
-        semester:
-          item.semester,
-        startDate:
-          item.tanggal_mulai,
-        endDate:
-          item.tanggal_selesai,
-        status:
-          item.is_aktif
-            ? 'Aktif'
-            : 'Telah Selesai',
-        fileUrl:
-          item.fileUrl,
-      }))
-  })
-
-const currentPage =
-  computed(() => page.value)
-
-const rowStartIndex =
-  computed(
-    () =>
-      (page.value - 1) *
-      size.value,
-  )
-
-const shownFrom =
-  computed(() =>
-    totalItems.value === 0
-      ? 0
-      : rowStartIndex.value +
-      1,
-  )
-
-const shownTo =
-  computed(() =>
-    Math.min(
-      rowStartIndex.value +
-      size.value,
-      totalItems.value,
-    ),
-  )
-
-const pageNumbers =
-  computed(() =>
-    Array.from(
-      {
-        length:
-          totalPages.value,
-      },
-      (_, i) => i + 1,
-    ),
-  )
-
-const goToPage = (
-  targetPage: number,
-) => {
-  if (
-    targetPage >= 1 &&
-    targetPage <=
-    totalPages.value
-  ) {
-    page.value =
-      targetPage
+const goToPage = (targetPage: number) => {
+  if (targetPage >= 1 && targetPage <= totalPages.value) {
+    page.value = targetPage
   }
 }
 
@@ -615,30 +472,106 @@ const goToPage = (
  * ACTIONS
  * ========================= */
 
-const submitCreate = () => {
-  console.log(
-    'CREATE',
-    createForm,
-  )
-}
-
-const submitUpdate = () => {
-  console.log(
-    'UPDATE',
-    updateForm,
-  )
-}
-
-const nonaktifkanPeriode =
-  () => {
-    const aktif =
-      periodes.value.find(
-        item =>
-          item.is_aktif,
-      )
-
-    if (aktif) {
-      aktif.is_aktif = false
-    }
+const submitCreate = async () => {
+  if (!selectedFile.value) {
+    toast.add({ title: 'Error', description: 'File kalender wajib diupload', color: 'error' })
+    return
   }
+  
+  try {
+    isLoading.value = true
+    const fd = new FormData()
+    fd.append('tahun_ajaran', createForm.tahun_ajaran)
+    fd.append('semester', createForm.semester)
+    fd.append('tanggal_mulai', createForm.tanggal_mulai)
+    fd.append('tanggal_selesai', createForm.tanggal_selesai)
+    fd.append('file_kalender', selectedFile.value)
+
+    await apiFetch('/api/periode', {
+      method: 'POST',
+      body: fd,
+    })
+    
+    toast.add({ title: 'Sukses', description: 'Periode berhasil dibuat', color: 'success' })
+    createForm.tahun_ajaran = ''
+    createForm.tanggal_mulai = ''
+    createForm.tanggal_selesai = ''
+    selectedFile.value = null
+    fetchPeriodes()
+    fetchPeriodeAktif()
+  } catch (err: any) {
+    toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const submitUpdate = async () => {
+  if (!periodeAktif.value) return
+  try {
+    isLoading.value = true
+    const fd = new FormData()
+    fd.append('tanggal_mulai', updateForm.tanggal_mulai)
+    fd.append('tanggal_selesai', updateForm.tanggal_selesai)
+    if (selectedFile.value) {
+      fd.append('file_kalender', selectedFile.value)
+    }
+
+    await apiFetch(`/api/periode/${periodeAktif.value.id}`, {
+      method: 'PATCH',
+      body: fd,
+    })
+    
+    toast.add({ title: 'Sukses', description: 'Periode berhasil diupdate', color: 'success' })
+    selectedFile.value = null
+    fetchPeriodes()
+    fetchPeriodeAktif()
+  } catch (err: any) {
+    toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const nonaktifkanPeriode = async () => {
+  if (!periodeAktif.value) return
+  if (!confirm('Apakah Anda yakin ingin menonaktifkan periode ini?')) return
+  
+  try {
+    isLoading.value = true
+    await apiFetch(`/api/periode/${periodeAktif.value.id}/nonaktifkan`, {
+      method: 'PUT',
+    })
+    toast.add({ title: 'Sukses', description: 'Periode berhasil dinonaktifkan', color: 'success' })
+    fetchPeriodes()
+    fetchPeriodeAktif()
+  } catch (err: any) {
+    toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const downloadKalender = async (id: string) => {
+  try {
+    isLoading.value = true
+    const response = await apiFetch<Blob>(`/api/periode/${id}/kalender/download`, {
+      method: 'GET',
+      responseType: 'blob'
+    })
+    
+    const url = window.URL.createObjectURL(response)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `kalender-akademik.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (err: any) {
+    toast.add({ title: 'Error', description: 'Gagal mendownload kalender', color: 'error' })
+  } finally {
+    isLoading.value = false
+  }
+}
 </script>
