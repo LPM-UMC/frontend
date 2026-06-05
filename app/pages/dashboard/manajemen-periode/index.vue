@@ -351,7 +351,8 @@ const search = ref('')
 const fetchPeriodes = async () => {
   try {
     isLoading.value = true
-    const res = await apiFetch<{ data: PeriodeResponse[], meta: any }>(`/api/periode?page=${page.value}&size=${size.value}&order=${sortOrder.value}&search=${search.value}`)
+    const t = new Date().getTime() // cache busting supaya tidak dibaca dari cache browser
+    const res = await apiFetch<{ data: PeriodeResponse[], meta: any }>(`/api/periode?page=${page.value}&size=${size.value}&order=${sortOrder.value}&search=${search.value}&_t=${t}`)
     periodes.value = res.data
     totalItems.value = res.meta.total
     totalPages.value = res.meta.total_pages
@@ -497,8 +498,13 @@ const submitCreate = async () => {
     createForm.tanggal_mulai = ''
     createForm.tanggal_selesai = ''
     selectedFile.value = null
-    fetchPeriodes()
-    fetchPeriodeAktif()
+    
+    // Ubah sorting ke Terbaru (desc) & pindah ke hal 1 agar entri baru langsung terlihat
+    sortOrder.value = 'desc'
+    page.value = 1
+    
+    await fetchPeriodes()
+    await fetchPeriodeAktif()
   } catch (err: any) {
     toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
   } finally {
@@ -524,8 +530,8 @@ const submitUpdate = async () => {
     
     toast.add({ title: 'Sukses', description: 'Periode berhasil diupdate', color: 'success' })
     selectedFile.value = null
-    fetchPeriodes()
-    fetchPeriodeAktif()
+    await fetchPeriodes()
+    await fetchPeriodeAktif()
   } catch (err: any) {
     toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
   } finally {
@@ -543,8 +549,8 @@ const nonaktifkanPeriode = async () => {
       method: 'PUT',
     })
     toast.add({ title: 'Sukses', description: 'Periode berhasil dinonaktifkan', color: 'success' })
-    fetchPeriodes()
-    fetchPeriodeAktif()
+    await fetchPeriodes()
+    await fetchPeriodeAktif()
   } catch (err: any) {
     toast.add({ title: 'Error', description: err.data?.errors || err.message, color: 'error' })
   } finally {
