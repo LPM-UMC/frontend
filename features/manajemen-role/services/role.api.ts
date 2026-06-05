@@ -25,6 +25,8 @@ export const ROLE_ENDPOINTS = {
   create: '/api/roles',
   update: (roleId: string) => `/api/roles/${encodeURIComponent(roleId)}`,
   remove: (roleId: string) => `/api/roles/${encodeURIComponent(roleId)}`,
+  exportPdf: '/api/roles/export/pdf',
+  exportCsv: '/api/roles/export/csv',
 }
 
 export function useRoleApi() {
@@ -64,11 +66,25 @@ export function useRoleApi() {
     })
   }
 
+  async function exportRolesPdf() {
+    return request<Blob>(ROLE_ENDPOINTS.exportPdf, {
+      responseType: 'blob',
+    })
+  }
+
+  async function exportRolesCsv() {
+    return request<Blob>(ROLE_ENDPOINTS.exportCsv, {
+      responseType: 'blob',
+    })
+  }
+
   return {
     endpoints: ROLE_ENDPOINTS,
     listRoles,
     createRole,
     updateRole,
     deleteRole,
+    exportRolesPdf,
+    exportRolesCsv,
   }
 }

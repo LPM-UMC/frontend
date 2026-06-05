@@ -63,7 +63,7 @@
           </button>
 
           <!-- Profile -->
-          <NuxtLink :to="localePath('/profile')"
+          <NuxtLink :to="localePath('/dashboard/profile')"
             class="flex w-full items-center gap-3 rounded-2xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white">
             <img :src="profile.avatar" class="h-10 w-10 rounded-xl object-cover">
 
@@ -140,7 +140,7 @@
 
       <!-- Profile -->
       <div class="border-t border-[#d7d7d9] pt-1.5">
-        <NuxtLink :to="localePath('/profile')" class="block">
+        <NuxtLink :to="localePath('/dashboard/profile')" class="block">
           <div
             class="flex items-center gap-2.5 rounded-xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white active:scale-95">
             <img :src="profile.avatar" class="h-9 w-9 rounded-lg object-cover border border-black/5">

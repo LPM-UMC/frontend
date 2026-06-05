@@ -27,6 +27,8 @@ export const USER_ENDPOINTS = {
   detail: (userId: string) => `/api/users/${encodeURIComponent(userId)}`,
   update: (userId: string) => `/api/users/${encodeURIComponent(userId)}`,
   remove: (userId: string) => `/api/users/${encodeURIComponent(userId)}`,
+  exportPdf: '/api/users/export/pdf',
+  exportCsv: '/api/users/export/csv',
 }
 
 export function useUserApi() {
@@ -71,6 +73,18 @@ export function useUserApi() {
     })
   }
 
+  async function exportUsersPdf() {
+    return request<Blob>(USER_ENDPOINTS.exportPdf, {
+      responseType: 'blob',
+    })
+  }
+
+  async function exportUsersCsv() {
+    return request<Blob>(USER_ENDPOINTS.exportCsv, {
+      responseType: 'blob',
+    })
+  }
+
   return {
     endpoints: USER_ENDPOINTS,
     listUsers,
@@ -78,5 +92,7 @@ export function useUserApi() {
     getUser,
     updateUser,
     removeUser,
+    exportUsersPdf,
+    exportUsersCsv,
   }
 }

@@ -47,12 +47,34 @@
           </p>
         </div>
 
-        <NuxtLink :to="localePath('/dashboard/manajemen-role/create')">
-          <button
-            class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e30000] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
-            {{ $t('manajemenRole.create.tombol') }}
-          </button>
-        </NuxtLink>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex gap-2">
+            <button
+              :disabled="exporting"
+              @click="handleExportPdf"
+              class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl bg-white border border-[#dce1e8] px-4 text-sm sm:text-[0.95rem] font-semibold text-[#44474d] shadow-[0_2px_4px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              PDF
+            </button>
+            <button
+              :disabled="exporting"
+              @click="handleExportCsv"
+              class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl bg-white border border-[#dce1e8] px-4 text-sm sm:text-[0.95rem] font-semibold text-[#44474d] shadow-[0_2px_4px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              CSV
+            </button>
+          </div>
+          <NuxtLink :to="localePath('/dashboard/manajemen-role/create')">
+            <button
+              class="inline-flex h-10 sm:h-11 min-w-32 items-center justify-center rounded-xl bg-[#e30000] px-5 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
+              {{ $t('manajemenRole.create.tombol') }}
+            </button>
+          </NuxtLink>
+        </div>
       </div>
     </section>
 
@@ -214,13 +236,15 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch, onMounted } from 'vue'
-import { navigateTo, useLocalePath } from '#imports'
+import { navigateTo, useLocalePath, useToast } from '#imports'
 import { useRole } from '../composables/useRole'
 
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
 
 const isRTL = computed(() => locale.value === 'ar')
+const toast = useToast()
+const exporting = ref(false)
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat(
@@ -261,6 +285,8 @@ const {
   meta: roleMeta,
   loading: roleLoading,
   fetchRoles,
+  exportRolesPdf,
+  exportRolesCsv,
 } = useRole()
 
 /* =========================
@@ -394,4 +420,70 @@ const breadcrumbItems =
       active: true,
     },
   ])
+
+/* =========================
+ * EXPORT
+ * ========================= */
+
+async function handleExportPdf() {
+  exporting.value = true
+  try {
+    const blob = await exportRolesPdf()
+    if (!blob) throw new Error('No data')
+    
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `roles_export_${new Date().toISOString().split('T')[0]}.pdf`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+    
+    toast.add({
+      title: t('util.berhasil', 'Berhasil'),
+      description: 'Export PDF berhasil.',
+      color: 'success'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('util.gagal', 'Gagal'),
+      description: 'Gagal mengekspor PDF.',
+      color: 'error'
+    })
+  } finally {
+    exporting.value = false
+  }
+}
+
+async function handleExportCsv() {
+  exporting.value = true
+  try {
+    const blob = await exportRolesCsv()
+    if (!blob) throw new Error('No data')
+    
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `roles_export_${new Date().toISOString().split('T')[0]}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+    
+    toast.add({
+      title: t('util.berhasil', 'Berhasil'),
+      description: 'Export CSV berhasil.',
+      color: 'success'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('util.gagal', 'Gagal'),
+      description: 'Gagal mengekspor CSV.',
+      color: 'error'
+    })
+  } finally {
+    exporting.value = false
+  }
+}
 </script>

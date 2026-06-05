@@ -118,6 +118,24 @@
         </div>
 
       </form>
+
+        <!-- Nonaktifkan -->
+        <div
+          class="mx-auto mt-4 w-full max-w-4xl rounded-2xl border border-dashed border-[#d7dbe4] bg-[#f8f8f8] px-4 py-5 sm:px-6 sm:py-7">
+          <h4 class="text-lg font-semibold text-[#1f2634] sm:text-xl">
+            {{ t('manajemenRole.nonaktif.judul', 'Nonaktifkan Role') }}
+          </h4>
+
+          <p class="mt-2 text-sm text-[#5d6778] sm:text-base">
+            {{ t('manajemenRole.nonaktif.deskripsi', 'Role yang dinonaktifkan tidak akan bisa digunakan di sistem. Yakin ingin menonaktifkan role ini?') }}
+          </p>
+
+          <button :disabled="deleting" @click="handleDeactivate"
+            class="mt-4 inline-flex h-11 items-center justify-center rounded-[14px] px-5 text-sm font-semibold cursor-pointer transition sm:h-12 sm:px-6 sm:text-base text-white bg-[#e30000] hover:bg-[#c90000] disabled:opacity-60 disabled:cursor-not-allowed">
+            {{ deleting ? '...' : t('manajemenRole.nonaktif.tombol', 'Nonaktifkan Role') }}
+          </button>
+        </div>
+
     </section>
   </section>
 </template>
@@ -173,6 +191,7 @@ const {
   rows: roleRows,
   fetchRoles,
   updateRole,
+  deleteRole,
 } = useRole()
 
 /* =========================
@@ -197,6 +216,7 @@ const roleData =
   )
 
 const submitting = ref(false)
+const deleting = ref(false)
 
 /* =========================
  * FORM
@@ -455,6 +475,36 @@ async function handleSubmit() {
     })
   } finally {
     submitting.value = false
+  }
+}
+
+/* =========================
+ * DEACTIVATE
+ * ========================= */
+
+async function handleDeactivate() {
+  deleting.value = true
+
+  try {
+    await deleteRole(roleId.value)
+
+    toast.add({
+      title: t('util.berhasil'),
+      description: t('manajemenRole.nonaktif.berhasil', 'Role berhasil dinonaktifkan.'),
+      color: 'success',
+    })
+
+    setTimeout(async () => {
+      await navigateTo('/dashboard/manajemen-role')
+    }, 1000)
+  } catch {
+    toast.add({
+      title: t('util.gagal'),
+      description: t('manajemenRole.nonaktif.gagal', 'Gagal menonaktifkan role.'),
+      color: 'error',
+    })
+  } finally {
+    deleting.value = false
   }
 }
 </script>

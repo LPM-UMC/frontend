@@ -6,16 +6,23 @@ import ProfilePopUp from './ProfilePopUp.vue'
 import type { RoleResponse } from '#types/role'
 import { getAvatar } from '#utils/util'
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useSwitchLocalePath } from '#i18n'
+import { useLocalePath } from '#imports'
+import { en, id, ar, ja } from '@nuxt/ui/locale'
 
-const { locale } = useI18n()
+const { locale, setLocale } = useI18n()
+const localePath = useLocalePath()
 const authStore = useAuthStore()
 
-// ================= STATE =================
-const openMenu = ref<'lang' | null>(null)
-const isProfileOpen = ref(false)
+const locales = [id, en, ar, ja]
 
-const localeMenuRef = ref<HTMLElement | null>(null)
+async function changeLocale(lang: 'id' | 'en' | 'ar' | 'ja') {
+  await setLocale(lang)
+  isMobileMenuOpen.value = false
+}
+
+// ================= STATE =================
+const isProfileOpen = ref(false)
+const isMobileMenuOpen = ref(false)
 const profileRef = ref<HTMLElement | null>(null)
 
 // ✅ FIX TYPE
@@ -33,31 +40,6 @@ const handleChangeRole = (role: RoleResponse) => {
   authStore.setActiveRole(role)
 }
 
-// ================= LOCALE =================
-const switchLocalePath = useSwitchLocalePath()
-
-const getLocale = async (code: "id" | "en") => {
-  await navigateTo(switchLocalePath(code))
-}
-
-const localeItems = [
-  { code: 'id', label: 'Indonesia' },
-  { code: 'en', label: 'English' },
-]
-
-const changeLocale = async (code: string) => {
-  closeMenu()
-  await getLocale(code === 'en' ? 'en' : 'id')
-}
-
-const toggleMenu = (name: 'lang') => {
-  openMenu.value = openMenu.value === name ? null : name
-}
-
-const closeMenu = () => {
-  openMenu.value = null
-}
-
 // ================= PROFILE =================
 function toggleProfilePopup() {
   isProfileOpen.value = !isProfileOpen.value
@@ -72,15 +54,19 @@ async function handleSignOut() {
   await authStore.logout()
 }
 
+function toggleMobileMenu() {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
 // ================= OUTSIDE CLICK =================
 function handleClickOutside(event: MouseEvent) {
   const target = event.target as Node | null
   if (!target) return
 
-  if (localeMenuRef.value && !localeMenuRef.value.contains(target)) {
-    closeMenu()
+  // Removed localeMenuRef outside click check because ULocaleSelect handles its own.
+  if (profileRef.value && !profileRef.value.contains(target)) {
+    // profile popup has its own close logic or we could add it here
   }
-
 }
 
 // ================= INIT =================
@@ -107,67 +93,135 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="fixed inset-x-0 top-0 z-50">
+  <header class="fixed inset-x-0 top-0 z-50 w-screen" dir="ltr">
     <div class="border-b border-[#ececec] bg-white">
-      <div class="mx-auto flex h-14.5 w-full max-w-470 items-center justify-between px-3 sm:h-21.5 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div
+        class="flex h-14 items-center justify-between border-b border-[#d7d7d9] bg-[#f0f1f3] px-3 sm:h-15 sm:px-4 md:h-16"
+      >
+        <NuxtLink :to="localePath('/')" class="flex min-w-0 items-center gap-2 sm:gap-3 ml-7">
+          <img
+            src="/img/logo-umc.jpg"
+            alt="Logo UMC"
+            class="h-9 w-9 rounded-full object-cover sm:h-10 sm:w-10 md:h-11 md:w-11"
+          >
 
-        <!-- LOGO -->
-        <NuxtLink to="/" class="flex min-w-0 items-center gap-3">
-          <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
-            <img src="/img/logo-umc.jpg" class="h-full w-full object-cover">
-          </div>
-
-          <div class="min-w-0 leading-tight">
-            <span class="block truncate text-[15px] font-bold md:text-xl">
+          <div
+            class="min-w-0 leading-tight"
+            :class="locale === 'ar' ? 'text-right' : 'text-left'"
+            :dir="locale === 'ar' ? 'rtl' : 'ltr'"
+          >
+            <span class="block truncate text-[14px] font-bold text-red-700 sm:text-[15px] md:text-[17px]">
               SI-IMOET
             </span>
-            <span class="hidden truncate text-[11px] text-gray-500 sm:block">
-              LPM & SPI UMC
+            <span class="hidden truncate text-[10px] font-semibold text-gray-500 sm:block md:text-[11px]">
+              LPM &amp; SPI UMC
             </span>
           </div>
         </NuxtLink>
 
-        <!-- RIGHT -->
-        <div class="flex items-center gap-2">
+        <div class="hidden items-center gap-2 md:flex mr-4 md:mr-8 lg:mr-12">
+          <ULocaleSelect
+            :model-value="locale"
+            :locales="locales"
+            class="min-w-fit"
+            @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')"
+          />
 
-          <!-- LANGUAGE -->
-          <div ref="localeMenuRef" class="relative block">
-            <button
-              class="cursor-pointer transition flex items-center gap-1 rounded-md px-2 py-1 text-sm text-[#2f3744] hover:bg-gray-100"
-              @click="toggleMenu('lang')">
-              {{ locale.toUpperCase() }}
-
-              <UIcon name="i-lucide-chevron-down" class="h-4 w-4 transition-transform duration-200"
-                :class="openMenu === 'lang' ? 'rotate-180' : ''" />
-            </button>
-
-            <div v-if="openMenu === 'lang'" class="absolute right-0 mt-2 w-24 bg-white shadow">
-              <button
-                v-for="item in localeItems"
-                :key="item.code"
-                class="block w-full px-3 py-2 text-left hover:bg-gray-100"
-                @click="changeLocale(item.code)"
-              >
-                {{ item.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- PROFILE -->
           <button
             ref="profileRef"
-            class="cursor-pointer relative h-8.5 w-8.5"
+            type="button"
+            aria-label="Open profile"
+            class="relative h-9 w-9 cursor-pointer rounded-full"
             @click.stop="toggleProfilePopup"
           >
-            <img :src="user.avatar" class="rounded-full object-cover">
+            <img
+              :src="user.avatar"
+              :alt="user.name"
+              class="h-full w-full rounded-full object-cover"
+            >
+
+            <span
+              v-if="user.isOnline"
+              class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#12bf4c]"
+            />
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            class="relative h-8.5 w-8.5 cursor-pointer rounded-full"
+            @click="toggleProfilePopup"
+          >
+            <img
+              :src="user.avatar"
+              :alt="user.name"
+              class="h-full w-full rounded-full object-cover"
+            >
+
+            <span
+              v-if="user.isOnline"
+              class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#12bf4c]"
+            />
           </button>
 
+          <button
+            type="button"
+            class="grid h-8.5 w-8.5 cursor-pointer place-items-center rounded-md border border-gray-200 bg-white text-gray-700 transition hover:bg-gray-100"
+            :aria-expanded="isMobileMenuOpen"
+            @click="toggleMobileMenu"
+          >
+            <svg
+              v-if="!isMobileMenuOpen"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4.5 w-4.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4.5 w-4.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
         </div>
       </div>
+
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-1"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-1"
+      >
+        <div
+          v-if="isMobileMenuOpen"
+          class="border-t border-gray-200 bg-white px-3 py-3 md:hidden"
+        >
+          <div class="flex justify-end" dir="ltr">
+            <ULocaleSelect
+              :model-value="locale"
+              :locales="locales"
+              @update:model-value="changeLocale($event as 'id' | 'en' | 'ar' | 'ja')"
+            />
+          </div>
+        </div>
+      </Transition>
     </div>
   </header>
 
-  <!-- POPUP -->
   <ProfilePopUp
     :open="isProfileOpen"
     :user="{

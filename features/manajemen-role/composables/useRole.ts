@@ -45,6 +45,14 @@ export function useRole() {
     return api.deleteRole(roleId)
   }
 
+  async function exportRolesPdf() {
+    return api.exportRolesPdf()
+  }
+
+  async function exportRolesCsv() {
+    return api.exportRolesCsv()
+  }
+
   return {
     rows,
     meta,
@@ -54,5 +62,7 @@ export function useRole() {
     createRole,
     updateRole,
     deleteRole,
+    exportRolesPdf,
+    exportRolesCsv,
   }
 }

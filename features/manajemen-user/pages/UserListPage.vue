@@ -47,12 +47,35 @@
           </p>
         </div>
 
-        <NuxtLink :to="localePath('/dashboard/manajemen-user/create')">
-          <button
-            class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e30000] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
-            {{ $t('manajemenUser.create.tombol') }}
-          </button>
-        </NuxtLink>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex gap-2">
+            <button
+              :disabled="exporting"
+              @click="handleExportPdf"
+              class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl bg-white border border-[#dce1e8] px-4 text-sm sm:text-[0.95rem] font-semibold text-[#44474d] shadow-[0_2px_4px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              PDF
+            </button>
+            <button
+              :disabled="exporting"
+              @click="handleExportCsv"
+              class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl bg-white border border-[#dce1e8] px-4 text-sm sm:text-[0.95rem] font-semibold text-[#44474d] shadow-[0_2px_4px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              CSV
+            </button>
+          </div>
+          
+          <NuxtLink :to="localePath('/dashboard/manajemen-user/create')">
+            <button
+              class="inline-flex h-10 sm:h-11 min-w-32 items-center justify-center rounded-xl bg-[#e30000] px-5 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
+              {{ $t('manajemenUser.create.tombol') }}
+            </button>
+          </NuxtLink>
+        </div>
       </div>
     </section>
 
@@ -198,21 +221,40 @@
 
       <!-- Pagination -->
       <div class="mt-4 flex justify-end">
-        <div class="flex gap-2 text-sm">
-          <button :disabled="currentPage === 1"
-            class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="goToPage(currentPage - 1)">
-            {{ $t('util.paginasi.sebelumnya') }}
+        <div class="flex items-center gap-1.5 text-sm">
+          <!-- Previous -->
+          <button
+            :disabled="currentPage === 1"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d8dde4] bg-[#f8f8f8] text-[#556173] transition hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            @click="goToPage(currentPage - 1)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
 
-          <button class="rounded-xl bg-[#e30000] px-4 py-2 text-white">
-            {{ currentPage }}
+          <!-- Page Numbers -->
+          <button
+            v-for="page in visiblePages"
+            :key="page"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium transition cursor-pointer"
+            :class="currentPage === page
+              ? 'bg-[#e30000] text-white shadow-[0_4px_12px_rgba(227,0,0,0.3)]'
+              : 'border border-[#d8dde4] bg-[#f8f8f8] text-[#556173] hover:bg-white'"
+            @click="goToPage(page)"
+          >
+            {{ page }}
           </button>
 
-          <button :disabled="currentPage === totalPages"
-            class="rounded-xl border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer"
-            @click="goToPage(currentPage + 1)">
-            {{ $t('util.paginasi.berikutnya') }}
+          <!-- Next -->
+          <button
+            :disabled="currentPage === totalPages"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#d8dde4] bg-[#f8f8f8] text-[#556173] transition hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            @click="goToPage(currentPage + 1)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </button>
         </div>
       </div>
@@ -222,7 +264,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
-import { navigateTo } from '#imports'
+import { navigateTo, useToast } from '#imports'
 import { useI18n } from 'vue-i18n'
 import { useUser } from '../composables/useUser'
 import { useRole } from '#features/manajemen-role/composables/useRole'
@@ -231,6 +273,8 @@ const localePath = useLocalePath()
 const { locale, t } = useI18n()
 
 const isRTL = computed(() => locale.value === 'ar')
+const toast = useToast()
+const exporting = ref(false)
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat(
@@ -271,6 +315,8 @@ const {
   meta: userMeta,
   loading: userLoading,
   fetchUsers,
+  exportUsersPdf,
+  exportUsersCsv,
 } = useUser()
 
 const {
@@ -309,6 +355,37 @@ const topRoleName = computed(() => {
 const totalPages = computed(() =>
   Math.max(1, userMeta.value.total_pages),
 )
+
+/**
+ * Sliding pagination: tampilkan maksimal 5 nomor halaman.
+ * currentPage selalu berada di tengah jika memungkinkan.
+ * Edge-case: tidak pernah < 1 dan tidak pernah > totalPages.
+ */
+const visiblePages = computed(() => {
+  const maxVisible = 5
+  const total = totalPages.value
+  const current = currentPage.value
+
+  // Jika total halaman <= maxVisible, tampilkan semua
+  if (total <= maxVisible) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  // Hitung start agar current berada di tengah
+  let start = current - Math.floor(maxVisible / 2)
+
+  // Clamp: jangan sampai start < 1
+  if (start < 1) start = 1
+
+  // Clamp: jangan sampai end > total
+  let end = start + maxVisible - 1
+  if (end > total) {
+    end = total
+    start = end - maxVisible + 1
+  }
+
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+})
 
 const showingFrom = computed(() => {
   if (userRows.value.length === 0) return 0
@@ -405,4 +482,70 @@ const breadcrumbItems = [
     active: true,
   },
 ]
+
+/* =========================
+ * EXPORT
+ * ========================= */
+
+async function handleExportPdf() {
+  exporting.value = true
+  try {
+    const blob = await exportUsersPdf()
+    if (!blob) throw new Error('No data')
+    
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `users_export_${new Date().toISOString().split('T')[0]}.pdf`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+    
+    toast.add({
+      title: t('util.berhasil', 'Berhasil'),
+      description: 'Export PDF berhasil.',
+      color: 'success'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('util.gagal', 'Gagal'),
+      description: 'Gagal mengekspor PDF.',
+      color: 'error'
+    })
+  } finally {
+    exporting.value = false
+  }
+}
+
+async function handleExportCsv() {
+  exporting.value = true
+  try {
+    const blob = await exportUsersCsv()
+    if (!blob) throw new Error('No data')
+    
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `users_export_${new Date().toISOString().split('T')[0]}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+    
+    toast.add({
+      title: t('util.berhasil', 'Berhasil'),
+      description: 'Export CSV berhasil.',
+      color: 'success'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('util.gagal', 'Gagal'),
+      description: 'Gagal mengekspor CSV.',
+      color: 'error'
+    })
+  } finally {
+    exporting.value = false
+  }
+}
 </script>

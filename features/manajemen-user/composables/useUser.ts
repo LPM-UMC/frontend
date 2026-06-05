@@ -60,6 +60,14 @@ export function useUser() {
     return api.removeUser(userId)
   }
 
+  async function exportUsersPdf() {
+    return api.exportUsersPdf()
+  }
+
+  async function exportUsersCsv() {
+    return api.exportUsersCsv()
+  }
+
   return {
     rows,
     meta,
@@ -70,5 +78,7 @@ export function useUser() {
     createUser,
     updateUser,
     deleteUser,
+    exportUsersPdf,
+    exportUsersCsv,
   }
 }
