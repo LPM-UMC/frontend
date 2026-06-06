@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DashboardModulEditPage from '#features/modul/pages/DashboardModulEditPage.vue'
+import ModulEditPage from '#features/modul/pages/ModulEditPage.vue'
 
 definePageMeta({
   layout: 'modul-generator',
@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <DashboardModulEditPage />
+  <ModulEditPage />
 </template>
 
 

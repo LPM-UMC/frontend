@@ -1,17 +1,17 @@
 export interface ModulRecord {
   id: string
-  name: string
-  description?: string
-  createdAt?: string
-  updatedAt?: string
+  tipe_modul: string
+  nama: string
+  deskripsi: string
+  lingkup_evaluasi: {
+    id: string
+    nama: string
+  }
+  total_aspek: number
 }
 
 export interface ModulFormInput {
-  name: string
-  description?: string
-}
-
-export interface ModulListPayload {
-  items: ModulRecord[]
-  total: number
+  lingkup_id: string
+  nama: string
+  deskripsi: string
 }

@@ -1,37 +1,23 @@
 <template>
-  <section class="mx-auto w-full max-w-380 px-3 pb-6 pt-4 sm:px-6 lg:px-8">
-    <!-- Breadcrumb -->
-    <div class="flex flex-wrap items-center gap-2">
-      <NuxtLink :to="localePath('/dashboard/manajemen-modul')">
-        <button
-          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer sm:h-9 sm:w-9">
-          <svg
-xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
-          </svg>
-        </button>
-      </NuxtLink>
-
-      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
-        <template v-for="(item, index) in breadcrumbItems" :key="index">
-          <NuxtLink v-if="item.to" :to="item.to" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
-            {{ item.label }}
-          </NuxtLink>
-
-          <span
-v-else :class="item.active
-            ? 'font-semibold text-[#e30000] underline'
-            : 'text-[#9aa2b1]'">
-            {{ item.label }}
-          </span>
-
-          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
-            /
-          </span>
-        </template>
-      </nav>
+  <div>
+    <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
+      <div class="h-full w-full bg-repeat-x bg-top"
+        style="background-image: url('/img/batik.png'); background-size: auto clamp(72px, 8vw, 90px);" />
     </div>
+
+    <section
+      class="mx-auto w-full max-w-[1880px] bg-[#f4f4f4] px-3 pb-8 pt-5 sm:px-5 sm:pt-7 md:px-6 md:pt-8 lg:px-8 xl:px-10 2xl:px-12">
+      <div class="mb-4 flex flex-wrap items-center gap-2 text-[13px] text-slate-500">
+        <NuxtLink :to="localePath('/dashboard/manajemen-modul')" class="inline-flex items-center gap-1.5 transition hover:text-[#e1121b]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
+          </svg>
+          <span>{{ $t('manajemenModul.judul') }}</span>
+        </NuxtLink>
+        <span>/</span>
+        <span class="font-semibold text-[#e1121b]">{{ $t('manajemenModul.create.judul') }}</span>
+      </div>
 
     <!-- Hero -->
     <section
@@ -63,7 +49,7 @@ v-else :class="item.active
           <div>
             <label class="text-sm font-semibold text-[#3f4b5f]">
               {{ $t('manajemenModul.model.nama') }}
-              <span class="text-[#e30000]">*</span>
+              <span class="text-[#e1121b]">*</span>
             </label>
 
             <input
@@ -74,7 +60,7 @@ v-model="form.nama" type="text" maxlength="50" :placeholder="$t('manajemenModul.
               <span>{{ form.nama.length }}/50</span>
             </p>
 
-            <p v-if="formErrors.nama" class="mt-1 text-xs text-[#e30000]">
+            <p v-if="formErrors.nama" class="mt-1 text-xs text-[#e1121b]">
               {{ formErrors.nama }}
             </p>
           </div>
@@ -83,7 +69,7 @@ v-model="form.nama" type="text" maxlength="50" :placeholder="$t('manajemenModul.
           <div>
             <label class="text-sm font-semibold text-[#3f4b5f]">
               {{ $t('manajemenModul.model.deskripsi') }}
-              <span class="text-[#e30000]">*</span>
+              <span class="text-[#e1121b]">*</span>
             </label>
 
             <textarea
@@ -95,7 +81,7 @@ v-model="form.deskripsi" maxlength="500" rows="4"
               <span>{{ form.deskripsi.length }}/500</span>
             </p>
 
-            <p v-if="formErrors.deskripsi" class="mt-1 text-xs text-[#e30000]">
+            <p v-if="formErrors.deskripsi" class="mt-1 text-xs text-[#e1121b]">
               {{ formErrors.deskripsi }}
             </p>
           </div>
@@ -104,7 +90,7 @@ v-model="form.deskripsi" maxlength="500" rows="4"
           <div>
             <label class="text-sm font-semibold text-[#3f4b5f]">
               {{ $t('manajemenModul.model.lingkup') }}
-              <span class="text-[#e30000]">*</span>
+              <span class="text-[#e1121b]">*</span>
             </label>
 
             <label class="relative mt-2 block">
@@ -115,8 +101,8 @@ v-model="form.lingkup_id"
                   {{ $t('manajemenModul.create.pilihLingkup') }}
                 </option>
 
-                <option v-for="option in unitEvaluasiOptions" :key="option.value" :value="option.value">
-                  {{ option.label }}
+                <option v-for="option in lingkupOptions" :key="option.id" :value="option.id">
+                  {{ option.nama }}
                 </option>
               </select>
 
@@ -129,7 +115,7 @@ xmlns="http://www.w3.org/2000/svg"
             </label>
 
             <div class="mt-2 text-[0.95rem] text-[#95a0b1]">
-              <p v-if="formErrors.lingkup_id" class="mt-1 text-xs text-[#e30000]">
+              <p v-if="formErrors.lingkup_id" class="mt-1 text-xs text-[#e1121b]">
                 {{ formErrors.lingkup_id }}
               </p>
             </div>
@@ -148,7 +134,7 @@ xmlns="http://www.w3.org/2000/svg"
 type="submit" :disabled="!isFormValid" :class="[
             'inline-flex h-10 min-w-28 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base',
             isFormValid
-              ? 'bg-[#e30000] hover:bg-[#c90000] cursor-pointer'
+              ? 'bg-[#e1121b] hover:bg-[#cc0f17] cursor-pointer'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
           ]">
             {{ $t('util.buat') }}
@@ -157,12 +143,13 @@ type="submit" :disabled="!isFormValid" :class="[
 
       </form>
     </section>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, onMounted } from 'vue'
 import { navigateTo, useLocalePath, useToast } from '#imports'
 import { createModulValidation } from '#validations/modul.validation'
 
@@ -190,14 +177,15 @@ const breadcrumbItems = computed(() => [
   },
 ])
 
-// =====================
-// DUMMY OPTIONS
-// =====================
-const unitEvaluasiOptions = [
-  { value: '57fd214c-7a66-4391-8296-b7cd62057d37', label: 'Unit Akademik' },
-  { value: 'ue-2', label: 'Unit Administrasi' },
-  { value: 'ue-3', label: 'Unit Penelitian' },
-]
+import { useModul } from '../composables/useModul'
+import { useLingkup } from '#features/manajemen-lingkup/composables/useLingkup'
+
+const { saveModul } = useModul()
+const { rows: lingkupOptions, fetchLingkup } = useLingkup()
+
+onMounted(() => {
+  fetchLingkup()
+})
 
 // =====================
 // FORM
@@ -228,7 +216,7 @@ function resetError(field: keyof typeof formErrors) {
 // VALIDATE SINGLE FIELD
 // =====================
 function validateField(field: keyof typeof formErrors) {
-  const schema = createModulValidation(t)
+  const schema = createModulValidation(t as any)
   const result = schema.safeParse(form)
 
   resetError(field)
@@ -249,7 +237,7 @@ function validateForm() {
     formErrors[k as keyof typeof formErrors] = ''
   })
 
-  const schema = createModulValidation(t)
+  const schema = createModulValidation(t as any)
   const result = schema.safeParse(form)
 
   if (!result.success) {
@@ -276,7 +264,7 @@ watch(() => form.deskripsi, () => validateField('deskripsi'))
 // FORM VALID STATE (FIXED ERROR SOURCE)
 // =====================
 const isFormValid = computed(() => {
-  const schema = createModulValidation(t)
+  const schema = createModulValidation(t as any)
   return schema.safeParse(form).success
 })
 
@@ -295,14 +283,28 @@ async function handleSubmit() {
     return
   }
 
-  toast.add({
-    title: t('util.berhasil'),
-    description: 'Modul berhasil dibuat',
-    color: 'success',
-  })
+  try {
+    await saveModul({
+      lingkup_id: form.lingkup_id,
+      nama: form.nama,
+      deskripsi: form.deskripsi,
+    })
 
-  setTimeout(() => {
-    navigateTo('/dashboard/manajemen-modul')
-  }, 1000)
+    toast.add({
+      title: t('util.berhasil'),
+      description: 'Modul berhasil dibuat',
+      color: 'success',
+    })
+
+    setTimeout(() => {
+      navigateTo('/dashboard/manajemen-modul')
+    }, 1000)
+  } catch (error: any) {
+    toast.add({
+      title: t('util.gagal'),
+      description: error?.message || t('util.periksaKembaliForm'),
+      color: 'error',
+    })
+  }
 }
 </script>

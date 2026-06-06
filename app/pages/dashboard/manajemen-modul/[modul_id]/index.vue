@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DashboardModulDetailPage from '#features/modul/pages/DashboardModulDetailPage.vue'
+import ModulDetailPage from '#features/modul/pages/ModulDetailPage.vue'
 
 definePageMeta({
   layout: 'modul-generator',
@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <DashboardModulDetailPage />
+  <ModulDetailPage />
 </template>
 
 

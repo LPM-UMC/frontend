@@ -1,38 +1,23 @@
 <template>
-  <section class="mx-auto w-full max-w-360 px-3 pb-6 pt-4 sm:px-5 lg:px-8">
-
-    <!-- Breadcrumb -->
-    <div class="flex flex-wrap items-center gap-2">
-      <NuxtLink :to="localePath('/dashboard')">
-        <button
-          class="inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer">
-          <svg
-xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
-          </svg>
-        </button>
-      </NuxtLink>
-
-      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
-        <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
-          <NuxtLink v-if="item.to" :to="item.to" class="text-[#9aa2b1] hover:text-[#6e7788] transition hover:underline">
-            {{ item.label }}
-          </NuxtLink>
-
-          <span
-v-else :class="item.active
-            ? 'font-semibold text-[#e30000] underline'
-            : 'text-[#9aa2b1]'">
-            {{ item.label }}
-          </span>
-
-          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
-            /
-          </span>
-        </template>
-      </nav>
+  <div>
+    <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
+      <div class="h-full w-full bg-repeat-x bg-top"
+        style="background-image: url('/img/batik.png'); background-size: auto clamp(72px, 8vw, 90px);" />
     </div>
+
+    <section
+      class="mx-auto w-full max-w-[1880px] bg-[#f4f4f4] px-3 pb-8 pt-5 sm:px-5 sm:pt-7 md:px-6 md:pt-8 lg:px-8 xl:px-10 2xl:px-12">
+      <div class="mb-4 flex flex-wrap items-center gap-2 text-[13px] text-slate-500">
+        <NuxtLink :to="localePath('/dashboard')" class="inline-flex items-center gap-1.5 transition hover:text-[#e1121b]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
+          </svg>
+          <span>{{ $t('navigasi.dasbor') }}</span>
+        </NuxtLink>
+        <span>/</span>
+        <span class="font-semibold text-[#e1121b]">{{ $t('manajemenModul.judul') }}</span>
+      </div>
 
     <!-- Hero -->
     <section
@@ -52,7 +37,7 @@ v-else :class="item.active
 
         <NuxtLink :to="localePath('/dashboard/manajemen-modul/create')">
           <button
-            class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e30000] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
+            class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e1121b] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#cc0f17] cursor-pointer">
             {{ $t('manajemenModul.create.tombol') }}
           </button>
         </NuxtLink>
@@ -151,43 +136,39 @@ v-model="sortOrder"
               <th class="px-3 py-3 text-left">{{ $t('manajemenModul.model.nama') }}</th>
               <th class="px-3 py-3 text-left">{{ $t('manajemenModul.model.lingkup') }}</th>
               <th class="px-3 py-3 text-left">{{ $t('manajemenModul.model.totalAspek') }}</th>
-              <th class="px-3 py-3 text-left">{{ $t('manajemenModul.model.status') }}</th>
-              <th class="px-3 py-3 text-left">{{ $t('manajemenModul.model.tanggalDibuat') }}</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="(row, index) in paginatedRows" :key="row.id" @click="goToEditPage(row.id)">
+            <tr v-if="loading">
+              <td colspan="4" class="px-3 py-6 text-center text-gray-500">
+                Loading...
+              </td>
+            </tr>
+            <tr v-else-if="rows.length === 0">
+              <td colspan="4" class="px-3 py-6 text-center text-gray-500">
+                Data kosong
+              </td>
+            </tr>
+            <tr v-else v-for="(row, index) in rows" :key="row.id" @click="goToEditPage(row.id)">
               <td class="px-3 py-3">
-                {{ formatNumber(showingFrom + index) }}
+                {{ formatNumber(((currentPage - 1) * pageSize) + index + 1) }}
               </td>
 
               <td class="px-3 py-3 font-semibold">
                 <NuxtLink
 :to="localePath(`/dashboard/manajemen-modul/${encodeURIComponent(row.id)}`)"
                   class="text-red-600 underline hover:text-red-800 transition">
-                  {{ row.name }}
+                  {{ row.nama }}
                 </NuxtLink>
               </td>
 
               <td class="px-3 py-3">
-                {{ row.email }}
+                {{ row.lingkup_evaluasi?.nama }}
               </td>
 
               <td class="px-3 py-3">
-                {{ row.tableRoleLabel }}
-              </td>
-
-              <td class="px-3 py-3">
-                <span
-class="inline-flex rounded-xl px-3 py-1 text-xs sm:text-sm font-semibold"
-                  :class="resolveStatusClass(row.status)">
-                  {{ row.status }}
-                </span>
-              </td>
-
-              <td class="px-3 py-3">
-                {{ row.joinedAt }}
+                {{ row.total_aspek }}
               </td>
             </tr>
           </tbody>
@@ -204,7 +185,7 @@ class="inline-flex rounded-xl px-3 py-1 text-xs sm:text-sm font-semibold"
             {{ $t('util.paginasi.sebelumnya') }}
           </button>
 
-          <button class="rounded-xl bg-[#e30000] px-4 py-2 text-white">
+          <button class="rounded-xl bg-[#e1121b] px-4 py-2 text-white">
             {{ currentPage }}
           </button>
 
@@ -217,14 +198,16 @@ class="inline-flex rounded-xl px-3 py-1 text-xs sm:text-sm font-semibold"
         </div>
       </div>
     </section>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { navigateTo } from '#imports'
 import { useI18n } from 'vue-i18n'
-
+import { useDebounceFn } from '@vueuse/core'
+import { useModul } from '../composables/useModul'
 
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
@@ -243,205 +226,47 @@ function formatNumber(value: number) {
   ).format(value)
 }
 /* =========================
- * TYPES
- * ========================= */
-
-type DashboardUserStatus =
-  | 'Aktif'
-  | 'Non Aktif'
-
-type DashboardUserSortOrder =
-  | 'a-z'
-  | 'z-a'
-
-interface DashboardUserRow {
-  id: string
-  name: string
-  email: string
-  tableRoleLabel: string
-  selectedRoleValues: string[]
-  status: DashboardUserStatus
-  joinedAt: string
-}
-
-/* =========================
- * DUMMY DATA
- * ========================= */
-
-const pageSize = 5
-
-const rows = ref<
-  DashboardUserRow[]
->([
-  {
-    id: 'USR001',
-    name: 'Ahmad Fauzan',
-    email: 'ahmad@umc.ac.id',
-    tableRoleLabel:
-      'Admin',
-    selectedRoleValues: [
-      'admin',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '12 Jan 2026',
-  },
-  {
-    id: 'USR002',
-    name: 'Siti Rahma',
-    email: 'siti@umc.ac.id',
-    tableRoleLabel:
-      'Auditor',
-    selectedRoleValues: [
-      'auditor',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '18 Jan 2026',
-  },
-  {
-    id: 'USR003',
-    name: 'Rizki Saputra',
-    email: 'rizki@umc.ac.id',
-    tableRoleLabel:
-      'Operator',
-    selectedRoleValues: [
-      'operator',
-    ],
-    status:
-      'Non Aktif',
-    joinedAt:
-      '03 Feb 2026',
-  },
-  {
-    id: 'USR004',
-    name: 'Dewi Lestari',
-    email: 'dewi@umc.ac.id',
-    tableRoleLabel:
-      'Admin, Auditor',
-    selectedRoleValues: [
-      'admin',
-      'auditor',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '09 Feb 2026',
-  },
-  {
-    id: 'USR005',
-    name: 'Budi Santoso',
-    email: 'budi@umc.ac.id',
-    tableRoleLabel:
-      'Operator',
-    selectedRoleValues: [
-      'operator',
-    ],
-    status: 'Aktif',
-    joinedAt:
-      '15 Feb 2026',
-  },
-  {
-    id: 'USR006',
-    name: 'Rina Putri',
-    email: 'rina@umc.ac.id',
-    tableRoleLabel:
-      'Auditor',
-    selectedRoleValues: [
-      'auditor',
-    ],
-    status:
-      'Non Aktif',
-    joinedAt:
-      '20 Feb 2026',
-  },
-])
-
-/* =========================
  * STATE
  * ========================= */
 
-const searchQuery =
-  ref('')
+const searchQuery = ref('')
+const sortOrder = ref('a-z')
 
-const sortOrder =
-  ref<DashboardUserSortOrder>(
-    'a-z'
-  )
+const currentPage = ref(1)
+const pageSize = 10
 
-const roleFilter =
-  ref('all')
+const {
+  rows,
+  total,
+  loading,
+  fetchModul,
+} = useModul()
 
-const currentPage =
-  ref(1)
+onMounted(() => {
+  loadData()
+})
 
-/* =========================
- * HELPERS
- * ========================= */
+watch([currentPage, sortOrder], () => {
+  loadData()
+})
 
-function sortRows(
-  data: DashboardUserRow[],
-  order: DashboardUserSortOrder
-) {
-  return [...data].sort(
-    (a, b) => {
-      const compare =
-        a.name.localeCompare(
-          b.name
-        )
+watch(searchQuery, useDebounceFn(() => {
+  currentPage.value = 1
+  loadData()
+}, 500))
 
-      return order === 'a-z'
-        ? compare
-        : -compare
-    }
-  )
+function loadData() {
+  fetchModul({
+    page: currentPage.value,
+    size: pageSize,
+    search: searchQuery.value,
+    order: sortOrder.value === 'a-z' ? 'asc' : 'desc'
+  })
 }
 
-/* =========================
- * FILTER TABLE
- * ========================= */
-
-const filteredRows =
-  computed(() => {
-    const query =
-      searchQuery.value
-        .trim()
-        .toLowerCase()
-
-    const sorted =
-      sortRows(
-        rows.value,
-        sortOrder.value
-      )
-
-    return sorted.filter(
-      (row) => {
-        const text = `
-          ${row.name}
-          ${row.email}
-          ${row.tableRoleLabel}
-          ${row.status}
-        `.toLowerCase()
-
-        const matchesSearch =
-          !query ||
-          text.includes(
-            query
-          )
-
-        const matchesRole =
-          roleFilter.value ===
-          'all' ||
-          row.selectedRoleValues.includes(
-            roleFilter.value
-          )
-
-        return (
-          matchesSearch &&
-          matchesRole
-        )
-      }
-    )
-  })
+function goToEditPage(id: string) {
+  navigateTo(localePath(`/dashboard/manajemen-modul/${encodeURIComponent(id)}`))
+}
 
 /* =========================
  * PAGINATION
@@ -452,89 +277,15 @@ const totalPages =
     Math.max(
       1,
       Math.ceil(
-        filteredRows.value
-          .length /
+        total.value /
         pageSize
       )
     )
   )
 
-const paginatedRows =
-  computed(() => {
-    const start =
-      (
-        currentPage.value -
-        1
-      ) * pageSize
-
-    return filteredRows.value.slice(
-      start,
-      start +
-      pageSize
-    )
-  })
-
-const showingFrom =
-  computed(() => {
-    if (
-      !filteredRows.value
-        .length
-    ) {
-      return 0
-    }
-
-    return (
-      (
-        currentPage.value -
-        1
-      ) *
-      pageSize +
-      1
-    )
-  })
-
-/* =========================
- * STYLE
- * ========================= */
-
-function resolveStatusClass(
-  status: DashboardUserStatus
-) {
-  if (
-    status === 'Aktif'
-  ) {
-    return 'bg-[#9DE8A1] text-[#128b1f]'
-  }
-
-  return 'bg-[#DEE4EC] text-[#495363]'
+function resolveStatusClass(status: string) {
+  return 'bg-gray-100 text-gray-700'
 }
-
-/* =========================
- * NAVIGATION
- * ========================= */
-
-async function goToEditPage(
-  id: string
-) {
-  await navigateTo(
-    `/dashboard/manajemen-user/${encodeURIComponent(id)}/edit`
-  )
-}
-
-/* =========================
- * WATCHER
- * ========================= */
-
-watch(
-  [
-    searchQuery,
-    sortOrder,
-    roleFilter,
-  ],
-  () => {
-    currentPage.value = 1
-  }
-)
 
 watch(
   totalPages,

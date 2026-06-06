@@ -1,12 +1,14 @@
 import { useApiRequest } from '#features/shared/api/http'
-import type { ModulFormInput, ModulListPayload, ModulRecord } from '../types/modul'
+import type { ModulFormInput, ModulRecord } from '../types/modul'
 
 export const MODUL_ENDPOINTS = {
-  list: '/api/v1/dashboard/modul',
-  create: '/api/v1/dashboard/modul/create',
-  detail: (modulId: string) => `/api/v1/dashboard/modul/${encodeURIComponent(modulId)}`,
-  update: (modulId: string) => `/api/v1/dashboard/modul/${encodeURIComponent(modulId)}/update`,
-  remove: (modulId: string) => `/api/v1/dashboard/modul/${encodeURIComponent(modulId)}/delete`,
+  listMonev: '/api/modul/monev',
+  listAmi: '/api/modul/ami',
+  createMonev: '/api/modul/monev',
+  createAmi: '/api/modul/ami',
+  detail: (modulId: string) => `/api/modul/${encodeURIComponent(modulId)}`,
+  update: (modulId: string) => `/api/modul/${encodeURIComponent(modulId)}`,
+  remove: (modulId: string) => `/api/modul/${encodeURIComponent(modulId)}`,
 }
 
 export function useModulApi() {
@@ -14,13 +16,16 @@ export function useModulApi() {
 
   return {
     endpoints: MODUL_ENDPOINTS,
-    listModul: () => request<ModulListPayload>(MODUL_ENDPOINTS.list),
-    createModul: (payload: ModulFormInput) =>
-      request<ModulRecord>(MODUL_ENDPOINTS.create, { method: 'POST', body: payload }),
-    getModul: (modulId: string) => request<ModulRecord>(MODUL_ENDPOINTS.detail(modulId)),
+    listModulMonev: (query?: Record<string, any>) => request<{ data: ModulRecord[], meta: { total: number } }>(MODUL_ENDPOINTS.listMonev, { query }),
+    listModulAmi: (query?: Record<string, any>) => request<{ data: ModulRecord[], meta: { total: number } }>(MODUL_ENDPOINTS.listAmi, { query }),
+    createModulMonev: (payload: ModulFormInput) =>
+      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.createMonev, { method: 'POST', body: payload }),
+    createModulAmi: (payload: ModulFormInput) =>
+      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.createAmi, { method: 'POST', body: payload }),
+    getModul: (modulId: string) => request<{ data: ModulRecord }>(MODUL_ENDPOINTS.detail(modulId)),
     updateModul: (modulId: string, payload: Partial<ModulFormInput>) =>
-      request<ModulRecord>(MODUL_ENDPOINTS.update(modulId), { method: 'PUT', body: payload }),
+      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.update(modulId), { method: 'PUT', body: payload }),
     removeModul: (modulId: string) =>
-      request<{ deleted: boolean }>(MODUL_ENDPOINTS.remove(modulId), { method: 'DELETE' }),
+      request<void>(MODUL_ENDPOINTS.remove(modulId), { method: 'DELETE' }),
   }
 }
