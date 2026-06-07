@@ -24,28 +24,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import DashboardMenuCard from '../components/DashboardMenuCard.vue'
-// import { useAuthStore } from '#stores/auth'
+import { useAuthStore } from '#stores/auth'
 import { useI18n } from '#imports'
 
 const { t } = useI18n()
-// const auth = useAuthStore()
+const auth = useAuthStore()
 const localePath = useLocalePath()
 
 // ================= INIT =================
-// onMounted(async () => {
-//   if (!auth.isInitialized) {
-//     await auth.initAuth()
-//   }
-// })
+onMounted(async () => {
+  if (!auth.isAuthenticated) {
+    await auth.initializeAuth()
+  }
+})
 
 // ================= USER =================
-// const userName = computed(() => auth.user?.nama ?? '-')
-// const roleName = computed(() => auth.activeRole?.nama ?? '-')
+const userName = computed(() => auth.user?.nama ?? '-')
+const roleName = computed(() => auth.activeRole?.nama ?? '-')
 
 // ================= ALL MENUS =================
-const menus = computed(() => [
+const allMenus = computed(() => [
   {
     id: 'monev',
     key: 'monev',
@@ -89,47 +89,40 @@ const menus = computed(() => [
 ])
 
 // ================= RULES =================
-// const monevBlacklist = ['ketua-spi', 'admin-spi', 'spi']
-// const auditBlacklist = ['ketua-lpm', 'admin-lpm', 'lpm']
-//
-// const modulWhitelist = [
-//   'ketua-lpm',
-//   'admin-lpm',
-//   'ketua-spi',
-//   'admin-spi',
-// ]
+const adminWhitelist = [
+  'ketua-lpm',
+  'admin-lpm',
+  'ketua-spi',
+  'admin-spi',
+]
 
 // ================= FILTER =================
-// const menus = computed(() => {
-//   const roleCode = auth.activeRole?.kode
-//
-//   if (!roleCode) return []
-//
-//   return allMenus.value
-//     .filter(menu => {
-//       switch (menu.key) {
-//         case 'monev':
-//           return !monevBlacklist.includes(roleCode)
-//
-//         case 'audit':
-//           return !auditBlacklist.includes(roleCode)
-//
-//         case 'modul':
-//           return modulWhitelist.includes(roleCode)
-//
-//         case 'periode':
-//           return modulWhitelist.includes(roleCode)
-//
-//         case 'user':
-//           return modulWhitelist.includes(roleCode)
-//
-//         default:
-//           return false
-//       }
-//     })
-//     .map(menu => ({
-//       ...menu,
-//       ctaLabel: 'Masuk',
-//     }))
-// })
+const menus = computed(() => {
+  const roleCode = auth.activeRole?.kode
+
+  if (!roleCode) return []
+
+  return allMenus.value
+    .filter(menu => {
+      switch (menu.key) {
+        case 'monev':
+          return true
+        case 'audit':
+          return true
+        case 'modul':
+          return adminWhitelist.includes(roleCode)
+        case 'periode':
+          return adminWhitelist.includes(roleCode)
+        case 'user':
+          return adminWhitelist.includes(roleCode)
+
+        default:
+          return true
+      }
+    })
+    .map(menu => ({
+      ...menu,
+      ctaLabel: 'Masuk',
+    }))
+})
 </script>

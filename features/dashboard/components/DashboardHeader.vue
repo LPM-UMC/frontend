@@ -51,7 +51,7 @@
           <button
             type="button"
             aria-label="Open profile"
-            class="relative h-9 w-9 rounded-full"
+            class="relative h-9 w-9 cursor-pointer rounded-full"
             @click="openProfilePopup"
           >
             <img
@@ -164,19 +164,21 @@
       avatar: user.avatar,
       online: user.isOnline,
     }"
+    :roles="authStore.roles"
+    :active-role="authStore.activeRole"
     @close="closeProfilePopup"
     @signout="handleSignOut"
+    @change-role="handleRoleChange"
   />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { en, id, ar, ja } from '@nuxt/ui/locale'
 import { useI18n } from 'vue-i18n'
 import { navigateTo } from 'nuxt/app'
 import ProfilePopUp from './ProfilePopUp.vue'
-import { getDashboardDummyUser } from '../data/dashboardDummy'
-import { useDashboardRepository } from '../composables/useDashboardRepository'
+import { useAuthStore } from '#stores/auth'
 import type { DashboardUser } from '../types/dashboard'
 
 const { locale, setLocale } = useI18n()
@@ -187,9 +189,18 @@ async function changeLocale(lang: 'id' | 'en' | 'ar' | 'ja') {
   isMobileMenuOpen.value = false
 }
 
-const repository = useDashboardRepository('auto')
+const authStore = useAuthStore()
 
-const user = ref<DashboardUser>(getDashboardDummyUser())
+const user = computed(() => {
+  return {
+    name: authStore.user?.nama ?? 'Guest',
+    email: authStore.user?.email ?? '',
+    role: authStore.activeRole?.nama ?? 'No Role',
+    avatar: authStore.user?.picture || '/img/logo-umc.jpg',
+    isOnline: authStore.isAuthenticated,
+  } as unknown as DashboardUser
+})
+
 const isProfileOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 
@@ -207,10 +218,23 @@ function toggleMobileMenu() {
 
 async function handleSignOut() {
   isProfileOpen.value = false
-  await navigateTo(localePath('/login'))
+  await authStore.logout()
+}
+
+function handleRoleChange(role: any) {
+  authStore.setActiveRole(role)
+  isProfileOpen.value = false
+  if (typeof window !== 'undefined') {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
 }
 
 onMounted(async () => {
-  user.value = await repository.getCurrentUser()
+  if (!authStore.isAuthenticated) {
+    await authStore.initializeAuth()
+  }
 })
 </script>

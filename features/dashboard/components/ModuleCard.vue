@@ -1,40 +1,3 @@
-<script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    title: string
-    description: string
-    periodeModulId?: string | number | null
-    unitLingkupPeriodeModulId?: string | number | null
-    aspekPeriodeModulId?: string | number | null
-    accentVariant?: 'wave' | 'curve' | 'corner'
-    surfaceColor?: string
-  }>(),
-  {
-    accentVariant: 'wave',
-    surfaceColor: '#ffffff',
-  },
-)
-
-const toast = useToast()
-const router = useRouter()
-
-function handleClick() {
-  if (!props.periodeModulId || !props.unitLingkupPeriodeModulId) {
-    toast.add({
-      title: 'Data tidak ditemukan',
-      description: 'Modul belum tersedia.',
-      color: 'error',
-    })
-
-    return
-  }
-
-  router.push(
-    `/dashboard/periode-modul/${props.periodeModulId}/unit/${props.unitLingkupPeriodeModulId}/fm1/aspek/${props.aspekPeriodeModulId}`,
-  )
-}
-</script>
-
 <template>
   <div role="button" tabindex="0"
     class="group relative block min-h-[200px] cursor-pointer overflow-hidden rounded-[12px] border border-[#e2e5eb] bg-white px-4 pb-4 pt-3 shadow-[0_2px_10px_rgba(15,23,42,0.09)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(15,23,42,0.15)] sm:min-h-[220px]"
@@ -80,3 +43,53 @@ function handleClick() {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+const localePath = useLocalePath()
+
+const props = withDefaults(
+  defineProps<{
+    title: string
+    description: string
+    periodeModulId?: string | number | null
+    unitLingkupPeriodeModulId?: string | number | null
+    aspekPeriodeModulId?: string | number | null
+    accentVariant?: 'wave' | 'curve' | 'corner'
+    surfaceColor?: string
+  }>(),
+  {
+    accentVariant: 'wave',
+    surfaceColor: '#ffffff',
+  },
+)
+
+const toast = useToast()
+const router = useRouter()
+
+function handleClick() {
+  if (!props.periodeModulId || !props.unitLingkupPeriodeModulId) {
+    toast.add({
+      title: t('periodeModul.belumAdaRiwayatPelaksanaan.judul'),
+      description: t('periodeModul.belumAdaRiwayatPelaksanaan.deskripsi'),
+      color: 'error',
+    })
+
+    return
+  }
+
+  if (!props.aspekPeriodeModulId) {
+    toast.add({
+      title: t('periodeModul.belumAdaAspek.judul'),
+      description: t('periodeModul.belumAdaAspek.deskripsi'),
+      color: 'error',
+    })
+
+    return
+  }
+
+  router.push(localePath(`/dashboard/periode-modul/${props.periodeModulId}/unit/${props.unitLingkupPeriodeModulId}/fm1/aspek/${props.aspekPeriodeModulId}`))
+}
+</script>

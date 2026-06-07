@@ -1,27 +1,311 @@
-<script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useRoute } from '#imports'
-import {
-  FM2_SCORE_FILTER_OPTIONS,
-  getFm2DashboardDummyData,
-  matchesFm2ScoreFilter,
-  resolveFm2Band,
-  type Fm2AspekTableRow,
-  type Fm2ScoreFilterValue,
-} from '#features/periode-modul/data/fm2DashboardDummy'
+<template>
+  <section class="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6 md:gap-6 lg:px-8 lg:py-8">
+    <div v-if="fm2Store.isLoadingInfo || fm2Store.isLoadingAspeks" class="flex justify-center p-8">
+      <span class="text-gray-500">{{ t('loading', 'Loading...') }}</span>
+    </div>
+    <template v-else>
+      <section
+        class="rounded-xl bg-gradient-to-br from-[#d90000] to-[#f30000] px-5 py-6 text-white shadow-md sm:px-6 lg:p-8">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between">
+          <div class="max-w-3xl">
+            <h1 class="text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
+              {{ t('fm2.title') }}
+            </h1>
+            <p class="mt-2 text-sm leading-relaxed text-white/90 sm:text-base">
+              {{ t('fm2.description') }}
+            </p>
+          </div>
+        </div>
 
+        <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:mt-8 lg:gap-4">
+          <article class="rounded-lg bg-white/10 px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-white/80">
+              {{ t('fm2.startTime') }}
+            </p>
+            <p class="mt-1 text-base font-bold sm:text-lg">
+              {{ fm2Store.informasi?.tanggal_mulai ? new Date(fm2Store.informasi.tanggal_mulai).toLocaleString(locale) : '-' }}
+            </p>
+          </article>
+          <article class="rounded-lg bg-white/10 px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-white/80">
+              {{ t('fm2.endTime') }}
+            </p>
+            <p class="mt-1 text-base font-bold sm:text-lg">
+              {{ fm2Store.informasi?.tanggal_selesai ? new Date(fm2Store.informasi.tanggal_selesai).toLocaleString(locale) : '-' }}
+            </p>
+          </article>
+          <article class="rounded-lg bg-white/10 px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-white/80">
+              {{ t('fm2.status') }}
+            </p>
+            <p class="mt-1 text-base font-bold sm:text-lg">
+              {{ fm2Store.informasi?.status_pelaksanaan === 'SEDANG_BERLANGSUNG' ? t('fm2.active') : t('fm2.inactive') }}
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm sm:p-5 lg:p-6">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <article class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+            <p class="text-xs font-semibold text-gray-600 sm:text-sm" :class="isRTL ? 'text-right' : 'text-left'">
+              {{ t('fm2.aspectVeryGood') }}
+            </p>
+            <p class="mt-1.5 text-xl font-bold text-red-700 sm:text-2xl lg:text-3xl"
+              :class="isRTL ? 'text-left' : 'text-right'">
+              {{ formatNumber(countSangatBaik) }}
+            </p>
+          </article>
+
+          <article class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+            <p class="text-xs font-semibold text-gray-600 sm:text-sm">
+              {{ t('fm2.aspectGood') }}
+            </p>
+            <p class="mt-1.5 text-xl font-bold text-red-700 sm:text-2xl lg:text-3xl"
+              :class="isRTL ? 'text-left' : 'text-right'">
+              {{ formatNumber(countBaik) }}
+            </p>
+          </article>
+
+          <article class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+            <p class="text-xs font-semibold text-gray-600 sm:text-sm">
+              {{ t('fm2.aspectFair') }}
+            </p>
+            <p class="mt-1.5 text-xl font-bold text-red-700 sm:text-2xl lg:text-3xl"
+              :class="isRTL ? 'text-left' : 'text-right'">
+              {{ formatNumber(countCukup) }}
+            </p>
+          </article>
+
+          <article class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+            <p class="text-xs font-semibold text-gray-600 sm:text-sm">
+              {{ t('fm2.aspectPoor') }}
+            </p>
+            <p class="mt-1.5 text-xl font-bold text-red-700 sm:text-2xl lg:text-3xl"
+              :class="isRTL ? 'text-left' : 'text-right'">
+              {{ formatNumber(countKurang) }}
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm sm:p-5 lg:p-6">
+        <h2 class="text-lg font-bold text-gray-900 sm:text-xl lg:text-2xl">
+          {{ t('fm2.chartTitle') }}
+        </h2>
+
+        <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
+          <article
+            class="flex flex-col justify-center rounded-xl bg-[#e60000] p-5 text-white shadow-md sm:p-6 lg:col-span-1">
+            <div>
+              <p class="text-sm font-medium opacity-90 sm:text-base">{{ t('fm2.totalReadinessScore') }}</p>
+              <p class="mt-1 text-4xl font-bold tracking-tight sm:text-5xl">
+                {{ fm2Store.skorMonitoring?.skor ? fm2Store.skorMonitoring.skor.toFixed(2) : '0' }}
+                <span class="text-lg font-medium opacity-80 sm:text-xl">/ 4.0</span>
+              </p>
+            </div>
+            <div class="mt-6">
+              <p class="text-sm font-medium opacity-90 sm:text-base">{{ t('fm2.readinessPercentage') }}</p>
+              <p class="mt-1 text-3xl font-bold sm:text-4xl">{{ fm2Store.skorMonitoring?.persentase ? fm2Store.skorMonitoring.persentase.toFixed(1) : '0' }}%</p>
+            </div>
+            <div class="mt-6" v-if="fm2Store.skorMonitoring?.kategori">
+              <span
+                class="inline-flex items-center rounded-full bg-white px-4 py-1.5 text-sm font-bold text-[#e60000] shadow-sm">
+                {{ t('fm2.category') }}: {{ fm2Store.skorMonitoring.kategori }}
+              </span>
+            </div>
+          </article>
+
+          <article
+            class="flex flex-col items-center rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5 lg:col-span-1">
+            <h3 class="w-full text-base font-bold text-gray-800 sm:text-lg">
+              {{ t('fm2.reviewerProfile') }}
+            </h3>
+            <svg v-if="radarAxes.length > 0" viewBox="0 0 420 360" class="mt-4 w-full max-w-[320px]" role="img" aria-label="Radar chart capaian FM02">
+              <g>
+                <polygon v-for="polygon in radarGridPolygons" :key="polygon.id" :points="polygon.points"
+                  class="fill-none stroke-[#d7dce2] stroke-[1.5]" />
+              </g>
+              <g>
+                <line v-for="line in radarAxisLines" :key="line.id" :x1="radarCenter.x" :y1="radarCenter.y" :x2="line.x2"
+                  :y2="line.y2" class="stroke-[#d2d8de] stroke-[1.5]" />
+              </g>
+              <g>
+                <polygon :points="radarDataPolygon" class="fill-[#e80000]/20 stroke-[#e40000] stroke-[2]" />
+                <circle v-for="point in radarDataPoints" :key="point.id" :cx="point.x" :cy="point.y" r="5"
+                  class="fill-[#ffd4d4] stroke-[#e40000] stroke-[2]" />
+              </g>
+              <g>
+                <text v-for="label in radarLabelPoints" :key="label.id" :x="label.x" :y="label.y"
+                  :text-anchor="label.textAnchor" class="fill-gray-600 text-[10px] sm:text-xs">
+                  {{ label.label.substring(0, 15) }}{{ label.label.length > 15 ? '...' : '' }}
+                </text>
+              </g>
+              <g>
+                <text v-for="level in radarLevelLabels" :key="level.id" :x="level.x" :y="level.y"
+                  class="fill-gray-400 text-[10px]">
+                  {{ level.level }}
+                </text>
+              </g>
+            </svg>
+            <div v-else class="flex h-full w-full items-center justify-center">
+              <p class="text-sm text-gray-400">{{ t('fm2.table.empty') }}</p>
+            </div>
+          </article>
+
+          <article class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5 lg:col-span-1">
+            <h3 class="text-base font-bold text-gray-800 sm:text-lg">
+              {{ t('fm2.assessmentIndicators') }}
+            </h3>
+            <ul class="mt-4 flex flex-col gap-3.5">
+              <li class="flex items-center gap-3 text-sm font-medium text-gray-700 sm:text-base">
+                <span class="block h-3.5 w-3.5 shrink-0 rounded-full bg-[#148c42]" />
+                <span>90 - 100% {{ t('fm2.aspectVeryGood') }}</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm font-medium text-gray-700 sm:text-base">
+                <span class="block h-3.5 w-3.5 shrink-0 rounded-full bg-[#1590d0]" />
+                <span>75 - 90% {{ t('fm2.aspectGood') }}</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm font-medium text-gray-700 sm:text-base">
+                <span class="block h-3.5 w-3.5 shrink-0 rounded-full bg-[#e7b208]" />
+                <span>50 - 75% {{ t('fm2.aspectFair') }}</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm font-medium text-gray-700 sm:text-base">
+                <span class="block h-3.5 w-3.5 shrink-0 rounded-full bg-[#e10000]" />
+                <span>0 - 50% {{ t('fm2.aspectPoor') }}</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm sm:p-5 lg:p-6">
+        <h2 class="text-lg font-bold text-gray-900 sm:text-xl lg:text-2xl">
+          {{ t('fm2.aspectEvaluationResult') }}
+        </h2>
+
+        <div class="mt-4 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+          <table class="w-full min-w-[800px] border-collapse text-left">
+            <thead class="bg-gray-100">
+              <tr>
+                <th
+                  class="w-12 border-b border-gray-200 px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-600">
+                  {{ t('fm2.table.no') }}</th>
+                <th class="border-b border-gray-200 px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-600">
+                  {{ t('fm2.table.aspect') }}</th>
+                <th
+                  class="w-40 border-b border-gray-200 px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-600">
+                  {{ t('fm2.table.achievement') }}</th>
+                <th
+                  class="w-32 border-b border-gray-200 px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-600">
+                  {{ t('fm2.table.action') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr v-for="row in paginatedRows" :key="row.id" class="transition hover:bg-gray-50">
+                <td class="px-4 py-4 text-center text-sm text-gray-600 align-top">
+                  {{ row.rowNumber }}
+                </td>
+                <td class="px-4 py-4 align-top">
+                  <p class="text-sm font-bold text-gray-900">{{ row.nama }}</p>
+                  <p class="mt-1 text-xs leading-relaxed text-gray-500">{{ row.deskripsi }}</p>
+                </td>
+                <td class="px-4 py-4 align-top">
+                  <p class="text-sm font-bold text-gray-900">{{ row.skor?.persentase ? row.skor.persentase.toFixed(1) : 0 }}%</p>
+                  <div class="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                    <span class="block h-full rounded-full transition-all duration-300"
+                      :style="{ width: `${row.skor?.persentase ?? 0}%`, backgroundColor: resolveFm2Band(row.skor?.persentase ?? 0).barColor }" />
+                  </div>
+                  <p class="mt-1 text-xs font-medium" :style="{ color: resolveFm2Band(row.skor?.persentase ?? 0).textColor }">
+                    {{ row.skor?.kategori || resolveFm2Band(row.skor?.persentase ?? 0).label }}
+                  </p>
+                </td>
+                <td class="px-4 py-4 text-center align-top">
+                  <button v-if="canCalculate && !row.skor" @click="calculateAspect(row.aspek_periode_modul_id)"
+                    class="inline-flex w-full items-center justify-center rounded-lg border border-red-600 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white disabled:opacity-50"
+                    :disabled="fm2Store.isCalculating">
+                    {{ t('fm2.table.calculateScore') }}
+                  </button>
+                  <span v-else-if="row.skor" class="inline-flex w-full items-center justify-center px-3 py-1.5 text-xs font-semibold text-gray-500">
+                    -
+                  </span>
+                </td>
+              </tr>
+              <tr v-if="paginatedRows.length === 0">
+                <td colspan="4" class="px-4 py-8 text-center text-sm text-gray-500">
+                  {{ t('fm2.table.empty') }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-if="canCalculate && allAspectsCalculated && !fm2Store.skorMonitoring" class="mt-4 flex justify-end">
+          <button @click="calculateMonitoring"
+            class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
+            :disabled="fm2Store.isCalculating">
+            {{ t('fm2.table.calculateAllScore') }}
+          </button>
+        </div>
+
+        <div
+          class="mt-4 flex flex-col-reverse gap-4 border-t border-gray-200 pt-4 sm:flex-row sm:items-center sm:justify-end">
+          <div class="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+            <div class="flex items-center gap-2">
+              <button type="button"
+                class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                :disabled="currentPage === 1" @click="goToPreviousPage">
+                {{ t('fm2.pagination.previous') }}
+              </button>
+              <span
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-sm font-bold text-white shadow-sm">
+                {{ currentPage }}
+              </span>
+              <button type="button"
+                class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                :disabled="currentPage >= totalPages" @click="goToNextPage">
+                {{ t('fm2.pagination.next') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { computed, ref, onMounted } from 'vue'
+import { useRoute } from '#imports'
+import { resolveFm2Band } from '#features/periode-modul/data/fm2DashboardDummy'
+import { useI18n } from 'vue-i18n'
+import { useFm2Store } from '#stores/fm2'
+import { useToast } from '#imports'
+
+const { locale, t } = useI18n()
+const toast = useToast()
+const fm2Store = useFm2Store()
 const route = useRoute()
+
+const isRTL = computed(() => locale.value === 'ar')
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat(
+    locale.value === 'ar'
+      ? 'ar-SA'
+      : locale.value === 'ja'
+        ? 'ja-JP'
+        : locale.value === 'en'
+          ? 'en-US'
+          : 'id-ID'
+  ).format(value)
+}
 
 const pageSize = 10
 const radarCenter = { x: 210, y: 200 }
 const radarRadius = 120
 const radarLevels = [25, 50, 75, 100]
 
-const searchKeyword = ref('')
-const selectedAspekCategory = ref('')
-const selectedFaculty = ref('')
-const selectedStudyProgram = ref('')
-const selectedScoreRange = ref<Fm2ScoreFilterValue | ''>('')
 const currentPage = ref(1)
 
 function normalizeRouteParam(
@@ -29,81 +313,39 @@ function normalizeRouteParam(
   fallbackValue: string
 ): string {
   if (!value) return fallbackValue
-  if (Array.isArray(value)) return value[0] ?? fallbackValue
+  if (Array.isArray(value)) return fallbackValue
   return value
 }
 
 const periodeModulId = computed(() =>
-  normalizeRouteParam(
-    route.params.periode_modul_id as string | string[] | undefined,
-    'pm-2026-genap'
-  )
+  normalizeRouteParam(route.params.periode_modul_id as string | string[] | undefined, '')
 )
 
 const unitId = computed(() =>
-  normalizeRouteParam(route.params.unit_id as string | string[] | undefined, 'unit-tif')
+  normalizeRouteParam(route.params.unit_id as string | string[] | undefined, '')
 )
 
-const dashboardData = computed(() =>
-  getFm2DashboardDummyData({
-    periodeModulId: periodeModulId.value,
-    unitId: unitId.value,
-  })
-)
-
-const scoreFilterOptions = FM2_SCORE_FILTER_OPTIONS
-
-const aspekCategoryOptions = computed(() => {
-  const unique = new Map<string, string>()
-  dashboardData.value.tableRows.forEach((row) => {
-    unique.set(row.aspectCategoryCode, row.aspectCategoryLabel)
-  })
-  return Array.from(unique, ([value, label]) => ({ value, label }))
+onMounted(async () => {
+  if (periodeModulId.value && unitId.value) {
+    await Promise.all([
+      fm2Store.fetchInformasi(periodeModulId.value, unitId.value),
+      fm2Store.checkIsAuditee(unitId.value),
+      fm2Store.fetchSkorAspeks(unitId.value),
+      fm2Store.fetchSkorMonitoring(unitId.value)
+    ])
+  }
 })
 
-const facultyOptions = computed(() => {
-  const unique = new Map<string, string>()
-  dashboardData.value.tableRows.forEach((row) => {
-    unique.set(row.facultyCode, row.facultyLabel)
-  })
-  return Array.from(unique, ([value, label]) => ({ value, label }))
+const isAuditee = computed(() => fm2Store.isAuditee)
+const isBerlangsung = computed(() => fm2Store.informasi?.status_pelaksanaan === 'SEDANG_BERLANGSUNG')
+const canCalculate = computed(() => isAuditee.value && isBerlangsung.value)
+
+const allAspectsCalculated = computed(() => {
+  if (!fm2Store.skorAspeks.length) return false;
+  return fm2Store.skorAspeks.every(a => !!a.skor);
 })
 
-const studyProgramOptions = computed(() => {
-  const unique = new Map<string, string>()
-  dashboardData.value.tableRows.forEach((row) => {
-    unique.set(row.studyProgramCode, row.studyProgramLabel)
-  })
-  return Array.from(unique, ([value, label]) => ({ value, label }))
-})
-
-const filteredRows = computed(() => {
-  const normalizedKeyword = searchKeyword.value.trim().toLowerCase()
-
-  return dashboardData.value.tableRows.filter((row) => {
-    const searchableText = `${row.aspectTitle} ${row.aspectDescription} ${row.note}`.toLowerCase()
-    const scoreFilterValue = selectedScoreRange.value
-    const matchesKeyword = normalizedKeyword.length === 0
-      || searchableText.includes(normalizedKeyword)
-    const matchesAspek = selectedAspekCategory.value.length === 0
-      || row.aspectCategoryCode === selectedAspekCategory.value
-    const matchesFaculty = selectedFaculty.value.length === 0
-      || row.facultyCode === selectedFaculty.value
-    const matchesStudyProgram = selectedStudyProgram.value.length === 0
-      || row.studyProgramCode === selectedStudyProgram.value
-    const matchesScore = scoreFilterValue === ''
-      ? true
-      : matchesFm2ScoreFilter(row.achievement, scoreFilterValue)
-
-    return (
-      matchesKeyword
-      && matchesAspek
-      && matchesFaculty
-      && matchesStudyProgram
-      && matchesScore
-    )
-  })
-})
+const filteredRows = computed(() => fm2Store.skorAspeks)
 
 const totalPages = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / pageSize)))
 
@@ -115,7 +357,19 @@ const paginatedRows = computed(() => {
   }))
 })
 
-const radarAxes = computed(() => dashboardData.value.chart.radarAxes)
+const countSangatBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 90).length)
+const countBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 75 && a.skor.persentase < 90).length)
+const countCukup = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 50 && a.skor.persentase < 75).length)
+const countKurang = computed(() => fm2Store.skorAspeks.filter(a => (a.skor?.persentase && a.skor.persentase < 50) || !a.skor).length)
+
+const radarAxes = computed(() => {
+  if (!fm2Store.skorAspeks.length) return []
+  return fm2Store.skorAspeks.map((a) => ({
+    id: a.id,
+    label: a.nama,
+    value: a.skor?.persentase ?? 0,
+  }))
+})
 
 function getRadarAngle(axisIndex: number, totalAxis: number): number {
   return -Math.PI / 2 + (axisIndex * Math.PI * 2) / totalAxis
@@ -203,10 +457,6 @@ const radarLevelLabels = computed(() =>
   }))
 )
 
-function buildAspekDetailRoute(row: Fm2AspekTableRow): string {
-  return `/dashboard/periode-modul/${encodeURIComponent(periodeModulId.value)}/unit/${encodeURIComponent(unitId.value)}/fm2/aspek/${encodeURIComponent(row.id)}`
-}
-
 function goToPreviousPage() {
   if (currentPage.value === 1) return
   currentPage.value -= 1
@@ -217,431 +467,33 @@ function goToNextPage() {
   currentPage.value += 1
 }
 
-function handleDownloadResult() {
-  const payload = {
-    generatedAt: new Date().toISOString(),
-    context: dashboardData.value.context,
-    hero: dashboardData.value.hero,
-    chart: dashboardData.value.chart,
-    filters: {
-      search: searchKeyword.value,
-      aspek: selectedAspekCategory.value,
-      fakultas: selectedFaculty.value,
-      programStudi: selectedStudyProgram.value,
-      rentangSkor: selectedScoreRange.value,
-    },
-    rows: filteredRows.value,
+async function calculateAspect(aspekPeriodeModulId: string) {
+  try {
+    await fm2Store.calculateSkorAspek(unitId.value, aspekPeriodeModulId)
+    toast.add({
+      title: t('fm2.toast.calculateSuccess'),
+      color: 'green'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('fm2.toast.calculateError'),
+      color: 'red'
+    })
   }
-
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: 'application/json',
-  })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = `fm2-hasil-${dashboardData.value.context.unitId}.json`
-  document.body.append(anchor)
-  anchor.click()
-  anchor.remove()
-  URL.revokeObjectURL(url)
 }
 
-watch(
-  [searchKeyword, selectedAspekCategory, selectedFaculty, selectedStudyProgram, selectedScoreRange],
-  () => {
-    currentPage.value = 1
+async function calculateMonitoring() {
+  try {
+    await fm2Store.calculateSkorMonitoring(unitId.value)
+    toast.add({
+      title: t('fm2.toast.calculateAllSuccess'),
+      color: 'green'
+    })
+  } catch (error) {
+    toast.add({
+      title: t('fm2.toast.calculateAllError'),
+      color: 'red'
+    })
   }
-)
-
-watch(totalPages, (nextTotalPage) => {
-  if (currentPage.value > nextTotalPage) {
-    currentPage.value = nextTotalPage
-  }
-})
+}
 </script>
-
-<template>
-  <section class="mx-auto grid w-full max-w-[1720px] gap-5 px-4 pb-7 pt-4 md:gap-6 md:px-5 md:pb-8 md:pt-5 xl:px-6 xl:pb-9">
-    <section class="rounded-xl bg-[linear-gradient(165deg,#f30000_0%,#d90000_100%)] px-4 py-5 text-white shadow-[0_6px_18px_rgba(15,23,42,0.16)] md:px-5 md:py-6 xl:px-6 xl:py-7">
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
-        <div>
-          <h1 class="text-[clamp(1.5rem,2.3vw,2.25rem)] font-bold leading-tight">
-            {{ dashboardData.hero.title }}
-          </h1>
-          <p class="mt-2 max-w-[760px] text-[clamp(0.9rem,1.15vw,1rem)] text-white/[0.93]">
-            {{ dashboardData.hero.description }}
-          </p>
-        </div>
-
-        <aside class="min-w-[150px] justify-self-start rounded-xl bg-white/20 px-3 py-3 md:justify-self-end md:px-4">
-          <span class="block text-[0.72rem] uppercase tracking-[0.06em] text-white/[0.78]">{{ dashboardData.hero.statusLabel }}</span>
-          <strong class="mt-1.5 block text-[1.45rem] font-bold uppercase leading-tight">{{ dashboardData.hero.statusValue }}</strong>
-          <span class="mt-1.5 block text-sm">{{ dashboardData.hero.statusDate }}</span>
-        </aside>
-      </div>
-
-      <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-        <article class="rounded-lg bg-[linear-gradient(152deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.12)_100%)] px-3.5 py-3 md:px-4">
-          <p class="text-[0.72rem] uppercase tracking-[0.02em] text-white/80">{{ dashboardData.hero.currentStageLabel }}</p>
-          <p class="mt-1.5 text-[1.1rem] font-bold leading-snug md:text-[1.2rem]">{{ dashboardData.hero.currentStageValue }}</p>
-        </article>
-        <article class="rounded-lg bg-[linear-gradient(152deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.12)_100%)] px-3.5 py-3 md:px-4">
-          <p class="text-[0.72rem] uppercase tracking-[0.02em] text-white/80">{{ dashboardData.hero.deadlineLabel }}</p>
-          <p class="mt-1.5 text-[1.1rem] font-bold leading-snug md:text-[1.2rem]">{{ dashboardData.hero.deadlineValue }}</p>
-        </article>
-        <article class="rounded-lg bg-[linear-gradient(152deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.12)_100%)] px-3.5 py-3 md:px-4">
-          <p class="text-[0.72rem] uppercase tracking-[0.02em] text-white/80">{{ dashboardData.hero.noteLabel }}</p>
-          <p class="mt-1.5 text-[1.1rem] font-bold leading-snug md:text-[1.2rem]">{{ dashboardData.hero.noteValue }}</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-4 md:p-5 xl:p-6">
-      <h2 class="text-[clamp(1.3rem,1.9vw,1.75rem)] font-semibold leading-tight text-[#080b12]">
-        Capaian Indikator
-      </h2>
-
-      <div class="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
-        <article
-          v-for="item in dashboardData.indicatorSummary"
-          :key="item.id"
-          class="rounded-xl bg-[#f3f3f3] px-4 pb-4 pt-4 shadow-[inset_0_0_0_1px_#ebebeb]"
-        >
-          <div class="flex items-start justify-between gap-2.5">
-            <h3 class="text-[clamp(1rem,1.4vw,1.2rem)] font-semibold text-[#4a4b4f]">
-              {{ item.title }}
-            </h3>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="h-[18px] w-[18px] text-[#67696d]">
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 17L17 7M9 7h8v8"
-              />
-            </svg>
-          </div>
-
-          <p class="mt-3 text-[clamp(1.9rem,2.7vw,2.4rem)] font-semibold leading-none text-[#06090f]">
-            {{ item.score }}
-          </p>
-
-          <div class="mt-3 h-[10px] w-[150px] overflow-hidden rounded-full bg-[#dce2e9]">
-            <span class="block h-full rounded-full bg-[#45cf74]" :style="{ width: `${item.progressPercent}%` }" />
-          </div>
-
-          <p class="mt-2.5 text-[1.1rem] text-[#1f76aa]">
-            {{ item.subtitle }}
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-3 md:p-4 xl:p-5">
-      <h2 class="text-[clamp(1.3rem,1.9vw,1.75rem)] font-semibold leading-tight text-[#080b12]">
-        Chart Capaian
-      </h2>
-
-      <div class="mt-3.5 grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-[minmax(250px,1fr)_minmax(470px,1.35fr)_minmax(280px,0.9fr)] 2xl:gap-5">
-        <article class="rounded-xl border border-[#ff3f43] bg-[#ff4145] p-4 text-white shadow-[0_6px_14px_rgba(15,23,42,0.1)]">
-          <p class="text-[clamp(1rem,1.3vw,1.2rem)]">Total Skor Kesiapan</p>
-          <p class="mt-1 text-[clamp(2.35rem,4.8vw,3.45rem)] font-bold leading-[0.98]">
-            {{ dashboardData.chart.totalScore.toFixed(2) }}
-            <span class="text-[0.56em] font-semibold">/ {{ dashboardData.chart.maxScore.toFixed(1) }}</span>
-          </p>
-
-          <p class="mt-5 text-[clamp(1rem,1.3vw,1.2rem)]">Persentase Kesiapan</p>
-          <p class="mt-1 text-[clamp(2rem,4.2vw,3rem)] font-bold leading-none">
-            {{ dashboardData.chart.readinessPercentage.toFixed(1) }}%
-          </p>
-
-          <div class="mt-6 inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-[0.95rem] font-semibold text-[#d90000]">
-            Kategori: {{ dashboardData.chart.readinessCategory }}
-          </div>
-        </article>
-
-        <article class="rounded-xl border border-[#dadde2] bg-[#f2f2f2] p-4 shadow-[0_6px_14px_rgba(15,23,42,0.1)]">
-          <h3 class="text-[clamp(1.25rem,1.6vw,1.5rem)] font-bold text-[#1a2130]">
-            Profil Pemeriksa
-          </h3>
-
-          <svg viewBox="0 0 420 360" class="mt-2 w-full" role="img" aria-label="Radar chart capaian FM02">
-            <g>
-              <polygon
-                v-for="polygon in radarGridPolygons"
-                :key="polygon.id"
-                :points="polygon.points"
-                class="fill-none stroke-[#d7dce2] [stroke-width:1.8]"
-              />
-            </g>
-
-            <g>
-              <line
-                v-for="line in radarAxisLines"
-                :key="line.id"
-                :x1="radarCenter.x"
-                :y1="radarCenter.y"
-                :x2="line.x2"
-                :y2="line.y2"
-                class="stroke-[#d2d8de] [stroke-width:1.5]"
-              />
-            </g>
-
-            <g>
-              <polygon
-                :points="radarDataPolygon"
-                class="fill-[rgba(232,0,0,0.4)] stroke-[#e40000] [stroke-width:3]"
-              />
-
-              <circle
-                v-for="point in radarDataPoints"
-                :key="point.id"
-                :cx="point.x"
-                :cy="point.y"
-                r="6"
-                class="fill-[#ffd4d4] stroke-[#e40000] [stroke-width:3]"
-              />
-            </g>
-
-            <g>
-              <text
-                v-for="label in radarLabelPoints"
-                :key="label.id"
-                :x="label.x"
-                :y="label.y"
-                :text-anchor="label.textAnchor"
-                class="fill-[#6b7484] text-[0.95rem]"
-              >
-                {{ label.label }}
-              </text>
-            </g>
-
-            <g>
-              <text
-                v-for="level in radarLevelLabels"
-                :key="level.id"
-                :x="level.x"
-                :y="level.y"
-                class="fill-[#9da5b2] text-[0.75rem]"
-              >
-                {{ level.level }}
-              </text>
-            </g>
-          </svg>
-        </article>
-
-        <article class="rounded-xl border border-[#dadde2] bg-[#f2f2f2] p-4 shadow-[0_6px_14px_rgba(15,23,42,0.1)] lg:col-span-2 2xl:col-span-1">
-          <h3 class="text-[clamp(1.25rem,1.6vw,1.5rem)] font-bold text-[#1a2130]">
-            Indikator Penilaian
-          </h3>
-
-          <ul class="mt-4 grid gap-3">
-            <li
-              v-for="legend in dashboardData.legend"
-              :key="legend.id"
-              class="flex items-center gap-2.5 text-[0.95rem] font-semibold text-[#202938] lg:text-[1rem]"
-            >
-              <span class="inline-block h-4 w-4 rounded-full" :style="{ backgroundColor: legend.dotColor }" />
-              <span>{{ legend.rangeLabel }} {{ legend.label }}</span>
-            </li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-4 md:p-5 xl:p-6">
-      <h2 class="text-[clamp(1.3rem,1.9vw,1.75rem)] font-semibold leading-tight text-[#080b12]">
-        Nilai Aspek dan Indikator
-      </h2>
-
-      <div class="mt-3.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-6">
-        <label class="relative h-10 rounded-[11px] border border-[#d3d7de] bg-[#f8f8f8] pr-[42px] xl:col-span-2">
-          <input
-            v-model="searchKeyword"
-            type="text"
-            placeholder="Search"
-            class="h-full w-full rounded-[11px] border-none bg-transparent px-3.5 text-[0.92rem] text-[#444f63] outline-none placeholder:text-[#8f95a3]"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9399a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.55-5.4a6.95 6.95 0 1 1-13.9 0 6.95 6.95 0 0 1 13.9 0Z" />
-          </svg>
-        </label>
-
-        <label class="relative h-10 rounded-[11px] border border-[#d3d7de] bg-[#f8f8f8]">
-          <select v-model="selectedAspekCategory" class="h-full w-full cursor-pointer appearance-none rounded-[11px] border-none bg-transparent px-3.5 pr-8 text-[0.92rem] text-[#444f63] outline-none">
-            <option value="">Aspek</option>
-            <option
-              v-for="option in aspekCategoryOptions"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9399a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-          </svg>
-        </label>
-
-        <label class="relative h-10 rounded-[11px] border border-[#d3d7de] bg-[#f8f8f8]">
-          <select v-model="selectedFaculty" class="h-full w-full cursor-pointer appearance-none rounded-[11px] border-none bg-transparent px-3.5 pr-8 text-[0.92rem] text-[#444f63] outline-none">
-            <option value="">Fakultas</option>
-            <option
-              v-for="option in facultyOptions"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9399a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-          </svg>
-        </label>
-
-        <label class="relative h-10 rounded-[11px] border border-[#d3d7de] bg-[#f8f8f8]">
-          <select v-model="selectedStudyProgram" class="h-full w-full cursor-pointer appearance-none rounded-[11px] border-none bg-transparent px-3.5 pr-8 text-[0.92rem] text-[#444f63] outline-none">
-            <option value="">TIF</option>
-            <option
-              v-for="option in studyProgramOptions"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9399a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-          </svg>
-        </label>
-
-        <label class="relative h-10 rounded-[11px] border border-[#d3d7de] bg-[#f8f8f8]">
-          <select v-model="selectedScoreRange" class="h-full w-full cursor-pointer appearance-none rounded-[11px] border-none bg-transparent px-3.5 pr-8 text-[0.92rem] text-[#444f63] outline-none">
-            <option value="">&lt; 50%</option>
-            <option
-              v-for="option in scoreFilterOptions"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9399a7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-          </svg>
-        </label>
-      </div>
-
-      <div class="mt-3 overflow-x-auto rounded-xl border border-[#d7dce3] bg-white">
-        <table class="w-full min-w-[920px] border-separate border-spacing-0">
-          <thead>
-            <tr>
-              <th class="w-12 border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-center text-[0.83rem] font-bold text-[#373b42]">No</th>
-              <th class="border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-left text-[0.83rem] font-bold text-[#373b42]">Aspek &amp; Indikator</th>
-              <th class="border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-left text-[0.83rem] font-bold text-[#373b42]">Jumlah Matkul &amp; Dosen</th>
-              <th class="border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-left text-[0.83rem] font-bold text-[#373b42]">Capaian &amp; Skor</th>
-              <th class="border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-left text-[0.83rem] font-bold text-[#373b42]">Catatan</th>
-              <th class="w-[120px] border-b border-[#dfe4ea] bg-[#ebebeb] px-2.5 py-2.5 text-center text-[0.83rem] font-bold text-[#373b42]">Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="row in paginatedRows" :key="row.id">
-              <td class="w-12 border-b border-[#e8ebf0] px-2.5 py-3 text-center align-top text-[0.82rem]">
-                {{ row.rowNumber }}
-              </td>
-
-              <td class="border-b border-[#e8ebf0] px-2.5 py-3 align-top text-[0.82rem]">
-                <p class="text-[0.98rem] font-bold leading-[1.2] text-[#383c45]">{{ row.aspectTitle }}</p>
-                <p class="mt-1 max-w-[520px] text-[0.82rem] leading-[1.55] text-[#555c6b]">{{ row.aspectDescription }}</p>
-              </td>
-
-              <td class="border-b border-[#e8ebf0] px-2.5 py-3 align-top text-[0.82rem]">
-                <p class="max-w-[88px] text-[0.98rem] font-bold leading-[1.3] text-[#353942]">
-                  {{ row.totalCourses }} Mata Kuliah
-                </p>
-                <p class="mt-1.5 text-[0.9rem] text-[#2568e3]">
-                  {{ row.totalLecturers }} Dosen
-                </p>
-              </td>
-
-              <td class="border-b border-[#e8ebf0] px-2.5 py-3 align-top text-[0.82rem]">
-                <p class="text-[0.9rem] font-bold text-[#222836]">
-                  {{ row.achievement }}%
-                </p>
-                <div class="mt-1.5 h-[9px] w-[96px] overflow-hidden rounded-full bg-[#dde3ea]">
-                  <span
-                    class="block h-full rounded-full"
-                    :style="{
-                      width: `${row.achievement}%`,
-                      backgroundColor: resolveFm2Band(row.achievement).barColor,
-                    }"
-                  />
-                </div>
-                <p
-                  class="mt-1 text-[0.84rem]"
-                  :style="{ color: resolveFm2Band(row.achievement).textColor }"
-                >
-                  {{ resolveFm2Band(row.achievement).label }}
-                </p>
-              </td>
-
-              <td class="border-b border-[#e8ebf0] px-2.5 py-3 align-top text-[0.98rem] font-bold text-[#393f49]">
-                {{ row.note }}
-              </td>
-
-              <td class="w-[120px] border-b border-[#e8ebf0] px-2.5 py-3 text-center align-top">
-                <NuxtLink :to="buildAspekDetailRoute(row)" class="inline-flex items-center justify-center rounded-lg border-2 border-[#f03b3d] px-3 py-[5px] text-[0.82rem] font-semibold text-[#f10f12] transition hover:bg-[#f10f12] hover:text-white">
-                  Lihat Detail
-                </NuxtLink>
-              </td>
-            </tr>
-
-            <tr v-if="paginatedRows.length === 0">
-              <td colspan="6" class="px-2.5 py-5 text-center text-sm text-[#6a7280]">
-                Data aspek tidak ditemukan untuk filter yang dipilih.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="mt-3 flex justify-end">
-        <button type="button" class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border-none bg-[#e00000] px-3.5 py-2 text-[0.9rem] font-semibold text-white" @click="handleDownloadResult">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-[15px] w-[15px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v10m0 0 4-4m-4 4-4-4M4 19h16" />
-          </svg>
-          Download Hasil
-        </button>
-      </div>
-
-      <div class="mt-3 flex flex-col gap-2 border-t border-[#dfe3ea] pt-3 md:flex-row md:items-center md:justify-between">
-        <p class="text-[0.86rem] text-[#5a6474]">
-          Menampilkan <strong>{{ paginatedRows.length }}</strong> dari
-          <strong>{{ filteredRows.length }}</strong> data
-        </p>
-
-        <div class="ml-auto inline-flex items-center gap-1.5">
-          <button
-            type="button"
-            class="min-w-[76px] rounded-[9px] border border-[#d8dde5] bg-[#f7f7f7] px-3 py-1.5 text-[0.82rem] text-[#9198a4] disabled:cursor-not-allowed disabled:opacity-80"
-            :disabled="currentPage === 1"
-            @click="goToPreviousPage"
-          >
-            Previous
-          </button>
-          <span class="inline-flex h-[34px] min-w-[34px] items-center justify-center rounded-[10px] bg-[#ea0000] text-[0.88rem] font-semibold text-white">{{ currentPage }}</span>
-          <button
-            type="button"
-            class="min-w-[76px] rounded-[9px] border border-[#d8dde5] bg-[#f7f7f7] px-3 py-1.5 text-[0.82rem] text-[#9198a4] disabled:cursor-not-allowed disabled:opacity-80"
-            :disabled="currentPage >= totalPages"
-            @click="goToNextPage"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
-  </section>
-</template>

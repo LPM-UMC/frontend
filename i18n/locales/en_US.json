@@ -1,4 +1,13 @@
 {
+  "toast": {
+    "common": {
+      "unexpectedError": "An unexpected issue occurred while processing your request. Please try again later."
+    },
+    "auth": {
+      "loginSuccess": "Welcome back. You have successfully signed in.",
+      "invalidCredentials": "The email address or password you entered is incorrect. Please verify your credentials and try again."
+    }
+  },
   "basic": {
     "namaAplikasi": "Integrated Monitoring and Evaluation Information System",
     "namaKampus": "Muhammadiyah University of Cirebon"
@@ -18,6 +27,10 @@
       "sebelumnya": "Previous",
       "berikutnya": "Next"
     },
+    "boolean": {
+      "true": "Yes",
+      "false": "No"
+    },
     "buat": "Create",
     "edit": "Edit",
     "hapus": "Delete",
@@ -25,7 +38,10 @@
     "kembali": "Back",
     "simpan": "Save",
     "batal": "Cancel",
-    "berhasil": "Success"
+    "berhasil": "Success",
+    "tidakAdaData": "No data available.",
+    "terbaru": "Newest",
+    "terlama": "Oldest"
   },
   "footer": {
     "copyright": "© 2026 All Rights Reserved."
@@ -59,7 +75,22 @@
     "silahkanMasuk": "Please sign in to continue",
     "masukGoogle": "Sign in with Google",
     "mengalihkan": "Redirecting...",
-    "kembali": "Back"
+    "kembali": "Back",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "masuk": "Sign In",
+    "atau": "Or",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordMax": "Password must be a maximum of 255 characters",
+    "userNotFound": "Email not found",
+    "invalidPassword": "Incorrect password",
+    "accountDisabled": "Your account has been disabled",
+    "unauthorized": "You do not have access",
+    "unknownError": "An error occurred, please try again"
   },
   "dasborModul": {
     "selamatDatang": {
@@ -411,6 +442,10 @@
     "lihatEvaluasiTerbaru": "View Latest Evaluations",
     "placeholder": {
       "cari": "Search evaluations by name or description..."
+    },
+    "kosong": {
+      "judul": "Module Not Found",
+      "deskripsi": "Currently, there are no monitoring and evaluation modules available or matching your search criteria."
     }
   },
   "ami": {
@@ -418,6 +453,10 @@
     "lihatAuditTerbaru": "View Latest Audits",
     "placeholder": {
       "cari": "Search audits by name or description..."
+    },
+    "kosong": {
+      "judul": "Module Not Found",
+      "deskripsi": "Currently, there are no internal quality audit modules available or matching your search criteria."
     }
   },
   "fm": {
@@ -441,6 +480,172 @@
     },
     "laporan": {
       "judul": "Report"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "Start Time",
+    "waktuBerakhir": "End Time",
+    "status": "Status",
+    "semuaStatus": "All Statuses",
+    "sudahDievaluasi": "Evaluated",
+    "belumDievaluasi": "Not Evaluated",
+    "pilihAspek": "Select Aspect",
+    "evaluasi": "Evaluate",
+    "lihatHasilEvaluasi": "View Evaluation Results",
+    "detailAspek": "Aspect Details",
+    "objekEvaluasi": "Evaluation Object",
+    "indikatoEvaluasi": "Evaluation Indicator",
+    "pastikanIndikatorDinilai": "Make sure all evaluation indicators have been assessed before the end time.",
+    "lingkupEvaluasi": "Evaluation Scope",
+    "unitLingkupEvaluasi": "Evaluation Scope Unit",
+    "pihakTerkait": "Related Parties",
+    "daftarObjekEvaluasi": "List of Evaluation Objects",
+    "unitObjekEvaluasi": {
+      "tambah": "Add Evaluation Object Unit",
+      "deskripsi": "Evaluation object units are specific entities or groups that are evaluated within the scope of a module. These units can include departments, programs, or other organizational components that are relevant to the evaluation process."
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "No Evaluation History Available",
+      "deskripsi": "No implementation data is available for this module yet. Please check back later or contact the administrator for more information."
+    },
+    "belumAdaAspek": {
+      "judul": "No Aspects Available",
+      "deskripsi": "There are currently no evaluation aspects available for this module. Please check back later or contact the administrator for more information."
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "Berkas Bukti Belum Tersedia",
+      "deskripsi": "Currently, there are no supporting documents available for this evaluation aspect. Please check back later or contact the administrator for more information."
+    },
+    "roles": {
+      "auditee": "Auditee",
+      "evaluator": "Evaluator",
+      "reviewer": "Reviewer"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "Not Started",
+      "SEDANG_BERLANGSUNG": "In Progress",
+      "SELESAI": "Completed",
+      "DIBATALKAN": "Cancelled"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "Provide justification for this evaluation result...",
+      "cariObjekEvaluasi": "Search evaluation objects by name or description..."
+    },
+    "evaluasi": {
+      "tipeBiner": "Binary Evaluation (Yes/No)",
+      "tipeSkala": "Scale Evaluation",
+      "tipeCek": "Checklist Evaluation",
+      "catatanLabel": "Note",
+      "menyimpan": "Saving...",
+      "simpan": "Save",
+      "toast": {
+        "berhasilMenyimpan": "Indicator answer saved successfully.",
+        "gagalMenyimpan": "Failed to save answer. Please try again.",
+        "validasiGagal": "Please check your form input again.",
+        "gagalJudul": "Failed"
+      },
+      "validasi": {
+        "binerRequired": "Please select one of the evaluation options (Yes/No)",
+        "skalaRequired": "Please select the evaluation scale",
+        "cekRequired": "At least one checklist option must be selected"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "Evaluation Object",
+      "deskripsi": "Evaluation objects are specific entities or groups that are evaluated within the scope of a module. These units can include departments, programs, or other organizational components that are relevant to the evaluation process.",
+      "model": {
+        "nama": "Name",
+        "deskripsi": "Description"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "Input Instrument Evidence",
+      "deskripsiInput": "Provide evidence for the evaluation indicator by uploading relevant documents, images, or other supporting files that demonstrate compliance with the evaluation criteria.",
+      "mulaiInput": "Start Input",
+      "validasi": {
+        "link": {
+          "required": "Document link is required",
+          "invalid": "Invalid document link format",
+          "max": "Document link maximum 255 characters"
+        },
+        "catatan": {
+          "min": "Note is required",
+          "max": "Note maximum 2000 characters"
+        }
+      },
+      "dokumenBukti": "EVIDENCE DOCUMENT",
+      "buktiPendukung": "Supporting Evidence",
+      "cantumkanLink": "Include a link to the supporting document and provide brief details",
+      "linkGoogleDrive": "Google Drive Document Link",
+      "lihatFormatBukti": "View Evidence Format Here",
+      "catatanPanduan": "Guide Note:",
+      "catatanTambahan": "Additional Notes",
+      "berikanDeskripsi": "Provide a brief description or additional details",
+      "maksimal2000Karakter": "Maximum 2000 characters",
+      "simpanBukti": "Save Supporting Evidence",
+      "menyimpan": "Saving...",
+      "dokumenLainnya": "OTHER DOCUMENTS",
+      "formPengisian": "Form",
+      "dari": "of",
+      "data": "data",
+      "berhasilMenyimpan": "Instrument evidence saved successfully.",
+      "gagalMenyimpan": "Failed to save instrument evidence. Please try again."
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "Email is required",
+        "invalid": "Invalid email format",
+        "min": "Email must be at least 5 characters",
+        "max": "Email must be a maximum of 255 characters"
+      },
+      "password": {
+        "required": "Password is required",
+        "min": "Password must be at least 8 characters",
+        "max": "Password must be a maximum of 255 characters"
+      }
+    }
+  },
+  "fm2": {
+    "title": "Monitoring Form 02",
+    "description": "Dashboard to monitor the achievement of readiness assessment indicators at the University. Data is updated periodically to provide the latest overview of the progress and achievements of each unit.",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "aspectVeryGood": "Very Good Aspect",
+    "aspectGood": "Good Aspect",
+    "aspectFair": "Fair Aspect",
+    "aspectPoor": "Poor Aspect",
+    "chartTitle": "Achievement Chart",
+    "totalReadinessScore": "Total Readiness Score",
+    "readinessPercentage": "Readiness Percentage",
+    "category": "Category",
+    "reviewerProfile": "Reviewer Profile",
+    "assessmentIndicators": "Assessment Indicators",
+    "aspectEvaluationResult": "Aspect Evaluation Result",
+    "table": {
+      "no": "No",
+      "aspect": "Aspect",
+      "achievement": "Achievement",
+      "action": "Action",
+      "calculateScore": "Calculate Score",
+      "calculateAllScore": "Calculate Monitoring Score",
+      "empty": "Aspect data not found for the selected filter."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "toast": {
+      "calculateSuccess": "Score successfully calculated",
+      "calculateError": "Failed to calculate score",
+      "calculateAllSuccess": "Monitoring score successfully calculated",
+      "calculateAllError": "Failed to calculate monitoring score"
     }
   }
 }

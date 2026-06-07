@@ -3,15 +3,18 @@
   <div dir="ltr" class="min-h-screen bg-[#e4e4e6] text-slate-900">
     <!-- HEADER -->
     <header dir="ltr" class="fixed inset-x-0 top-0 z-30 border-b border-[#d9d9d9] bg-[#f4f4f4]">
-      <div dir="ltr"
+      <div
+dir="ltr"
         class="mx-auto flex h-16.5 w-full max-w-550 items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
         <!-- LEFT -->
         <div dir="ltr" class="flex min-w-0 items-center gap-2.5">
           <!-- Mobile menu -->
-          <button type="button" aria-label="Buka menu modul"
+          <button
+type="button" aria-label="Buka menu modul"
             class="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#d1d5db] bg-white text-[#394150] shadow-[0_6px_16px_rgba(15,23,42,0.08)] lg:hidden"
             @click="isMobileSidebarOpen = true">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+            <svg
+xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -25,23 +28,29 @@
             </div>
 
             <!-- Text boleh ikut locale -->
-            <div class="hidden min-w-0 leading-tight sm:block" :dir="locale === 'ar' ? 'rtl' : 'ltr'" :class="locale === 'ar'
+            <div
+class="hidden min-w-0 leading-tight sm:block" :dir="locale === 'ar' ? 'rtl' : 'ltr'" :class="locale === 'ar'
               ? 'text-right'
               : 'text-left'">
-              <p class="truncate text-[14px] font-bold text-red-800">
+              <span class="block truncate text-[15px] font-bold text-red-700 md:text-xl">
                 SI-IMOET
-              </p>
+              </span>
+              <span class="hidden truncate text-[11px] text-gray-500 sm:block font-bold">
+                LPM &amp; SPI UMC
+              </span>
             </div>
           </NuxtLink>
 
           <!-- Collapse button -->
-          <button type="button"
+          <button
+type="button"
             class="hidden h-9 w-9 items-center justify-center rounded-[10px] border border-[#d1d5db] bg-white text-[#394150] shadow-[0_6px_16px_rgba(15,23,42,0.08)] transition hover:bg-[#eef0f2] lg:inline-flex cursor-pointer"
             :aria-label="isSidebarCollapsed
               ? 'Buka sidebar'
               : 'Tutup sidebar'
               " @click="toggleSidebar">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 transition-transform" :class="isSidebarCollapsed
+            <svg
+xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 transition-transform" :class="isSidebarCollapsed
               ? 'rotate-180'
               : ''
               " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -50,29 +59,63 @@
           </button>
         </div>
 
-        <!-- RIGHT -->
-        <div dir="ltr" class="hidden items-center gap-3 md:flex">
-          <ULocaleSelect :model-value="locale" :locales="locales" class="cursor-pointer" @update:model-value="
-            setLocale(
-              $event as
-              | 'id'
-              | 'en'
-              | 'ar'
-              | 'ja'
-            )
-            " />
+        <div dir="ltr" class="hidden items-center gap-2 lg:flex">
+
+          <!-- Periode Modul -->
+          <div class="w-44">
+            <select
+v-model="selectedPeriodeModul"
+              class="h-9 w-full rounded-lg border border-[#d8dde4] bg-white px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition focus:border-red-500 cursor-pointer">
+              <option v-for="item in periodeModulOptions" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Unit Lingkup -->
+          <div class="w-44">
+            <select
+v-model="selectedUnitLingkup"
+              class="h-9 w-full rounded-lg border border-[#d8dde4] bg-white px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition focus:border-red-500 cursor-pointer">
+              <option v-for="item in unitLingkupOptions" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Bahasa -->
+          <ULocaleSelect
+            :model-value="locale"
+            :locales="locales"
+            class="cursor-pointer"
+            @update:model-value="(val: any) => setLocale(val.code || val)"
+          />
+
         </div>
+
       </div>
     </header>
 
     <!-- SIDEBAR -->
-    <ManajemenPeriodeModulSidebar :menus="modulMenus" :active-menu-id="activeMenuId" :is-collapsed="isSidebarCollapsed"
-      :is-mobile-open="isMobileSidebarOpen" :profile="sidebarProfile" @menu-select="handleMenuSelect" @close-mobile="
-        isMobileSidebarOpen = false
-        " />
+    <ManajemenPeriodeModulSidebar
+      :menus="modulMenus"
+      :active-menu-id="activeMenuId"
+      :is-collapsed="isSidebarCollapsed"
+      :is-mobile-open="isMobileSidebarOpen"
+      :profile="sidebarProfile"
+      :selected-periode-modul="selectedPeriodeModul"
+      :selected-unit-lingkup="selectedUnitLingkup"
+      :periode-modul-options="periodeModulOptions"
+      :unit-lingkup-options="unitLingkupOptions"
+      @update:selected-periode-modul="selectedPeriodeModul = $event"
+      @update:selected-unit-lingkup="selectedUnitLingkup = $event"
+      @menu-select="handleMenuSelect"
+      @close-mobile="isMobileSidebarOpen = false"
+    />
 
     <!-- MAIN -->
-    <main dir="ltr" class="flex-1 bg-[#f4f4f4] pb-6 pt-16.5 transition-[padding-left] duration-300" :class="isSidebarCollapsed
+    <main
+dir="ltr" class="flex-1 bg-[#f4f4f4] pb-6 pt-16.5 transition-[padding-left] duration-300" :class="isSidebarCollapsed
       ? 'lg:pl-21'
       : 'lg:pl-72.5'
       ">
@@ -82,14 +125,14 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { computed, ref, watch, } from 'vue'
 import { navigateTo, useRoute, } from '#imports'
 import { en, id, ar, ja, } from '@nuxt/ui/locale'
 import ManajemenPeriodeModulSidebar from '~/components/layout/ManajemenPeriodeModulSidebar.vue'
 
+const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
-
-const { locale, setLocale, t, } = useI18n()
 
 const locales = [
   id,
@@ -98,105 +141,145 @@ const locales = [
   ja,
 ]
 
+const route = useRoute()
+
+const pId = route.params.periode_modul_id as string
+const uId = route.params.unit_id as string
+const aId = route.params.aspek_id as string
+
+if (!pId || !uId || !aId) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Halaman Tidak Ditemukan',
+    fatal: true
+  })
+}
+
+const selectedPeriodeModul = ref(pId)
+const selectedUnitLingkup = ref(uId)
+
+watch(selectedPeriodeModul, (newVal) => {
+  if (newVal && newVal !== pId) {
+    navigateTo({ name: route.name as string, params: { ...route.params, periode_modul_id: newVal } })
+  }
+})
+
+watch(selectedUnitLingkup, (newVal) => {
+  if (newVal && newVal !== uId) {
+    navigateTo({ name: route.name as string, params: { ...route.params, unit_id: newVal } })
+  }
+})
+
+const { data: layoutOptions } = await useAsyncData(`layout-options-${pId}`, async () => {
+  const baseURL = useRuntimeConfig().public.apiBaseUrl || 'http://localhost:3001'
+  const headers = { "Accept-Language": locale.value }
+  
+  let pmOptions: { value: string, label: string }[] = []
+  let ulOptions: { value: string, label: string }[] = []
+
+  try {
+    const pmData = await $fetch<any>(`/periode-modul/${pId}`, { baseURL, headers, credentials: "include" })
+    const modulId = pmData?.data?.modul?.id
+
+    if (modulId) {
+      const pmRes = await $fetch<any>(`/periode-modul/modul/${modulId}`, { baseURL, headers, credentials: "include" })
+      pmOptions = pmRes?.data?.map((item: any) => ({
+        value: item.id,
+        label: `${item.periode?.tahun_ajaran || ''} - ${item.periode?.semester || ''}`
+      })) || []
+    }
+
+    const ulRes = await $fetch<any>(`/periode-modul/${pId}/unit-lingkup`, { baseURL, headers, credentials: "include" })
+    ulOptions = ulRes?.data?.map((item: any) => ({
+      value: item.id,
+      label: item.unit_lingkup?.nama || ''
+    })) || []
+  } catch (err) {
+    console.error("Failed to load layout options", err)
+  }
+
+  return { pmOptions, ulOptions }
+}, { watch: [locale] })
+
+const periodeModulOptions = computed(() => layoutOptions.value?.pmOptions || [])
+const unitLingkupOptions = computed(() => layoutOptions.value?.ulOptions || [])
+
 type MenuItem = {
   id: string
   label: string
   to?: string
   icon: string
 }
-
-const route = useRoute()
-
 const isSidebarCollapsed = ref(false)
 const isMobileSidebarOpen = ref(false)
 
 const modulMenus = computed<MenuItem[]>(
-  () => [
-    {
-      id: 'home',
-      label: t('navigasi.dasbor'),
-      to: localePath('/dashboard'),
-      icon: 'home',
-    },
-    {
-      id: 'fm01',
-      label: t('fm.monitoring.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm1/aspek/1'),
-      icon: 'monitoring',
-    },
-    {
-      id: 'fm02',
-      label: t('fm.hasilEvaluasi.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm2'),
-      icon: 'evaluation',
-    },
-    {
-      id: 'fm03',
-      label: t('fm.temuan.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm3'),
-      icon: 'finding',
-    },
-    {
-      id: 'fm04',
-      label: t('fm.rtl.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm4'),
-      icon: 'followup',
-    },
-    {
-      id: 'fm05',
-      label: t('fm.beritaAcara.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm5'),
-      icon: 'minutes',
-    },
-    {
-      id: 'fm06',
-      label: t('fm.survei.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm6'),
-      icon: 'survey',
-    },
-    {
-      id: 'fm07',
-      label: t('fm.laporan.judul'),
-      to: localePath('/dashboard/periode-modul/1/unit/1/fm7'),
-      icon: 'report',
-    },
-  ]
+  () => {
+    return [
+      {
+        id: 'home',
+        label: t('navigasi.dasbor'),
+        to: localePath('/dashboard'),
+        icon: 'home',
+      },
+      {
+        id: 'fm01',
+        label: t('fm.monitoring.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm1/aspek/${aId}`),
+        icon: 'monitoring',
+      },
+      {
+        id: 'fm02',
+        label: t('fm.hasilEvaluasi.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm2`),
+        icon: 'evaluation',
+      },
+      {
+        id: 'fm03',
+        label: t('fm.temuan.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm3`),
+        icon: 'finding',
+      },
+      {
+        id: 'fm04',
+        label: t('fm.rtl.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm4`),
+        icon: 'followup',
+      },
+      {
+        id: 'fm05',
+        label: t('fm.beritaAcara.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm5`),
+        icon: 'minutes',
+      },
+      {
+        id: 'fm06',
+        label: t('fm.survei.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm6`),
+        icon: 'survey',
+      },
+      {
+        id: 'fm07',
+        label: t('fm.laporan.judul'),
+        to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm7`),
+        icon: 'report',
+      },
+    ]
+  }
 )
 
-const activeMenuId =
-  computed(() => {
-    const sortedMenus =
-      [
-        ...modulMenus.value,
-      ].sort(
-        (a, b) =>
-          (
-            b.to?.length ||
-            0
-          ) -
-          (
-            a.to?.length ||
-            0
-          )
-      )
-
-    const current =
-      sortedMenus.find(
-        (menu) => {
-          if (!menu.to) {
-            return false
-          }
-
-          return route.path.startsWith(
-            menu.to
-          )
-        }
-      )
-
-    return (
-      current?.id ?? ''
-    )
-  })
+const activeMenuId = computed(() => {
+  const path = route.path;
+  if (path.includes(`/fm1`)) return 'fm01';
+  if (path.includes(`/fm2`)) return 'fm02';
+  if (path.includes(`/fm3`)) return 'fm03';
+  if (path.includes(`/fm4`)) return 'fm04';
+  if (path.includes(`/fm5`)) return 'fm05';
+  if (path.includes(`/fm6`)) return 'fm06';
+  if (path.includes(`/fm7`)) return 'fm07';
+  if (path.endsWith(`/dashboard`)) return 'home';
+  return '';
+});
 
 async function handleMenuSelect(
   item: MenuItem

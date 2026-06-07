@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import type { RoleResponse } from '#types/role'
+
 interface ProfileUser {
   name: string
   email: string
@@ -10,14 +13,26 @@ interface ProfileUser {
 withDefaults(defineProps<{
   open: boolean
   user: ProfileUser
+  roles?: RoleResponse[]
+  activeRole?: RoleResponse | null
 }>(), {
   open: false,
+  roles: () => [],
+  activeRole: null,
 })
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'signout'): void
+  (e: 'changeRole', role: RoleResponse): void
 }>()
+
+const isDropdownOpen = ref(false)
+
+function selectRole(role: RoleResponse) {
+  emit('changeRole', role)
+  isDropdownOpen.value = false
+}
 </script>
 
 <template>
@@ -41,7 +56,7 @@ const emit = defineEmits<{
           <button
             type="button"
             aria-label="Close profile dialog"
-            class="absolute right-4 top-3 text-[#9ca3af] transition hover:text-[#6b7280]"
+            class="absolute cursor-pointer right-4 top-3 text-[#9ca3af] transition hover:text-[#6b7280]"
             @click="emit('close')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -72,16 +87,66 @@ const emit = defineEmits<{
               {{ user.email }}
             </p>
 
-            <div class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#f5dce8] px-3 py-1.5 text-[12px] font-medium text-[#de1874] sm:text-[13px]">
+            <div v-if="roles && roles.length > 1" class="relative mt-4 inline-block text-left w-full max-w-[240px] mx-auto">
+              <div>
+                <button
+                  type="button"
+                  class="inline-flex w-full cursor-pointer justify-between items-center gap-x-1.5 rounded-2xl bg-white cursor-pointer px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+                  @click="isDropdownOpen = !isDropdownOpen"
+                >
+                  <span class="flex cursor-pointer items-center gap-1.5 text-[#de1874]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.12a7.5 7.5 0 0115 0" />
+                    </svg>
+                    {{ activeRole?.nama || user.role }}
+                  </span>
+                  <svg class="-mr-1 h-5 w-5 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': isDropdownOpen }" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+
+              <transition
+                enter-active-class="transition ease-out duration-100"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <div
+                  v-if="isDropdownOpen"
+                  class="absolute right-0 left-0 z-50 mt-1 max-h-40 overflow-y-auto origin-top rounded-xl bg-white scrollbar-thin"
+                >
+                  <div class="py-1">
+                    <button
+                      v-for="role in roles"
+                      :key="role.id"
+                      type="button"
+                      class="flex w-full cursor-pointer items-center px-4 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-red- transition-colors cursor-pointer"
+                      :class="{ 'bg-slate-50 text-[#de1874]': role.id === activeRole?.id }"
+                      @click="selectRole(role)"
+                    >
+                      <span class="flex-1">{{ role.nama }}</span>
+                      <svg v-if="role.id === activeRole?.id" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#de1874]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </transition>
+            </div>
+
+            <div v-else class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#f5dce8] px-3 py-1.5 text-[12px] font-medium text-[#de1874] sm:text-[13px]">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.12a7.5 7.5 0 0115 0" />
               </svg>
-              <span>{{ user.role }}</span>
+              <span>{{ activeRole?.nama || user.role }}</span>
             </div>
 
             <button
               type="button"
-              class="mt-5 flex w-full items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px]"
+              class="mt-5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px] cursor-pointer"
               @click="emit('signout')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

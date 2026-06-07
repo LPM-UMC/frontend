@@ -158,7 +158,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="(row, index) in paginatedRows" :key="row.id" @click="goToEditPage(row.id)">
+            <tr v-for="(row, index) in paginatedRows" :key="row.id">
               <td class="px-3 py-3">
                 {{ formatNumber(showingFrom + index) }}
               </td>

@@ -22,6 +22,9 @@ export type ModulResponse = {
   is_aktif?: boolean;
   total_aspek?: number;
   lingkup?: LingkupResponse;
+  periode_modul_id?: string;
+  unit_lingkup_periode_modul_id?: string;
+  aspek_periode_modul_id?: string;
   created_at?: Date;
   updated_at?: Date;
 };

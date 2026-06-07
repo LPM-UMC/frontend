@@ -1,4 +1,13 @@
 {
+  "toast": {
+    "common": {
+      "unexpectedError": "حدثت مشكلة أثناء معالجة طلبك. يرجى المحاولة مرة أخرى لاحقًا."
+    },
+    "auth": {
+      "loginSuccess": "مرحبًا بعودتك. تم تسجيل الدخول بنجاح.",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى التحقق من بيانات الاعتماد والمحاولة مرة أخرى."
+    }
+  },
   "basic": {
     "namaAplikasi": "نظام معلومات المراقبة والتقييم المتكامل",
     "namaKampus": "جامعة المحمدية تشيريبون"
@@ -18,6 +27,10 @@
       "sebelumnya": "السابق",
       "berikutnya": "التالي"
     },
+    "boolean": {
+      "true": "نعم",
+      "false": "لا"
+    },
     "buat": "إنشاء",
     "edit": "تعديل",
     "hapus": "حذف",
@@ -25,7 +38,10 @@
     "kembali": "عودة",
     "simpan": "حفظ",
     "batal": "إلغاء",
-    "berhasil": "نجاح"
+    "berhasil": "نجاح",
+    "tidakAdaData": "لا توجد بيانات متاحة.",
+    "terbaru": "الأحدث",
+    "terlama": "الأقدم"
   },
   "footer": {
     "copyright": "© ٢٠٢٦ جميع الحقوق محفوظة."
@@ -59,7 +75,22 @@
     "silahkanMasuk": "يرجى تسجيل الدخول للمتابعة",
     "masukGoogle": "تسجيل الدخول باستخدام Google",
     "mengalihkan": "جارٍ إعادة التوجيه...",
-    "kembali": "عودة"
+    "kembali": "عودة",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "rememberMe": "تذكرني",
+    "masuk": "تسجيل الدخول",
+    "atau": "أو",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "invalidEmail": "صيغة البريد الإلكتروني غير صالحة",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordMin": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+    "passwordMax": "كلمة المرور يجب أن تكون 255 حرفًا كحد أقصى",
+    "userNotFound": "البريد الإلكتروني غير موجود",
+    "invalidPassword": "كلمة المرور غير صحيحة",
+    "accountDisabled": "تم تعطيل حسابك",
+    "unauthorized": "ليس لديك صلاحية الوصول",
+    "unknownError": "حدث خطأ، يرجى المحاولة مرة أخرى"
   },
   "dasborModul": {
     "selamatDatang": {
@@ -411,6 +442,10 @@
     "lihatEvaluasiTerbaru": "عرض أحدث التقييمات",
     "placeholder": {
       "cari": "البحث عن التقييمات بالاسم أو الوصف..."
+    },
+    "kosong": {
+      "judul": "الوحدة غير موجودة",
+      "deskripsi": "حاليًا، لا توجد وحدات متابعة وتقييم متاحة أو مطابقة لمعايير البحث الخاصة بك."
     }
   },
   "ami": {
@@ -418,6 +453,10 @@
     "lihatAuditTerbaru": "عرض أحدث عمليات التدقيق",
     "placeholder": {
       "cari": "البحث عن عمليات التدقيق بالاسم أو الوصف..."
+    },
+    "kosong": {
+      "judul": "الوحدة غير موجودة",
+      "deskripsi": "حاليًا، لا توجد وحدات تدقيق داخلي للجودة متاحة أو مطابقة لمعايير البحث الخاصة بك."
     }
   },
   "fm": {
@@ -441,6 +480,172 @@
     },
     "laporan": {
       "judul": "التقارير"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "وقت البدء",
+    "waktuBerakhir": "وقت الانتهاء",
+    "status": "الحالة",
+    "semuaStatus": "جميع الحالات",
+    "sudahDievaluasi": "تم التقييم",
+    "belumDievaluasi": "لم يتم التقييم",
+    "pilihAspek": "اختر الجوانب للتقييم",
+    "evaluasi": "تقييم",
+    "lihatHasilEvaluasi": "عرض نتائج التقييم",
+    "detailAspek": "تفاصيل الجوانب",
+    "objekEvaluasi": "أطراف التقييم",
+    "indikatoEvaluasi": "مؤشرات التقييم",
+    "pastikanIndikatorDinilai": "تأكد من تقييم جميع مؤشرات التقييم قبل انتهاء الوقت.",
+    "lingkupEvaluasi": "نطاق التقييم",
+    "unitLingkupEvaluasi": "وحدة نطاق التقييم",
+    "pihakTerkait": "الأطراف المعنية",
+    "daftarObjekEvaluasi": "قائمة أطراف التقييم",
+    "unitObjekEvaluasi": {
+      "tambah": "إضافة وحدة تقييم جديدة",
+      "deskripsi": "نموذج لإضافة وحدة تقييم جديدة لأطراف التقييم المحددة، بما في ذلك اسم الوحدة، وصفها، ومؤشرات التقييم المرتبطة بها."
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "لا يوجد تاريخ تقييم متاح",
+      "deskripsi": "لا تتوفر بيانات تنفيذ لهذا النموذج بعد. يرجى التحقق مرة أخرى لاحقًا أو الاتصال بالمسؤول لمزيد من المعلومات."
+    },
+    "belumAdaAspek": {
+      "judul": "لا توجد جوانب تقييم متاحة",
+      "deskripsi": "لا تتوفر جوانب تقييم لهذا النموذج بعد. يرجى التحقق مرة أخرى لاحقًا أو الاتصال بالمسؤول لمزيد من المعلومات."
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "لا توجد ملفات أدلة داعمة متاحة",
+      "deskripsi": "لا تتوفر ملفات أدلة داعمة لهذا النموذج بعد. يرجى التحقق مرة أخرى لاحقًا أو الاتصال بالمسؤول لمزيد من المعلومات."
+    },
+    "roles": {
+      "auditee": "المُقيّم",
+      "evaluator": "المُقيّم",
+      "reviewer": "المُراجع"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "لم يبدأ",
+      "SEDANG_BERLANGSUNG": "قيد التنفيذ",
+      "SELESAI": "مكتمل",
+      "DIBATALKAN": "ألغي"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "يرجى تقديم تبرير لتقييم هذا المؤشر على هذا النحو...",
+      "cariObjekEvaluasi": "ابحث عن أطراف التقييم بالاسم أو الوصف..."
+    },
+    "evaluasi": {
+      "tipeBiner": "التقييم الثنائي (نعم/لا)",
+      "tipeSkala": "تقييم المقياس",
+      "tipeCek": "تقييم قائمة التحقق",
+      "catatanLabel": "ملاحظة",
+      "menyimpan": "جاري الحفظ...",
+      "simpan": "حفظ",
+      "toast": {
+        "berhasilMenyimpan": "تم حفظ استجابة المؤشر بنجاح.",
+        "gagalMenyimpan": "فشل في حفظ الاستجابة. يرجى المحاولة مرة أخرى.",
+        "validasiGagal": "يرجى التحقق من إدخال النموذج مرة أخرى.",
+        "gagalJudul": "فشل"
+      },
+      "validasi": {
+        "binerRequired": "يرجى اختيار أحد خيارات التقييم (نعم/لا)",
+        "skalaRequired": "يرجى اختيار مقياس التقييم",
+        "cekRequired": "يجب تحديد خيار واحد على الأقل من القائمة"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "أطراف التقييم",
+      "deskripsi": "قائمة الأطراف الخاضعة للتقييم، والتي تمثل الوحدات أو الأقسام أو الأفراد الذين يتم تقييمهم بناءً على مؤشرات التقييم المحددة.",
+      "model": {
+        "nama": "الاسم",
+        "deskripsi": "الوصف"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "إدخال الأدلة الداعمة",
+      "deskripsiInput": "نموذج لإدخال الأدلة الداعمة لتقييم المؤشرات، بما في ذلك تحميل الملفات ذات الصلة، وتقديم وصف للأدلة المقدمة.",
+      "mulaiInput": "بدء إدخال الأدلة الداعمة",
+      "validasi": {
+        "link": {
+          "required": "رابط المستند مطلوب",
+          "invalid": "صيغة رابط المستند غير صالحة",
+          "max": "الحد الأقصى لرابط المستند 255 حرفًا"
+        },
+        "catatan": {
+          "min": "الملاحظة مطلوبة",
+          "max": "الحد الأقصى للملاحظة 2000 حرف"
+        }
+      },
+      "dokumenBukti": "مستند الدليل",
+      "buktiPendukung": "دليل داعم",
+      "cantumkanLink": "قم بتضمين رابط للمستند الداعم وقدم تفاصيل موجزة",
+      "linkGoogleDrive": "رابط مستند Google Drive",
+      "lihatFormatBukti": "عرض تنسيق الدليل هنا",
+      "catatanPanduan": "ملاحظة الدليل:",
+      "catatanTambahan": "ملاحظات إضافية",
+      "berikanDeskripsi": "قدم وصفا موجزا أو تفاصيل إضافية",
+      "maksimal2000Karakter": "الحد الأقصى 2000 حرف",
+      "simpanBukti": "حفظ الدليل الداعم",
+      "menyimpan": "جاري الحفظ...",
+      "dokumenLainnya": "مستندات أخرى",
+      "formPengisian": "نموذج",
+      "dari": "من",
+      "data": "بيانات",
+      "berhasilMenyimpan": "تم حفظ أدلة الأداة بنجاح.",
+      "gagalMenyimpan": "فشل في حفظ أدلة الأداة. حاول مرة اخرى."
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "البريد الإلكتروني مطلوب",
+        "invalid": "صيغة البريد الإلكتروني غير صالحة",
+        "min": "البريد الإلكتروني يجب أن يكون 5 أحرف على الأقل",
+        "max": "البريد الإلكتروني يجب أن يكون 255 حرفًا كحد أقصى"
+      },
+      "password": {
+        "required": "كلمة المرور مطلوبة",
+        "min": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+        "max": "كلمة المرور يجب أن تكون 255 حرفًا كحد أقصى"
+      }
+    }
+  },
+  "fm2": {
+    "title": "نموذج المراقبة 02",
+    "description": "لوحة معلومات لمراقبة تحقيق مؤشرات تقييم الجاهزية في الجامعة. يتم تحديث البيانات دوريًا لتقديم أحدث نظرة عامة على تقدم وإنجازات كل وحدة.",
+    "startTime": "وقت البدء",
+    "endTime": "وقت الانتهاء",
+    "status": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "aspectVeryGood": "جانب جيد جدا",
+    "aspectGood": "جانب جيد",
+    "aspectFair": "جانب مقبول",
+    "aspectPoor": "جانب ضعيف",
+    "chartTitle": "مخطط الإنجاز",
+    "totalReadinessScore": "إجمالي نقاط الجاهزية",
+    "readinessPercentage": "نسبة الجاهزية",
+    "category": "الفئة",
+    "reviewerProfile": "ملف المراجع",
+    "assessmentIndicators": "مؤشرات التقييم",
+    "aspectEvaluationResult": "نتيجة تقييم الجانب",
+    "table": {
+      "no": "رقم",
+      "aspect": "جانب",
+      "achievement": "إنجاز",
+      "action": "إجراء",
+      "calculateScore": "حساب النتيجة",
+      "calculateAllScore": "حساب نتيجة المراقبة",
+      "empty": "لم يتم العثور على بيانات الجانب للفلتر المحدد."
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "toast": {
+      "calculateSuccess": "تم حساب النتيجة بنجاح",
+      "calculateError": "فشل حساب النتيجة",
+      "calculateAllSuccess": "تم حساب نتيجة المراقبة بنجاح",
+      "calculateAllError": "فشل حساب نتيجة المراقبة"
     }
   }
 }

@@ -1,4 +1,13 @@
 {
+  "toast": {
+    "common": {
+      "unexpectedError": "リクエストの処理中に問題が発生しました。しばらくしてからもう一度お試しください。"
+    },
+    "auth": {
+      "loginSuccess": "お帰りなさい。ログインに成功しました。",
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。内容をご確認のうえ、再度お試しください。"
+    }
+  },
   "basic": {
     "namaAplikasi": "統合モニタリング・評価情報システム",
     "namaKampus": "ムハマディヤ・チルボン大学"
@@ -18,6 +27,10 @@
       "sebelumnya": "前へ",
       "berikutnya": "次へ"
     },
+    "boolean": {
+      "true": "はい",
+      "false": "いいえ"
+    },
     "buat": "作成",
     "edit": "編集",
     "hapus": "削除",
@@ -25,7 +38,10 @@
     "kembali": "戻る",
     "simpan": "保存",
     "batal": "キャンセル",
-    "berhasil": "成功"
+    "berhasil": "成功",
+    "tidakAdaData": "データがありません",
+    "terbaru": "最新",
+    "terlama": "最古"
   },
   "footer": {
     "copyright": "© 2026 無断転載を禁じます。"
@@ -59,7 +75,22 @@
     "silahkanMasuk": "続行するにはログインしてください",
     "masukGoogle": "Googleでログイン",
     "mengalihkan": "リダイレクト中...",
-    "kembali": "戻る"
+    "kembali": "戻る",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "rememberMe": "ログイン状態を保持する",
+    "masuk": "ログイン",
+    "atau": "または",
+    "emailRequired": "メールアドレスは必須です",
+    "invalidEmail": "無効なメールアドレス形式です",
+    "passwordRequired": "パスワードは必須です",
+    "passwordMin": "パスワードは8文字以上である必要があります",
+    "passwordMax": "パスワードは最大255文字までです",
+    "userNotFound": "メールアドレスが見つかりません",
+    "invalidPassword": "パスワードが間違っています",
+    "accountDisabled": "アカウントが無効化されています",
+    "unauthorized": "アクセス権限がありません",
+    "unknownError": "エラーが発生しました。もう一度お試しください"
   },
   "dasborModul": {
     "selamatDatang": {
@@ -411,6 +442,10 @@
     "lihatEvaluasiTerbaru": "最新の評価を見る",
     "placeholder": {
       "cari": "名前または説明で評価を検索..."
+    },
+    "kosong": {
+      "judul": "モジュールが見つかりません",
+      "deskripsi": "現在、利用可能なモニタリングおよび評価モジュールがないか、検索条件に一致するモジュールがありません。"
     }
   },
   "ami": {
@@ -418,6 +453,10 @@
     "lihatAuditTerbaru": "最新の監査を見る",
     "placeholder": {
       "cari": "名前または説明で監査を検索..."
+    },
+    "kosong": {
+      "judul": "モジュールが見つかりません",
+      "deskripsi": "現在、利用可能な内部品質監査モジュールがないか、検索条件に一致するモジュールがありません。"
     }
   },
   "fm": {
@@ -441,6 +480,172 @@
     },
     "laporan": {
       "judul": "レポート"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "開始日時",
+    "waktuBerakhir": "終了日時",
+    "status": "ステータス",
+    "semuaStatus": "すべてのステータス",
+    "sudahDievaluasi": "評価済み",
+    "belumDievaluasi": "未評価",
+    "pilihAspek": "評価観点を選択",
+    "evaluasi": "評価",
+    "lihatHasilEvaluasi": "評価結果を見る",
+    "detailAspek": "評価観点の詳細",
+    "objekEvaluasi": "評価対象",
+    "indikatoEvaluasi": "評価指標",
+    "pastikanIndikatorDinilai": "終了日時前にすべての評価指標が評価されていることを確認してください。",
+    "lingkupEvaluasi": "評価範囲",
+    "unitLingkupEvaluasi": "評価範囲の単位",
+    "pihakTerkait": "関連当事者",
+    "daftarObjekEvaluasi": "評価対象の一覧",
+    "unitObjekEvaluasi": {
+      "tambah": "評価対象の単位を追加",
+      "deskripsi": "評価対象の単位は、評価対象を構成する要素や部分を定義するためのものです。例えば、学生の評価対象が「授業参加」であれば、その単位は「出席率」や「発言回数」などになります。これにより、評価がより具体的で測定可能なものになります。"
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "評価履歴がありません",
+      "deskripsi": "このモジュールの実施データはまだ利用できません。後ほど再度ご確認ください。または、詳細について管理者にお問い合わせください。"
+    },
+    "belumAdaAspek": {
+      "judul": "評価観点がありません",
+      "deskripsi": "このモジュールにはまだ評価観点が設定されていません。管理者が評価観点を追加するまで、評価プロセスを開始できません。詳細については管理者にお問い合わせください。"
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "証拠書類が利用できません",
+      "deskripsi": "この評価の証拠書類はまだ利用できません。管理者が書類をアップロードするまで、評価の詳細を確認できません。詳細については管理者にお問い合わせください。"
+    },
+    "roles": {
+      "auditee": "被監査者",
+      "evaluator": "評価者",
+      "reviewer": "レビュアー"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "未開始",
+      "SEDANG_BERLANGSUNG": "進行中",
+      "SELESAI": "完了",
+      "DIBATALKAN": "キャンセル済み"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "評価の理由を入力してください...",
+      "cariObjekEvaluasi": "名前や説明で評価対象を検索..."
+    },
+    "evaluasi": {
+      "tipeBiner": "バイナリ評価 (はい/いいえ)",
+      "tipeSkala": "スケール評価",
+      "tipeCek": "チェックリスト評価",
+      "catatanLabel": "メモ",
+      "menyimpan": "保存中...",
+      "simpan": "保存",
+      "toast": {
+        "berhasilMenyimpan": "指標の回答が正常に保存されました。",
+        "gagalMenyimpan": "回答の保存に失敗しました。もう一度お試しください。",
+        "validasiGagal": "フォームの入力内容をもう一度ご確認ください。",
+        "gagalJudul": "失敗"
+      },
+      "validasi": {
+        "binerRequired": "評価オプション (はい/いいえ) のいずれかを選択してください",
+        "skalaRequired": "評価スケールを選択してください",
+        "cekRequired": "チェックリストのオプションを少なくとも1つ選択してください"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "評価対象",
+      "deskripsi": "評価対象は、モニタリング・評価プロセスの中心的な要素であり、評価される特定の項目や活動を指します。これには、プロジェクト、プログラム、プロセス、または特定の成果物が含まれることがあります。評価対象は、評価の焦点を定め、評価基準や指標に基づいてそのパフォーマンスや成果を測定するための基盤となります。",
+      "model": {
+        "nama": "名前",
+        "deskripsi": "説明"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "証拠書類の入力",
+      "deskripsiInput": "証拠書類は、評価の根拠となる資料やデータを指します。これには、レポート、写真、ビデオ、アンケート結果、インタビュー記録などが含まれることがあります。証拠書類は、評価の信頼性と透明性を高めるために重要であり、評価者が評価対象のパフォーマンスや成果を客観的に判断するための基盤となります。",
+      "mulaiInput": "証拠書類の入力を開始",
+      "validasi": {
+        "link": {
+          "required": "ドキュメントリンクは必須です",
+          "invalid": "無効なドキュメントリンク形式です",
+          "max": "ドキュメントリンクは最大255文字です"
+        },
+        "catatan": {
+          "min": "メモは必須です",
+          "max": "メモは最大2000文字です"
+        }
+      },
+      "dokumenBukti": "証拠書類",
+      "buktiPendukung": "裏付けとなる証拠",
+      "cantumkanLink": "サポートドキュメントへのリンクを含め、簡単な詳細を提供してください",
+      "linkGoogleDrive": "Google Drive ドキュメントリンク",
+      "lihatFormatBukti": "証拠の形式はこちらをご覧ください",
+      "catatanPanduan": "ガイドノート:",
+      "catatanTambahan": "追加の注意事項",
+      "berikanDeskripsi": "簡単な説明または追加の詳細を提供してください",
+      "maksimal2000Karakter": "最大2000文字",
+      "simpanBukti": "証拠を保存",
+      "menyimpan": "保存中...",
+      "dokumenLainnya": "その他のドキュメント",
+      "formPengisian": "入力フォーム",
+      "dari": "の",
+      "data": "データ",
+      "berhasilMenyimpan": "証拠書類が正常に保存されました。",
+      "gagalMenyimpan": "証拠書類の保存に失敗しました。もう一度お試しください。"
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "メールアドレスは必須です",
+        "invalid": "無効なメールアドレス形式です",
+        "min": "メールアドレスは5文字以上である必要があります",
+        "max": "メールアドレスは最大255文字までです"
+      },
+      "password": {
+        "required": "パスワードは必須です",
+        "min": "パスワードは8文字以上である必要があります",
+        "max": "パスワードは最大255文字までです"
+      }
+    }
+  },
+  "fm2": {
+    "title": "監視フォーム 02",
+    "description": "大学での準備状況評価指標の達成状況を監視するダッシュボード。各ユニットの進捗状況と達成状況の最新の概要を提供するために、データは定期的に更新されます。",
+    "startTime": "開始時間",
+    "endTime": "終了時間",
+    "status": "ステータス",
+    "active": "アクティブ",
+    "inactive": "非アクティブ",
+    "aspectVeryGood": "非常に良い側面",
+    "aspectGood": "良い側面",
+    "aspectFair": "まあまあの側面",
+    "aspectPoor": "悪い側面",
+    "chartTitle": "達成チャート",
+    "totalReadinessScore": "総準備スコア",
+    "readinessPercentage": "準備完了率",
+    "category": "カテゴリー",
+    "reviewerProfile": "レビュアープロフィール",
+    "assessmentIndicators": "評価指標",
+    "aspectEvaluationResult": "側面評価結果",
+    "table": {
+      "no": "番号",
+      "aspect": "側面",
+      "achievement": "達成",
+      "action": "アクション",
+      "calculateScore": "スコアを計算する",
+      "calculateAllScore": "監視スコアを計算する",
+      "empty": "選択したフィルターに一致する側面データが見つかりません。"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "toast": {
+      "calculateSuccess": "スコアが正常に計算されました",
+      "calculateError": "スコアの計算に失敗しました",
+      "calculateAllSuccess": "監視スコアが正常に計算されました",
+      "calculateAllError": "監視スコアの計算に失敗しました"
     }
   }
 }

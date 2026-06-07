@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-// import { useAuthStore } from "#stores/authStore";
-//
-// const authStore = useAuthStore();
-//
-// await callOnce(async () => {
-//   await authStore.initialize();
-// });
-//
+import { useAuthStore } from "#stores/auth"
+
+const authStore = useAuthStore()
+
+onMounted(async () => {
+  await authStore.initializeAuth()
+})
+
 const { locale } = useI18n()
 
 const isRTL = computed(() => locale.value === 'ar')

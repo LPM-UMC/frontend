@@ -20,7 +20,7 @@
 
       <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
         <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
-          <NuxtLink v-if="item.to" :to="item.to" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
+          <NuxtLink v-if="item.to" :to="localePath(item.to)" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
             {{ item.label }}
           </NuxtLink>
 
@@ -57,17 +57,33 @@
         <ModuleCard v-for="entry in filteredModules" :key="entry.item.id" :title="entry.item.title"
           :description="entry.item.description" :periode-modul-id="entry.item.periodeModulId"
           :unit-lingkup-periode-modul-id="entry.item.unitLingkupPeriodeModulId"
+          :aspek-periode-modul-id="entry.item.aspekPeriodeModulId"
           :accent-variant="useAlternateColorPattern(entry.originalIndex) ? 'wave' : entry.item.accentVariant"
           :surface-color="useAlternateColorPattern(entry.originalIndex) ? alternateCardColor : defaultCardColor" />
+          
+        <template v-if="modulStore.isLoading">
+          <USkeleton v-for="n in 4" :key="`skeleton-${n}`" class="min-h-[200px] w-full rounded-[12px] sm:min-h-[220px]" />
+        </template>
+        
+        <div v-if="!modulStore.isLoading && filteredModules.length === 0" class="col-span-full py-16 text-center">
+          <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#f6f7f9] text-[#a1a7b3]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-slate-800">{{ t('monev.kosong.judul') }}</h3>
+          <p class="mt-2 mx-auto max-w-md text-sm text-slate-500">{{ t('monev.kosong.deskripsi') }}</p>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import ModuleCard from '#features/dashboard/components/ModuleCard.vue'
 import { useI18n } from 'vue-i18n'
+import { useModulStore } from '#stores/modul'
 
 definePageMeta({
   layout: 'dashboard',
@@ -75,6 +91,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const modulStore = useModulStore()
 
 const breadcrumbItems = computed(() => [
   {
@@ -92,82 +109,21 @@ const search = ref('')
 const defaultCardColor = '#ffffff'
 const alternateCardColor = '#f6f7f9'
 
-const moduleData = ref({
-  searchPlaceholder: 'Cari modul...',
-  topics: [
-    {
-      id: '1',
-      title: 'Perencanaan',
-      description: 'Pengelolaan dan penyusunan perencanaan program kerja serta target capaian.',
-      accentVariant: 'wave',
-    },
-    {
-      id: '2',
-      title: 'Monitoring',
-      description: 'Pemantauan pelaksanaan kegiatan secara berkala untuk memastikan kesesuaian dengan rencana.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'curve',
-    },
-    {
-      id: '3',
-      title: 'Evaluasi',
-      description: 'Evaluasi hasil kegiatan dan pengukuran indikator keberhasilan program.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'wave',
-    },
-    {
-      id: '4',
-      title: 'Pelaporan',
-      description: 'Penyusunan laporan kegiatan, capaian, dan rekomendasi tindak lanjut.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'curve',
-    },
-    {
-      id: '5',
-      title: 'Indikator Kinerja',
-      description: 'Pengelolaan indikator kinerja utama dan pendukung untuk pengukuran capaian.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'wave',
-    },
-    {
-      id: '6',
-      title: 'Manajemen Risiko',
-      description: 'Identifikasi, analisis, dan mitigasi risiko dalam pelaksanaan program.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'curve',
-    },
-    {
-      id: '7',
-      title: 'Audit Internal',
-      description: 'Pelaksanaan audit internal untuk memastikan kepatuhan terhadap standar.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'wave',
-    },
-    {
-      id: '8',
-      title: 'Dashboard',
-      description: 'Visualisasi data monitoring dan evaluasi dalam bentuk dashboard interaktif.',
-      periodeModulId: 1,
-      unitLingkupPeriodeModulId: 1,
-      aspekPeriodeModulId: 1,
-      accentVariant: 'curve',
-    },
-  ],
+onMounted(() => {
+  modulStore.fetchModulMonev()
 })
 
-const modules = computed(() => moduleData.value.topics)
+const modules = computed(() => {
+  return modulStore.modulMonev.map((item, index) => ({
+    id: item.id,
+    title: item.nama,
+    description: item.deskripsi || '',
+    periodeModulId: item.periode_modul_id,
+    unitLingkupPeriodeModulId: item.unit_lingkup_periode_modul_id,
+    aspekPeriodeModulId: item.aspek_periode_modul_id,
+    accentVariant: (index % 2 === 0) ? 'wave' : 'curve',
+  }))
+})
 
 const indexedModules = computed(() =>
   modules.value.map((item, originalIndex) => ({
@@ -177,15 +133,31 @@ const indexedModules = computed(() =>
 )
 
 const filteredModules = computed(() => {
-  const query = search.value.trim().toLowerCase()
+  return indexedModules.value
+})
 
-  if (!query) {
-    return indexedModules.value
+let timeout: ReturnType<typeof setTimeout> | null = null
+watch(search, (val) => {
+  if (timeout) clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    modulStore.monevSearch = val
+    modulStore.fetchModulMonev()
+  }, 500)
+})
+
+function handleScroll() {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+  if (scrollTop + clientHeight >= scrollHeight - 50) {
+    modulStore.fetchModulMonev(true)
   }
+}
 
-  return indexedModules.value.filter(({ item }) =>
-    item.title.toLowerCase().includes(query),
-  )
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 
 function useAlternateColorPattern(originalIndex: number): boolean {
