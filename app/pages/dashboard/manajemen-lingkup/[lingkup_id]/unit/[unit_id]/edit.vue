@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LingkupUnitEditPage from '#features/manajemen-lingkup/pages/LingkupUnitEditPage.vue'
+import LingkupUnitEditPage from '#features/lingkup/pages/LingkupUnitEditPage.vue'
 
 definePageMeta({
   layout: 'dashboard',

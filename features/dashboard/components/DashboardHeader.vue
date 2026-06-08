@@ -8,7 +8,7 @@ import { getAvatar } from '#utils/util'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useSwitchLocalePath } from '#i18n'
 
-const { locale } = useI18n()
+const { locale, locales, setLocale } = useI18n()
 const authStore = useAuthStore()
 
 // ================= STATE =================
@@ -131,26 +131,16 @@ onUnmounted(() => {
         <div class="flex items-center gap-2">
 
           <!-- LANGUAGE -->
-          <div ref="localeMenuRef" class="relative block">
-            <button
-              class="cursor-pointer transition flex items-center gap-1 rounded-md px-2 py-1 text-sm text-[#2f3744] hover:bg-gray-100"
-              @click="toggleMenu('lang')">
-              {{ locale.toUpperCase() }}
-
-              <UIcon name="i-lucide-chevron-down" class="h-4 w-4 transition-transform duration-200"
-                :class="openMenu === 'lang' ? 'rotate-180' : ''" />
-            </button>
-
-            <div v-if="openMenu === 'lang'" class="absolute right-0 mt-2 w-24 bg-white shadow">
-              <button
-                v-for="item in localeItems"
-                :key="item.code"
-                class="block w-full px-3 py-2 text-left hover:bg-gray-100"
-                @click="changeLocale(item.code)"
-              >
-                {{ item.label }}
-              </button>
-            </div>
+          <div dir="ltr" class="hidden items-center gap-3 md:flex">
+            <ULocaleSelect :model-value="locale" :locales="locales as any" class="cursor-pointer" @update:model-value="
+              setLocale(
+                $event as
+                | 'id'
+                | 'en'
+                | 'ar'
+                | 'ja'
+              )
+              " />
           </div>
 
           <!-- PROFILE -->

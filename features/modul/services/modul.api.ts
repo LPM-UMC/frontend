@@ -19,12 +19,12 @@ export function useModulApi() {
     listModulMonev: (query?: Record<string, any>) => request<{ data: ModulRecord[], meta: { total: number } }>(MODUL_ENDPOINTS.listMonev, { query }),
     listModulAmi: (query?: Record<string, any>) => request<{ data: ModulRecord[], meta: { total: number } }>(MODUL_ENDPOINTS.listAmi, { query }),
     createModulMonev: (payload: ModulFormInput) =>
-      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.createMonev, { method: 'POST', body: payload }),
+      request<ModulRecord>(MODUL_ENDPOINTS.createMonev, { method: 'POST', body: payload }),
     createModulAmi: (payload: ModulFormInput) =>
-      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.createAmi, { method: 'POST', body: payload }),
-    getModul: (modulId: string) => request<{ data: ModulRecord }>(MODUL_ENDPOINTS.detail(modulId)),
+      request<ModulRecord>(MODUL_ENDPOINTS.createAmi, { method: 'POST', body: payload }),
+    getModul: (modulId: string) => request<ModulRecord>(MODUL_ENDPOINTS.detail(modulId)),
     updateModul: (modulId: string, payload: Partial<ModulFormInput>) =>
-      request<{ data: ModulRecord }>(MODUL_ENDPOINTS.update(modulId), { method: 'PUT', body: payload }),
+      request<ModulRecord>(MODUL_ENDPOINTS.update(modulId), { method: 'PUT', body: payload }),
     removeModul: (modulId: string) =>
       request<void>(MODUL_ENDPOINTS.remove(modulId), { method: 'DELETE' }),
   }

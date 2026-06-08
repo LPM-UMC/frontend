@@ -404,9 +404,111 @@
       "totalAspek": "Total Aspects",
       "status": "Status",
       "tanggalDibuat": "Date Created"
+    },
+    "detail": {
+      "judul": "Evaluation Module Detail",
+      "deskripsiDetail": "Use this page to view the details of the evaluation module along with its assessment indicators. The information displayed includes the name, description, and evaluation object.",
+      "informasiModul": "Module Information",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "tipeModul": "Module Type",
+      "editModul": "Edit Module",
+      "no": "No",
+      "cariAspek": "Search aspect...",
+      "urutkan": {
+        "az": "A - Z",
+        "za": "Z - A"
+      },
+      "belumAdaData": "No aspect data available yet."
     }
   },
   "manajemenLingkup": {
-    "judul": "Scope Management"
+    "judul": "Evaluation Scope",
+    "deskripsi": "Use this feature to define the scope of evaluation objects (e.g., Study Programs/Faculties/Units) to be used by the module during object mapping, data retrieval, and reporting. Integration status affects data sources and object availability.",
+    "buatLingkup": "Create Scope",
+    "card": {
+      "totalLingkup": "Total Evaluation Scopes",
+      "lingkupAktif": "Active Evaluation Scopes",
+      "lingkupTerbanyak": "Most Used Scope",
+      "lingkupTerakhir": "Last Created Scope"
+    },
+    "daftarLingkup": "List of Evaluation Scopes",
+    "placeholder": {
+      "cari": "Search..."
+    },
+    "urutkan": {
+      "az": "A - Z",
+      "za": "Z - A"
+    },
+    "filter": {
+      "semua": "All",
+      "aktif": "Active",
+      "tidakAktif": "Inactive"
+    },
+    "tabel": {
+      "no": "No",
+      "nama": "Name",
+      "status": "Status",
+      "lingkupEvaluasi": "Evaluation Scope",
+      "dibuatPada": "Created At",
+      "deskripsi": "Description",
+      "penanggungJawab": "Person in Charge",
+      "evaluator": "Evaluator",
+      "integrasiSistem": "System Integration"
+    },
+    "create": {
+      "breadcrumb": "Create Scope",
+      "judul": "Create New Evaluation Scope",
+      "deskripsi": "Use this feature to create a new evaluation scope as a boundary for objects to be assessed. This scope will be used to structure and track the monitoring process consistently.",
+      "formJudul": "Evaluation Scope Form",
+      "nama": "Name",
+      "namaPlaceholder": "Enter name here",
+      "namaHint": "Max 100 characters. Use consistent format.",
+      "deskripsiLabel": "Description",
+      "deskripsiPlaceholder": "Enter description here",
+      "deskripsiHint": "Max 100 characters. Use consistent format.",
+      "rolePj": "Select Person in Charge Role",
+      "roleEvaluator": "Select Evaluator Role",
+      "pilih": "Select",
+      "batal": "Cancel",
+      "simpan": "Save"
+    },
+    "detail": {
+      "judul": "View Evaluation Scope",
+      "deskripsi": "Use this page to view evaluation scope details along with connected units and objects. You can expand the scope information, unit list, and evaluation object list for easier data management.",
+      "informasi": "Evaluation Scope Information",
+      "namaLingkup": "Scope Name",
+      "deskripsiLabel": "Description",
+      "penanggungJawab": "Person in Charge",
+      "evaluator": "Evaluator",
+      "totalUnit": "Total Units",
+      "integrasiSistem": "System Integration",
+      "tanggalDiperbarui": "Last Updated",
+      "edit": "Edit",
+      "hapus": "Delete",
+      "tambahUnit": "Add Unit",
+      "tambahLingkup": "Add Scope",
+      "tambahObjek": "Add Evaluation Object",
+      "daftarUnit": "Unit List",
+      "daftarObjek": "Evaluation Object List",
+      "belumAdaData": "No data available."
+    }
+  },
+  "manajemenAspek": {
+    "judul": "Aspect Detail",
+    "deskripsiDetail": "Use this page to view the evaluation aspect details.",
+    "informasiAspek": "Aspect Information",
+    "namaAspek": "Aspect Name",
+    "deskripsi": "Description",
+    "editAspek": "Edit Aspect",
+    "hapus": "Delete",
+    "buatAspek": "Create Aspect",
+    "formAspek": "Aspect Form",
+    "deskripsiBuat": "Form to create a new aspect.",
+    "editAspekJudul": "Edit Aspect",
+    "deskripsiEdit": "Use this page to update an evaluation aspect.",
+    "batal": "Cancel",
+    "simpan": "Save",
+    "daftarAspek": "Aspect List"
   }
 }

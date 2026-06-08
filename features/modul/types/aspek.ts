@@ -1,14 +1,14 @@
 export interface AspekRecord {
   id: string
   modulId: string
-  name: string
-  description?: string
+  nama: string
+  deskripsi?: string
 }
 
 export interface AspekFormInput {
   modulId: string
-  name: string
-  description?: string
+  nama: string
+  deskripsi?: string
 }
 
 export interface AspekListPayload {

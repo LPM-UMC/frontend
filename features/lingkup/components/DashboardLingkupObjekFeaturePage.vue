@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch, onMounted } from 'vue'
 import { navigateTo, useRoute } from '#imports'
 import {
   getDashboardLingkupObjekCreateDefaultForm,
@@ -10,6 +10,9 @@ import {
   type DashboardLingkupObjekFormData,
   type DashboardLingkupSortOrder,
 } from '../data/dashboardLingkupDummy'
+import { useI18n } from 'vue-i18n'
+import { useLocalePath } from '#imports'
+import { useLingkup } from '#features/lingkup/composables/useLingkup'
 
 type DashboardLingkupObjekPageMode = 'detail' | 'create' | 'edit'
 type DashboardLingkupObjekSection = 'informasi' | 'daftar' | 'form'
@@ -30,6 +33,10 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const { t } = useI18n()
+const localePath = useLocalePath()
+const { rows: lingkupRows, fetchLingkup } = useLingkup()
+const realLingkupName = ref('Lingkup')
 
 const pageSize = 5
 const nameLimit = 100
@@ -105,11 +112,11 @@ const objekCreatePath = computed(() => `${objekDetailPath.value}/create`)
 
 const pageTitle = computed(() => {
   if (props.mode === 'create') {
-    return `Objek Evaluasi ${detailInfo.value.lingkupName} Baru`
+    return `Buat Objek Evaluasi ${realLingkupName.value} Baru`
   }
 
   if (props.mode === 'edit') {
-    return `Edit Objek Evaluasi (${detailInfo.value.lingkupName})`
+    return `Edit Objek Evaluasi (${realLingkupName.value})`
   }
 
   return detailInfo.value.name
@@ -117,7 +124,7 @@ const pageTitle = computed(() => {
 
 const pageDescription = computed(() => {
   if (props.mode === 'create') {
-    return `Gunakan fitur ini untuk menambahkan objek evaluasi pada lingkup ${detailInfo.value.lingkupName} sebagai target penilaian dalam modul. Objek yang dibuat akan dapat dipilih saat menyusun aspek dan pelaksanaan evaluasi pada periode berikutnya, sehingga proses monitoring dan penilaian lebih terarah dan konsisten.`
+    return `Gunakan fitur ini untuk menambahkan objek evaluasi pada lingkup ${realLingkupName.value} sebagai target penilaian dalam modul. Objek yang dibuat akan dapat dipilih saat menyusun aspek dan pelaksanaan evaluasi pada periode berikutnya, sehingga proses monitoring dan penilaian lebih terarah dan konsisten.`
   }
 
   if (props.mode === 'edit') {
@@ -129,15 +136,15 @@ const pageDescription = computed(() => {
 
 const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
   const base: BreadcrumbItem[] = [
-    { label: 'Home', to: '/dashboard' },
-    { label: 'Lingkup Evaluasi', to: '/dashboard/lingkup' },
-    { label: detailInfo.value.lingkupName, to: lingkupDetailPath.value },
-    { label: detailInfo.value.unitName },
-    { label: 'Objek Evaluasi' },
+    { label: t('navigasi.dasbor', 'Dasbor'), to: localePath('/dashboard') },
+    { label: t('manajemenLingkup.judul', 'Lingkup Evaluasi'), to: localePath('/dashboard/manajemen-lingkup') },
+    { label: realLingkupName.value, to: localePath(`/dashboard/manajemen-lingkup/${lingkupId.value}`) },
+    { label: detailInfo.value.unitName || t('manajemenLingkup.detail.daftarUnit', 'Unit Evaluasi').replace('Daftar ', ''), to: localePath(`/dashboard/manajemen-lingkup/${lingkupId.value}`) },
+    { label: t('manajemenLingkup.detail.daftarObjek', 'Objek Evaluasi').replace('Daftar ', ''), to: localePath(`/dashboard/manajemen-lingkup/${lingkupId.value}`) },
   ]
 
   if (props.mode === 'create') {
-    return [...base, { label: 'Buat', active: true }]
+    return [...base, { label: t('umum.buat', 'Buat'), active: true }]
   }
 
   return [...base, { label: detailInfo.value.name, active: true }]
@@ -308,6 +315,14 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(async () => {
+  await fetchLingkup()
+  const detail = lingkupRows.value.find((r: any) => String(r.id) === String(lingkupId.value))
+  if (detail) {
+    realLingkupName.value = detail.nama
+  }
+})
 </script>
 
 <template>
@@ -329,7 +344,7 @@ watch(
           <NuxtLink
             v-if="item.to"
             :to="item.to"
-            class="text-[clamp(0.95rem,1.2vw,1.05rem)] text-[#9aa2b1] hover:text-[#6e7788]"
+            class="text-[clamp(0.95rem,1.2vw,1.05rem)] text-[#9aa2b1] hover:text-[#6e7788] hover:underline cursor-pointer transition-colors"
           >
             {{ item.label }}
           </NuxtLink>
@@ -555,8 +570,8 @@ watch(
 
     <template v-else-if="props.mode === 'create'">
       <section class="mt-6 rounded-[16px] border border-[#dadde3] bg-[#f4f4f5] px-5 py-6 shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
-        <h2 class="text-[clamp(1.4rem,1.8vw,1.9rem)] font-semibold text-[#11141b]">
-          Buat Objek Evaluasi {{ detailInfo.lingkupName }} Baru
+        <h2 class="text-[clamp(1.4rem,1.8vw,1.9rem)] font-semibold text-[#11141b] hidden">
+          Buat Objek Evaluasi {{ realLingkupName }} Baru
         </h2>
 
         <form
@@ -564,13 +579,13 @@ watch(
           @submit.prevent="handleSubmit"
         >
           <h3 class="text-center text-[clamp(1.55rem,1.8vw,2rem)] font-semibold text-[#151922]">
-            Form Objek Evaluasi {{ detailInfo.lingkupName }}
+            Form Objek Evaluasi {{ realLingkupName }}
           </h3>
 
           <div class="mt-7 space-y-5">
             <div>
               <label class="block text-[1.05rem] font-semibold text-[#3f4b5f]">
-                Nama<span class="text-[#e30000]">*</span>
+                Nama Objek Evaluasi<span class="text-[#e30000]">*</span>
               </label>
               <input
                 v-model="form.name"
@@ -590,7 +605,7 @@ watch(
 
             <div>
               <label class="block text-[1.05rem] font-semibold text-[#3f4b5f]">
-                Deskripsi<span class="text-[#e30000]">*</span>
+                Deskripsi Objek Evaluasi<span class="text-[#e30000]">*</span>
               </label>
               <textarea
                 v-model="form.description"
@@ -609,12 +624,12 @@ watch(
             </div>
           </div>
 
-          <div class="mt-6 rounded-[12px] border border-[#f0a3a3] bg-[#fff3f3] px-4 py-3 text-[#c52222]">
+          <!-- <div class="mt-6 rounded-[12px] border border-[#f0a3a3] bg-[#fff3f3] px-4 py-3 text-[#c52222]">
             <p class="text-[0.98rem] leading-relaxed">
               <span class="font-semibold">Catatan:</span>
               Setelah disimpan, perubahan pada nama dan deskripsi objek evaluasi akan terlihat oleh semua pengguna yang memiliki akses pada lingkup ini. Pastikan data sudah sesuai sebelum menekan tombol Buat.
             </p>
-          </div>
+          </div> -->
 
           <p class="mt-5 text-center text-[1rem] text-[#6a7384]">
             Butuh Objek Evaluasi yang terintegrasi GS?
@@ -666,7 +681,7 @@ watch(
           <div class="mt-5 space-y-5">
             <div>
               <label class="block text-[1.05rem] font-semibold text-[#3f4b5f]">
-                Nama<span class="text-[#e30000]">*</span>
+                Nama Objek Evaluasi<span class="text-[#e30000]">*</span>
               </label>
               <input
                 v-model="form.name"
@@ -686,7 +701,7 @@ watch(
 
             <div>
               <label class="block text-[1.05rem] font-semibold text-[#3f4b5f]">
-                Deskripsi<span class="text-[#e30000]">*</span>
+                Deskripsi Objek Evaluasi<span class="text-[#e30000]">*</span>
               </label>
               <textarea
                 v-model="form.description"
@@ -748,11 +763,12 @@ watch(
                       v-model="column.type"
                       class="h-14 w-full appearance-none rounded-[16px] border border-[#cfd5de] bg-[#f3f4f6] px-5 pr-12 text-[1.05rem] text-[#9aa3b3] outline-none"
                     >
-                      <option value="">Pilih Tipe</option>
+                      <option value="" disabled hidden class="text-gray-500">Pilih Tipe</option>
                       <option
                         v-for="option in columnTypeOptions"
                         :key="option.value"
                         :value="option.value"
+                        class="text-black bg-white"
                       >
                         {{ option.label }}
                       </option>

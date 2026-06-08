@@ -1,27 +1,41 @@
 <template>
   <div>
-    <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
-      <div class="h-full w-full bg-repeat-x bg-top"
-        style="background-image: url('/img/batik.png'); background-size: auto clamp(72px, 8vw, 90px);" />
-    </div>
-
-    <section
-      class="mx-auto w-full max-w-[1880px] bg-[#f4f4f4] px-3 pb-8 pt-5 sm:px-5 sm:pt-7 md:px-6 md:pt-8 lg:px-8 xl:px-10 2xl:px-12">
-      <div class="mb-4 flex flex-wrap items-center gap-2 text-[13px] text-slate-500">
-        <NuxtLink :to="localePath('/dashboard/manajemen-modul')" class="inline-flex items-center gap-1.5 transition hover:text-[#e1121b]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
+    <section class="mx-auto w-full max-w-380 px-3 pb-6 pt-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <div class="mb-4 flex flex-wrap items-center gap-2">
+      <NuxtLink :to="localePath('/dashboard/manajemen-modul')">
+        <button
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer sm:h-9 sm:w-9">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
           </svg>
-          <span>{{ $t('manajemenModul.judul') }}</span>
-        </NuxtLink>
-        <span>/</span>
-        <span class="font-semibold text-[#e1121b]">{{ $t('manajemenModul.create.judul') }}</span>
-      </div>
+        </button>
+      </NuxtLink>
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
+        <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
+          <NuxtLink v-if="item.to" :to="localePath(item.to)" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
+            {{ item.label }}
+          </NuxtLink>
+
+          <span v-else :class="item.active
+            ? 'font-semibold text-[#e30000] underline'
+            : 'text-[#9aa2b1]'
+            ">
+            {{ item.label }}
+          </span>
+
+          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
+            /
+          </span>
+        </template>
+      </nav>
+    </div>
 
     <!-- Hero -->
     <section
-:dir="isRTL ? 'rtl' : 'ltr'"
+      :dir="isRTL ? 'rtl' : 'ltr'"
       class="mt-4 rounded-xl border border-[#dadde3] bg-[#f4f4f5] px-4 py-4 shadow-[0_1px_4px_rgba(15,23,42,0.08)] sm:px-5 sm:py-6">
       <h1 class="text-xl font-semibold text-[#11141b] sm:text-2xl lg:text-3xl">
         {{ $t('manajemenModul.create.judul') }}
@@ -126,15 +140,15 @@ xmlns="http://www.w3.org/2000/svg"
 
         <div class="mt-6 flex justify-center gap-3">
           <NuxtLink
-:to="localePath('/dashboard/manajemen-modul')"
-            class="inline-flex h-10 min-w-28 items-center justify-center rounded-xl border border-[#d7dbe4] bg-[#f3f4f6] px-5 text-sm font-semibold text-[#1f2634] transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base hover:bg-[#e0e0e0] cursor-pointer">
+            :to="localePath('/dashboard/manajemen-modul')"
+            class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] border border-[#d7dbe4] bg-[#f3f4f6] px-5 text-[16px] font-semibold text-[#1f2634] transition hover:bg-[#e0e0e0] cursor-pointer">
             {{ $t('util.batal') }}
           </NuxtLink>
           <button
-type="submit" :disabled="!isFormValid" :class="[
-            'inline-flex h-10 min-w-28 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition sm:h-11 sm:min-w-32 sm:px-6 sm:text-base',
+            type="submit" :disabled="!isFormValid" :class="[
+            'inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] px-5 text-[16px] font-semibold text-white transition',
             isFormValid
-              ? 'bg-[#e1121b] hover:bg-[#cc0f17] cursor-pointer'
+              ? 'bg-gradient-to-b from-[#E7000B] to-[#B91C1C] hover:from-[#cc0f17] hover:to-[#a01818] cursor-pointer shadow-[0_4px_14px_rgba(227,0,11,0.25)]'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
           ]">
             {{ $t('util.buat') }}
@@ -142,7 +156,7 @@ type="submit" :disabled="!isFormValid" :class="[
         </div>
 
       </form>
-    </section>
+      </section>
     </section>
   </div>
 </template>
@@ -178,7 +192,7 @@ const breadcrumbItems = computed(() => [
 ])
 
 import { useModul } from '../composables/useModul'
-import { useLingkup } from '#features/manajemen-lingkup/composables/useLingkup'
+import { useLingkup } from '#features/lingkup/composables/useLingkup'
 
 const { saveModul } = useModul()
 const { rows: lingkupOptions, fetchLingkup } = useLingkup()

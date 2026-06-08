@@ -404,9 +404,111 @@
       "totalAspek": "総観点数",
       "status": "ステータス",
       "tanggalDibuat": "作成日時"
+    },
+    "detail": {
+      "judul": "評価モジュールの詳細",
+      "deskripsiDetail": "このページを使用して、評価モジュールの詳細とその評価指標を表示します。表示される情報には、名前、説明、評価対象が含まれます。",
+      "informasiModul": "モジュール情報",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "tipeModul": "モジュールタイプ",
+      "editModul": "モジュールを編集",
+      "no": "番号",
+      "cariAspek": "側面を検索...",
+      "urutkan": {
+        "az": "A - Z",
+        "za": "Z - A"
+      },
+      "belumAdaData": "側面のデータはまだありません。"
     }
   },
   "manajemenLingkup": {
-    "judul": "範囲管理"
+    "judul": "評価範囲",
+    "deskripsi": "この機能を使用して、オブジェクトマッピング、データ取得、およびレポート作成時にモジュールで使用される評価オブジェクト（例：学習プログラム/学部/ユニット）の範囲を定義します。統合ステータスはデータソースとオブジェクトの可用性に影響します。",
+    "buatLingkup": "範囲を作成",
+    "card": {
+      "totalLingkup": "総評価範囲",
+      "lingkupAktif": "アクティブな評価範囲",
+      "lingkupTerbanyak": "最も使用された範囲",
+      "lingkupTerakhir": "最後に作成された範囲"
+    },
+    "daftarLingkup": "評価範囲リスト",
+    "placeholder": {
+      "cari": "検索..."
+    },
+    "urutkan": {
+      "az": "A - Z",
+      "za": "Z - A"
+    },
+    "filter": {
+      "semua": "すべて",
+      "aktif": "アクティブ",
+      "tidakAktif": "非アクティブ"
+    },
+    "tabel": {
+      "no": "番号",
+      "nama": "名前",
+      "status": "ステータス",
+      "lingkupEvaluasi": "評価範囲",
+      "dibuatPada": "作成日",
+      "deskripsi": "説明",
+      "penanggungJawab": "責任者",
+      "evaluator": "評価者",
+      "integrasiSistem": "システム統合"
+    },
+    "create": {
+      "breadcrumb": "範囲を作成",
+      "judul": "新しい評価範囲を作成",
+      "deskripsi": "この機能を使用して、評価対象の境界として新しい評価範囲を作成します。この範囲は、監視プロセスを一貫して構成および追跡するために使用されます。",
+      "formJudul": "評価範囲フォーム",
+      "nama": "名前",
+      "namaPlaceholder": "ここに名前を入力してください",
+      "namaHint": "最大100文字。一貫した形式を使用してください。",
+      "deskripsiLabel": "説明",
+      "deskripsiPlaceholder": "ここに説明を入力してください",
+      "deskripsiHint": "最大100文字。一貫した形式を使用してください。",
+      "rolePj": "責任者の役割を選択",
+      "roleEvaluator": "評価者の役割を選択",
+      "pilih": "選択",
+      "batal": "キャンセル",
+      "simpan": "保存"
+    },
+    "detail": {
+      "judul": "評価範囲を表示",
+      "deskripsi": "このページを使用して、接続されたユニットおよびオブジェクトとともに評価範囲の詳細を表示します。範囲情報、ユニットリスト、および評価オブジェクトリストを展開して、データ管理を容易にすることができます。",
+      "informasi": "評価範囲情報",
+      "namaLingkup": "範囲名",
+      "deskripsiLabel": "説明",
+      "penanggungJawab": "責任者",
+      "evaluator": "評価者",
+      "totalUnit": "合計ユニット",
+      "integrasiSistem": "システム統合",
+      "tanggalDiperbarui": "最終更新日",
+      "edit": "編集",
+      "hapus": "削除",
+      "tambahUnit": "ユニットを追加",
+      "tambahLingkup": "範囲を追加",
+      "tambahObjek": "評価対象を追加",
+      "daftarUnit": "ユニットリスト",
+      "daftarObjek": "評価オブジェクトリスト",
+      "belumAdaData": "利用可能なデータがありません。"
+    }
+  },
+  "manajemenAspek": {
+    "judul": "側面の詳細",
+    "deskripsiDetail": "このページを使用して評価の側面の詳細を表示します。",
+    "informasiAspek": "側面情報",
+    "namaAspek": "側面名",
+    "deskripsi": "説明",
+    "editAspek": "側面を編集",
+    "hapus": "削除",
+    "buatAspek": "側面を作成",
+    "formAspek": "側面フォーム",
+    "deskripsiBuat": "新しい側面を作成するためのフォーム。",
+    "editAspekJudul": "側面を編集",
+    "deskripsiEdit": "このページを使用して評価の側面を更新します。",
+    "batal": "キャンセル",
+    "simpan": "保存",
+    "daftarAspek": "側面リスト"
   }
 }

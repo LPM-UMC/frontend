@@ -1,6 +1,9 @@
 export interface ModulRecord {
   id: string
-  tipe_modul: string
+  tipe_modul: {
+    kode: string
+    label: string
+  }
   nama: string
   deskripsi: string
   lingkup_evaluasi: {

@@ -2,7 +2,7 @@
 import ModulAspekCreatePage from '#features/modul/pages/ModulAspekCreatePage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: 'manajemen-modul',
 })
 </script>
 

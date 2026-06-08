@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DashboardLingkupEditPage from '#features/manajemen-lingkup/pages/DashboardLingkupEditPage.vue'
+import DashboardLingkupEditPage from '#features/lingkup/pages/DashboardLingkupEditPage.vue'
 
 definePageMeta({
   layout: 'manajemen-modul',

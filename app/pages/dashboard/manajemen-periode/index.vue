@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
+    <!-- <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
       <div class="h-full w-full bg-repeat-x bg-top"
         style="background-image: url('/img/batik.png'); background-size: auto clamp(72px, 8vw, 90px);" />
-    </div>
+    </div> -->
 
     <section
       class="mx-auto w-full max-w-[1880px] bg-[#f4f4f4] px-3 pb-8 pt-5 sm:px-5 sm:pt-7 md:px-6 md:pt-8 lg:px-8 xl:px-10 2xl:px-12">

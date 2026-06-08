@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LingkupUnitCreatePage from '#features/manajemen-lingkup/pages/LingkupUnitCreatePage.vue'
+import LingkupUnitCreatePage from '#features/lingkup/pages/LingkupUnitCreatePage.vue'
 
 definePageMeta({
   layout: 'manajemen-modul',

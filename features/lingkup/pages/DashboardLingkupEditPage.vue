@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute } from '#imports'
+import { useRoute, navigateTo, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
-import { useLingkup } from '#features/manajemen-lingkup/composables/useLingkup'
+import { useLingkup } from '#features/lingkup/composables/useLingkup'
 import { useRole } from '#features/manajemen-role/composables/useRole'
 
 const route = useRoute()
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 
 const lingkupId = computed(() => {
   const id = route.params.lingkup_id
@@ -17,6 +18,25 @@ const { saveLingkup, rows: lingkupRows, fetchLingkup } = useLingkup()
 const { rows: roleRows, fetchRoles } = useRole()
 
 const isRTL = computed(() => locale.value.startsWith('ar'))
+
+const breadcrumbItems = computed(() => [
+  {
+    label: 'Dasbor',
+    to: '/dashboard',
+  },
+  {
+    label: 'Lingkup Evaluasi',
+    to: '/dashboard/manajemen-lingkup',
+  },
+  {
+    label: form.name || 'Detail Lingkup',
+    to: `/dashboard/manajemen-lingkup/${lingkupId.value}`,
+  },
+  {
+    label: 'Edit Lingkup',
+    active: true,
+  },
+])
 
 const pageLoading = ref(true)
 const isSubmitting = ref(false)
@@ -36,7 +56,7 @@ const formErrors = reactive({
   roleEvaluator: '',
 })
 
-const roleOptions = computed(() => roleRows.value.map(r => r.name))
+const roleOptions = computed(() => roleRows.value)
 
 const nameCount = computed(() => form.name.length)
 const descriptionCount = computed(() => form.description.length)
@@ -51,9 +71,8 @@ async function loadDetail() {
     if (detail) {
       form.name = detail.nama
       form.description = detail.deskripsi || ''
-      // role values would be mapped here if provided by backend
-      // form.rolePenanggungJawab = detail.rolePenanggungJawab
-      // form.roleEvaluator = detail.roleEvaluator
+      form.rolePenanggungJawab = detail.role_auditee?.id || ''
+      form.roleEvaluator = detail.role_evaluator?.id || ''
     }
   } catch(e) {
     console.error(e)
@@ -105,8 +124,10 @@ async function handleSubmit() {
     await saveLingkup({
       nama: form.name,
       deskripsi: form.description,
+      role_auditee_id: form.rolePenanggungJawab,
+      role_evaluator_id: form.roleEvaluator,
     }, lingkupId.value)
-    window.location.href = `/dashboard/manajemen-lingkup/${lingkupId.value}`
+    navigateTo(`/dashboard/manajemen-lingkup/${lingkupId.value}`)
   } catch (error: any) {
     submitError.value = error.message || 'Gagal menyimpan lingkup'
   } finally {
@@ -123,40 +144,55 @@ onMounted(() => {
 <template>
   <div v-if="pageLoading" class="p-8 text-center text-slate-500">Memuat data lingkup...</div>
   <div v-else>
-    <div class="h-[56px] w-full sm:h-[64px] md:h-[70px]">
-      <div class="h-full w-full bg-repeat-x bg-top" style="background-image: url('/img/batik.png'); background-size: auto clamp(72px, 8vw, 90px);" />
+    <section class="mx-auto w-full max-w-380 px-3 pb-6 pt-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <div class="mb-4 flex flex-wrap items-center gap-2">
+      <NuxtLink :to="localePath(`/dashboard/manajemen-lingkup/${lingkupId}`)">
+        <button
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer sm:h-9 sm:w-9">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
+          </svg>
+        </button>
+      </NuxtLink>
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
+        <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
+          <NuxtLink v-if="item.to" :to="item.to" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
+            {{ item.label }}
+          </NuxtLink>
+
+          <span v-else :class="item.active
+            ? 'font-semibold text-[#e30000] underline'
+            : 'text-[#9aa2b1]'
+            ">
+            {{ item.label }}
+          </span>
+
+          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
+            /
+          </span>
+        </template>
+      </nav>
     </div>
 
-    <section class="mx-auto w-full max-w-[1880px] bg-[#f4f4f4] px-3 pb-8 pt-5 sm:px-5 sm:pt-7 md:px-6 md:pt-8 lg:px-8 xl:px-10 2xl:px-12">
-      <div class="mb-4 flex flex-wrap items-center gap-2 text-[13px] text-slate-500">
-        <NuxtLink to="/dashboard/manajemen-lingkup" class="inline-flex items-center gap-1.5 transition hover:text-[#e1121b]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" />
-          </svg>
-          <span>Lingkup Evaluasi</span>
-        </NuxtLink>
-        <span>/</span>
-        <NuxtLink :to="`/dashboard/manajemen-lingkup/${lingkupId}`" class="transition hover:text-[#e1121b]">{{ form.name }}</NuxtLink>
-        <span>/</span>
-        <span class="font-semibold text-[#e1121b]">Edit Lingkup</span>
-      </div>
-
-      <section class="mt-5 rounded-[16px] border border-[#dadde3] bg-[#f4f4f5] px-5 py-6 shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
-        <h2 class="text-[clamp(1.45rem,1.9vw,1.9rem)] font-semibold leading-tight text-[#11141b]">
+      <section class="mt-4 rounded-xl border border-[#dadde3] bg-[#f4f4f5] px-4 py-4 shadow-[0_1px_4px_rgba(15,23,42,0.08)] sm:px-5 sm:py-6">
+        <h1 class="text-xl font-semibold text-[#11141b] sm:text-2xl lg:text-3xl">
           Edit Lingkup Evaluasi
-        </h2>
-        <p class="mt-3 max-w-[1200px] text-[clamp(0.95rem,1.1vw,1.1rem)] leading-relaxed text-[#556173]">
+        </h1>
+        <p class="mt-2 text-sm leading-relaxed text-[#556173] sm:text-base">
           Gunakan halaman ini untuk memperbarui informasi lingkup evaluasi seperti nama, deskripsi, dan role penanggung jawab. Perubahan ini akan memengaruhi data lingkup yang digunakan pada proses modul berikutnya.
         </p>
       </section>
 
-      <section class="mt-6 rounded-[16px] border border-[#dadde3] bg-[#f4f4f5] px-5 py-6 shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
+      <section class="mt-5 rounded-xl border border-[#dadde3] bg-[#f4f4f5] px-3 py-4 shadow-[0_1px_4px_rgba(15,23,42,0.08)] sm:px-5 sm:py-6">
         <div class="flex justify-center">
           <form
-            class="w-full max-w-[940px] rounded-[16px] border-2 border-dashed border-[#d3d8e1] bg-[#f8f8f8] px-5 py-6 shadow-[0_4px_12px_rgba(15,23,42,0.12)]"
+            class="mx-auto w-full max-w-4xl rounded-2xl border border-dashed border-[#d7dbe4] bg-[#f8f8f8] px-4 py-5 sm:px-6 sm:py-7"
             @submit.prevent="handleSubmit"
           >
-            <h3 class="text-center text-[clamp(1.25rem,1.6vw,1.6rem)] font-semibold text-[#161a22]">
+            <h3 class="text-center text-lg font-semibold text-[#151922] sm:text-xl md:text-2xl">
               Edit Form Lingkup Evaluasi
             </h3>
 
@@ -212,13 +248,14 @@ onMounted(() => {
                     v-model="form.rolePenanggungJawab"
                     class="h-12 w-full appearance-none rounded-[16px] border border-[#ccd3de] bg-[#f4f4f4] px-5 pr-12 text-[1rem] text-[#2b3340] outline-none"
                   >
-                    <option value="">Pilih</option>
+                    <option value="" disabled hidden class="text-gray-500">Pilih</option>
                     <option
-                      v-for="option in roleOptions"
-                      :key="option"
-                      :value="option"
+                      v-for="role in roleOptions"
+                      :key="role.id"
+                      :value="role.id"
+                      class="text-black bg-white"
                     >
-                      {{ option }}
+                      {{ role.nama }}
                     </option>
                   </select>
                   <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9ca5b5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -239,13 +276,14 @@ onMounted(() => {
                     v-model="form.roleEvaluator"
                     class="h-12 w-full appearance-none rounded-[16px] border border-[#ccd3de] bg-[#f4f4f4] px-5 pr-12 text-[1rem] text-[#2b3340] outline-none"
                   >
-                    <option value="">Pilih</option>
+                    <option value="" disabled hidden class="text-gray-500">Pilih</option>
                     <option
-                      v-for="option in roleOptions"
-                      :key="option"
-                      :value="option"
+                      v-for="role in roleOptions"
+                      :key="role.id"
+                      :value="role.id"
+                      class="text-black bg-white"
                     >
-                      {{ option }}
+                      {{ role.nama }}
                     </option>
                   </select>
                   <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9ca5b5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -258,18 +296,18 @@ onMounted(() => {
               </div>
             </div>
 
-            <div class="mt-8 flex justify-end gap-3">
+            <div class="mt-8 flex justify-center gap-3">
               <NuxtLink
                 :to="`/dashboard/manajemen-lingkup/${lingkupId}`"
-                class="rounded-full border border-[#d3d8e1] px-6 py-2.5 font-semibold text-[#3d485d] transition hover:bg-[#eceff3]"
+                class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] border border-[#d7dbe4] bg-[#f3f4f6] px-5 text-[16px] font-semibold text-[#1f2634] transition hover:bg-[#e0e0e0]"
               >
                 Batal
               </NuxtLink>
               <button
                 type="submit"
                 :disabled="!isFormValid || isSubmitting"
-                class="rounded-[18px] px-8 py-2.5 font-semibold text-white shadow-[0_8px_16px_rgba(227,0,0,0.22)] transition disabled:cursor-not-allowed disabled:opacity-60"
-                :class="isFormValid && !isSubmitting ? 'bg-[#e30000] hover:bg-[#c90000]' : 'bg-[#e30000] opacity-50'"
+                class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] px-5 text-[16px] font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
+                :class="isFormValid && !isSubmitting ? 'bg-gradient-to-b from-[#E7000B] to-[#B91C1C] hover:from-[#cc0f17] hover:to-[#a01818] shadow-[0_4px_14px_rgba(227,0,11,0.25)]' : 'bg-gray-400 opacity-50'"
               >
                 {{ isSubmitting ? 'Menyimpan...' : 'Simpan' }}
               </button>

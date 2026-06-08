@@ -425,11 +425,12 @@ watch(
                 v-model="form.type"
                 class="h-14 w-full appearance-none rounded-[16px] border border-[#cfd5de] bg-[#f3f4f6] px-5 pr-12 text-[1.05rem] text-[#9aa3b3] outline-none"
               >
-                <option value="">Pilih Tipe</option>
+                <option value="" disabled hidden class="text-gray-500">Pilih Tipe</option>
                 <option
                   v-for="option in typeOptions"
                   :key="option.value"
                   :value="option.value"
+                  class="text-black bg-white"
                 >
                   {{ option.label }}
                 </option>

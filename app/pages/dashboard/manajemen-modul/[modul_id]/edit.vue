@@ -2,7 +2,7 @@
 import ModulEditPage from '#features/modul/pages/ModulEditPage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: 'manajemen-modul',
 })
 </script>
 

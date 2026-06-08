@@ -2,7 +2,7 @@
 import ModulDetailPage from '#features/modul/pages/ModulDetailPage.vue'
 
 definePageMeta({
-  layout: 'modul-generator',
+  layout: 'manajemen-modul',
 })
 </script>
 

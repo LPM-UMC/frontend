@@ -404,9 +404,111 @@
       "totalAspek": "Total Aspek",
       "status": "Status",
       "tanggalDibuat": "Tanggal Dibuat"
+    },
+    "detail": {
+      "judul": "Detail Modul Evaluasi",
+      "deskripsiDetail": "Gunakan halaman ini untuk melihat detail modul evaluasi beserta indikator penilaiannya. Informasi yang ditampilkan mencakup nama, deskripsi, serta objek evaluasi.",
+      "informasiModul": "Informasi Modul",
+      "nama": "Nama",
+      "deskripsi": "Deskripsi",
+      "tipeModul": "Tipe Modul",
+      "editModul": "Edit Modul",
+      "no": "No",
+      "cariAspek": "Cari aspek...",
+      "urutkan": {
+        "az": "A - Z",
+        "za": "Z - A"
+      },
+      "belumAdaData": "Belum ada data aspek."
     }
   },
   "manajemenLingkup": {
-    "judul": "Manajemen Lingkup"
+    "judul": "Lingkup Evaluasi",
+    "deskripsi": "Gunakan fitur ini untuk mendefinisikan scope objek evaluasi (mis. Program Studi/Fakultas/UKM) yang akan digunakan oleh modul saat pemetaan objek, penarikan data, dan pelaporan. Status integrasi (terhubung/tidak terhubung GS) akan memengaruhi sumber data dan ketersediaan objek pada proses evaluasi berikutnya.",
+    "buatLingkup": "Buat Lingkup",
+    "card": {
+      "totalLingkup": "Total Lingkup Evaluasi",
+      "lingkupAktif": "Lingkup Evaluasi Aktif",
+      "lingkupTerbanyak": "Lingkup Terbanyak Digunakan",
+      "lingkupTerakhir": "Lingkup Terakhir Dibuat"
+    },
+    "daftarLingkup": "Daftar Lingkup Evaluasi",
+    "placeholder": {
+      "cari": "Cari..."
+    },
+    "urutkan": {
+      "az": "A - Z",
+      "za": "Z - A"
+    },
+    "filter": {
+      "semua": "Semua",
+      "aktif": "Aktif",
+      "tidakAktif": "Tidak Aktif"
+    },
+    "tabel": {
+      "no": "No",
+      "nama": "Nama",
+      "status": "Status",
+      "lingkupEvaluasi": "Lingkup Evaluasi",
+      "dibuatPada": "Dibuat Pada",
+      "deskripsi": "Deskripsi",
+      "penanggungJawab": "Penanggung Jawab",
+      "evaluator": "Evaluator",
+      "integrasiSistem": "Integrasi Sistem"
+    },
+    "create": {
+      "breadcrumb": "Buat Lingkup",
+      "judul": "Buat Lingkup Evaluasi Baru",
+      "deskripsi": "Gunakan fitur ini untuk membuat lingkup evaluasi baru sebagai batasan (scope) objek yang akan dinilai, seperti Program Studi, Fakultas, atau Unit. Lingkup yang dibuat akan digunakan pada modul saat menentukan objek evaluasi dan membantu proses monitoring serta penilaian berjalan lebih terstruktur dan konsisten.",
+      "formJudul": "Form Lingkup Evaluasi",
+      "nama": "Nama",
+      "namaPlaceholder": "Masukkan nama di sini",
+      "namaHint": "Maks. 100 karakter. Gunakan format konsisten.",
+      "deskripsiLabel": "Deskripsi",
+      "deskripsiPlaceholder": "Masukkan deskripsi di sini",
+      "deskripsiHint": "Maks. 100 karakter. Gunakan format konsisten.",
+      "rolePj": "Pilih Role Penanggung Jawab",
+      "roleEvaluator": "Pilih Role Evaluator",
+      "pilih": "Pilih",
+      "batal": "Batal",
+      "simpan": "Simpan"
+    },
+    "detail": {
+      "judul": "Lihat Lingkup Evaluasi",
+      "deskripsi": "Gunakan halaman ini untuk melihat detail lingkup evaluasi beserta unit dan objek yang terhubung. Anda dapat membuka informasi lingkup, meninjau daftar unit, serta daftar objek evaluasi untuk memudahkan pengelolaan data.",
+      "informasi": "Informasi Lingkup Evaluasi",
+      "namaLingkup": "Nama Lingkup",
+      "deskripsiLabel": "Deskripsi",
+      "penanggungJawab": "Penanggung Jawab",
+      "evaluator": "Evaluator",
+      "totalUnit": "Total Unit",
+      "integrasiSistem": "Integrasi Sistem",
+      "tanggalDiperbarui": "Tanggal Diperbarui",
+      "edit": "Edit",
+      "hapus": "Hapus",
+      "tambahUnit": "Tambah Unit Evaluasi",
+      "tambahLingkup": "Tambah Lingkup Evaluasi",
+      "tambahObjek": "Tambah Objek Evaluasi",
+      "daftarUnit": "Daftar Unit",
+      "daftarObjek": "Daftar Objek Evaluasi",
+      "belumAdaData": "Belum ada data."
+    }
+  },
+  "manajemenAspek": {
+    "judul": "Detail Aspek",
+    "deskripsiDetail": "Gunakan halaman ini untuk melihat detail aspek evaluasi.",
+    "informasiAspek": "Informasi Aspek",
+    "namaAspek": "Nama Aspek",
+    "deskripsi": "Deskripsi",
+    "editAspek": "Edit Aspek",
+    "hapus": "Hapus",
+    "buatAspek": "Buat Aspek",
+    "formAspek": "Form Aspek",
+    "deskripsiBuat": "Formulir untuk membuat aspek baru.",
+    "editAspekJudul": "Edit Aspek",
+    "deskripsiEdit": "Gunakan halaman ini untuk memperbarui aspek evaluasi.",
+    "batal": "Batal",
+    "simpan": "Simpan",
+    "daftarAspek": "Daftar Aspek"
   }
 }
