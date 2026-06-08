@@ -136,6 +136,9 @@
       "nidn": "Masukkan NIDN (untuk dosen)",
       "nim": "Masukkan NIM (untuk mahasiswa)"
     },
+    "filter": {
+      "semuaRole": "Semua Role"
+    },
     "nonaktif": {
       "judul": "Nonaktifkan Pengguna",
       "deskripsi": "Apakah Anda yakin ingin menonaktifkan pengguna ini? Pengguna yang dinonaktifkan tidak akan dapat mengakses sistem, tetapi data mereka akan tetap tersimpan untuk referensi di masa mendatang.",

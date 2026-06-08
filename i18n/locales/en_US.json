@@ -136,6 +136,9 @@
       "nidn": "Enter NIDN (for lecturers)",
       "nim": "Enter NIM (for students)"
     },
+    "filter": {
+      "semuaRole": "All Roles"
+    },
     "nonaktif": {
       "judul": "Deactivate User",
       "deskripsi": "Deactivating a user will restrict their access to the system and prevent them from performing any actions. This action is typically taken when a user leaves the organization or no longer requires access.",

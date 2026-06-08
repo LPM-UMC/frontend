@@ -47,12 +47,34 @@
           </p>
         </div>
 
-        <NuxtLink :to="localePath('/dashboard/manajemen-user/create')">
+        <div class="flex flex-wrap gap-2 lg:flex-nowrap">
           <button
-            class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e30000] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
-            {{ $t('manajemenUser.create.tombol') }}
+            @click="exportData('pdf')"
+            :disabled="isExporting"
+            class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl border border-[#dce1e8] bg-white px-4 py-2 text-sm sm:text-[0.95rem] font-semibold text-[#394150] shadow-[0_2px_6px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] disabled:opacity-50 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4.5 w-4.5 text-[#e30000]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            PDF
           </button>
-        </NuxtLink>
+          
+          <button
+            @click="exportData('csv')"
+            :disabled="isExporting"
+            class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl border border-[#dce1e8] bg-white px-4 py-2 text-sm sm:text-[0.95rem] font-semibold text-[#394150] shadow-[0_2px_6px_rgba(15,23,42,0.04)] transition hover:bg-[#f8f8f8] disabled:opacity-50 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4.5 w-4.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            CSV
+          </button>
+
+          <NuxtLink :to="localePath('/dashboard/manajemen-user/create')">
+            <button
+              class="inline-flex h-10 sm:h-11 min-w-40 items-center justify-center rounded-xl bg-[#e30000] px-5 py-3 text-sm sm:text-[0.95rem] font-semibold text-white shadow-[0_8px_18px_rgba(227,0,0,0.25)] transition hover:bg-[#c70000] cursor-pointer">
+              {{ $t('manajemenUser.create.tombol') }}
+            </button>
+          </NuxtLink>
+        </div>
       </div>
     </section>
 
@@ -134,7 +156,7 @@
           <select v-model="roleFilter"
             class="h-10 min-w-32 rounded-xl border border-[#d8dde4] bg-[#f8f8f8] px-4 text-sm cursor-pointer">
             <option value="" class="cursor-pointer">
-              {{ $t('manajemenUser.role') }}
+              {{ $t('manajemenUser.filter.semuaRole') }}
             </option>
             <option v-for="role in roleOptions" :key="role.id" :value="role.id" class="cursor-pointer">
               {{ role.nama }}
@@ -222,7 +244,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
-import { navigateTo } from '#imports'
+import { navigateTo, useRuntimeConfig } from '#imports'
+import { useAuthStore } from '#stores/auth'
 import { useI18n } from 'vue-i18n'
 import { useUser } from '../composables/useUser'
 import { useRole } from '#features/manajemen-role/composables/useRole'
@@ -351,6 +374,56 @@ async function goToEditPage(id: string) {
   await navigateTo(
     `/dashboard/manajemen-user/${encodeURIComponent(id)}/edit`,
   )
+}
+
+/* =========================
+ * EXPORT
+ * ========================= */
+
+const isExporting = ref(false)
+
+async function exportData(format: 'pdf' | 'csv') {
+  if (isExporting.value) return
+  isExporting.value = true
+  try {
+    const config = useRuntimeConfig()
+    const baseURL = ((config.public.apiBaseUrl as string) || 'http://localhost:3001').replace(/\/api\/?$/, '')
+    const auth = useAuthStore()
+    const token = auth.accessToken
+
+    const headers: Record<string, string> = {
+      'Accept-Language': locale.value,
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    const response = await $fetch(`/api/users/export/${format}`, {
+      baseURL,
+      headers,
+      credentials: 'include',
+      responseType: 'blob'
+    })
+
+    const url = window.URL.createObjectURL(response as Blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Users_Export_${new Date().toISOString().split('T')[0]}.${format}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error('Export failed', err)
+    const toast = useToast()
+    toast.add({
+      title: 'Gagal',
+      description: 'Gagal mengunduh file. Terjadi kesalahan pada server.',
+      color: 'error'
+    })
+  } finally {
+    isExporting.value = false
+  }
 }
 
 /* =========================
