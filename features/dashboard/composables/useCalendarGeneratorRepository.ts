@@ -68,7 +68,7 @@ export function useCalendarGeneratorRepository(
   ): Promise<T | null> {
     try {
       const response = await $fetch<T | DashboardApiEnvelope<T>>(endpoint, {
-        baseURL: config.public.apiBase,
+        baseURL: config.public.apiBaseUrl,
         credentials: 'include',
         method: request.method,
         body: request.body,

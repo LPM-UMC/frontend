@@ -32,13 +32,13 @@ export const useFm1Store = defineStore("fm1", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: FMInformationResponse }>(`/fm1/periode-modul/${pId}/unit-lingkup/${uId}/informasi`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.informasi = response.data;
@@ -55,13 +55,13 @@ export const useFm1Store = defineStore("fm1", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: AspekPeriodeModulResponse[] }>(`/periode-modul/${pId}/aspek`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           query: { size: 100 } // Get all aspects
         });
 
@@ -79,13 +79,13 @@ export const useFm1Store = defineStore("fm1", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: AspekPeriodeModulResponse }>(`/fm1/aspek-periode-modul/${aId}/unit-lingkup-periode-modul/${uId}`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.detailAspek = response.data;
@@ -103,13 +103,13 @@ export const useFm1Store = defineStore("fm1", {
       this.tablePage = page;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<UnitObjekTableResponse>(`/fm1/unit-lingkup-periode-modul/${uId}/objek/${objekId}/unit-objek`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           query: {
             page: this.tablePage,
             size: 10,
@@ -134,13 +134,13 @@ export const useFm1Store = defineStore("fm1", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: IndikatorAndAnswerResponse[] }>(`/fm1/aspek-periode-modul/${aspekPeriodeModulId}/unit-objek/${unitObjekId}/jawaban`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.jawabanIndikator = response.data || [];
@@ -157,14 +157,14 @@ export const useFm1Store = defineStore("fm1", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: IndikatorAndAnswerResponse }>(`/fm1/indikator-periode-modul/${indikatorPeriodeModulId}/unit-objek/${unitObjekId}/jawab`, {
           method: 'POST',
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           body: payload
         });
 
@@ -187,13 +187,13 @@ export const useFm1Store = defineStore("fm1", {
     async fetchBuktiInstrumenList(unitLingkupId: string, page: number = 1, size: number = 100) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: BuktiInstrumenDetailResponse[], meta?: any }>(`/fm1/unit-lingkup/${unitLingkupId}/bukti`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           query: { size, page }
         });
 
@@ -209,13 +209,13 @@ export const useFm1Store = defineStore("fm1", {
     async checkIsAuditee(unitLingkupId: string) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: { is_auditee: boolean } }>(`/periode-modul/unit-lingkup/${unitLingkupId}/is-auditee`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.isAuditee = response.data.is_auditee;
@@ -228,13 +228,13 @@ export const useFm1Store = defineStore("fm1", {
     async checkIsEvaluator(unitLingkupId: string) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: { is_evaluator: boolean } }>(`/periode-modul/unit-lingkup/${unitLingkupId}/is-evaluator`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.isEvaluator = response.data.is_evaluator;
@@ -247,14 +247,14 @@ export const useFm1Store = defineStore("fm1", {
     async simpanBuktiInstrumen(aspekPeriodeModulId: string, unitLingkupId: string, payload: { link: string, catatan: string }) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         await $fetch(`/fm1/aspek/${aspekPeriodeModulId}/unit-lingkup/${unitLingkupId}/bukti`, {
           method: 'POST',
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           body: payload
         });
 

@@ -86,7 +86,7 @@ export function useFm01Repository(initialMode: Fm01SourceMode = 'auto') {
   ): Promise<T | null> {
     try {
       const response = await $fetch<T | Fm01ApiEnvelope<T>>(endpoint, {
-        baseURL: config.public.apiBase,
+        baseURL: config.public.apiBaseUrl,
         credentials: 'include',
         ...(options ?? {}),
       })

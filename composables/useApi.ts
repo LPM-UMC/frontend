@@ -55,7 +55,7 @@ export function useApi() {
     catch (error: any) {
       // If 401 and we have a token, try refresh once then retry
       if (error?.response?.status === 401 && authStore.accessToken) {
-        await authStore.refreshToken()
+        await authStore.refreshAccessToken()
 
         if (authStore.accessToken) {
           headers.Authorization = `Bearer ${authStore.accessToken}`

@@ -11,12 +11,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  // 🔹 Hindari race condition
-  if (auth.isLoading) return
-
   // 🔹 Jika belum init → jalankan
-  if (!auth.isInitialized) {
-    await auth.initAuth()
+  if (!auth.initialized) {
+    await auth.initializeAuth()
   }
 
   // 🔥 INI YANG PENTING

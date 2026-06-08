@@ -29,16 +29,18 @@ export const useModulStore = defineStore("modul", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = config.public.apiBaseUrl || config.public.apiBaseUrl || 'http://localhost:3001';
 
         const nuxtApp = useNuxtApp();
         const lang = (nuxtApp.$i18n as any)?.locale?.value || "id";
+        const authStore = useAuthStore();
 
-        const response = await $fetch<{ data: ModulResponse[], meta: any }>("/modul/monev", {
+        const response = await $fetch<{ data: ModulResponse[], meta: any }>("/api/modul/monev", {
           baseURL,
           credentials: "include",
           headers: {
             "Accept-Language": lang,
+            ...(authStore.accessToken ? { Authorization: `Bearer ${authStore.accessToken}` } : {})
           },
           query: {
             page: this.monevPage,
@@ -76,16 +78,18 @@ export const useModulStore = defineStore("modul", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = config.public.apiBaseUrl || config.public.apiBaseUrl || 'http://localhost:3001';
 
         const nuxtApp = useNuxtApp();
         const lang = (nuxtApp.$i18n as any)?.locale?.value || "id";
+        const authStore = useAuthStore();
 
-        const response = await $fetch<{ data: ModulResponse[], meta: any }>("/modul/ami", {
+        const response = await $fetch<{ data: ModulResponse[], meta: any }>("/api/modul/ami", {
           baseURL,
           credentials: "include",
           headers: {
             "Accept-Language": lang,
+            ...(authStore.accessToken ? { Authorization: `Bearer ${authStore.accessToken}` } : {})
           },
           query: {
             page: this.amiPage,

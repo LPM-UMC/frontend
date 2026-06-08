@@ -48,7 +48,7 @@ export const useObjekStore = defineStore("objek", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<ObjekResponse>>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}/objek?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/objek?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -79,7 +79,7 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBase}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -113,7 +113,7 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}/objek`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/objek`,
           {
             method: "POST",
             headers: {
@@ -150,7 +150,7 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBase}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
           {
             method: "PUT",
             headers: {
@@ -190,7 +190,7 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
           {
             method: "DELETE",
             headers: {

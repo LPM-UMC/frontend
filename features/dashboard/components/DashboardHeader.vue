@@ -94,7 +94,7 @@ function handleClickOutside(event: MouseEvent) {
 onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
 
-  await authStore.initAuth()
+  await authStore.initializeAuth()
 
   if (!authStore.user) return
 

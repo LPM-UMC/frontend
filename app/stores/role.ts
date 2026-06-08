@@ -42,7 +42,7 @@ export const useRoleStore = defineStore("role", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<RoleResponse>>(
-          `${config.public.apiBase}/api/${lang}/roles?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/roles?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -73,7 +73,7 @@ export const useRoleStore = defineStore("role", {
 
       try {
         const res = await $fetch<{ data: RoleResponse }>(
-          `${config.public.apiBase}/api/${lang}/roles`,
+          `${config.public.apiBaseUrl}/api/${lang}/roles`,
           {
             method: "POST",
             headers: {
@@ -110,7 +110,7 @@ export const useRoleStore = defineStore("role", {
 
       try {
         const res = await $fetch<{ data: RoleResponse }>(
-          `${config.public.apiBase}/api/${lang}/roles/${roleId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/roles/${roleId}`,
           {
             method: "PUT",
             headers: {
@@ -145,7 +145,7 @@ export const useRoleStore = defineStore("role", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/roles/${roleId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/roles/${roleId}`,
           {
             method: "DELETE",
             headers: {

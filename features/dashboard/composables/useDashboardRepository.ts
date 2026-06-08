@@ -43,7 +43,7 @@ export function useDashboardRepository(initialMode: DashboardSourceMode = 'auto'
   async function fetchFromApi<T>(endpoint: string): Promise<T | null> {
     try {
       const response = await $fetch<T | DashboardApiEnvelope<T>>(endpoint, {
-        baseURL: config.public.apiBase,
+        baseURL: config.public.apiBaseUrl,
         credentials: 'include',
       })
 

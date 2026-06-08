@@ -42,7 +42,7 @@ export const useUserStore = defineStore("user", {
         if (params?.roleId) query.append("roleId", params.roleId)
 
         const res = await $fetch<PagingResponse<UserResponse>>(
-          `${config.public.apiBase}/api/${lang}/users?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/users?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -71,7 +71,7 @@ export const useUserStore = defineStore("user", {
 
       try {
         const res = await $fetch<{ data: UserResponse }>(
-          `${config.public.apiBase}/api/${lang}/users/${userId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -107,7 +107,7 @@ export const useUserStore = defineStore("user", {
 
       try {
         const res = await $fetch<{ data: UserResponse }>(
-          `${config.public.apiBase}/api/${lang}/users`,
+          `${config.public.apiBaseUrl}/api/${lang}/users`,
           {
             method: "POST",
             headers: {
@@ -143,7 +143,7 @@ export const useUserStore = defineStore("user", {
 
       try {
         const res = await $fetch<{ data: UserResponse }>(
-          `${config.public.apiBase}/api/${lang}/users/${userId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/users/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -180,7 +180,7 @@ export const useUserStore = defineStore("user", {
 
       try {
         const res = await $fetch<{ data: UserResponse }>(
-          `${config.public.apiBase}/api/${lang}/users/profile`,
+          `${config.public.apiBaseUrl}/api/${lang}/users/profile`,
           {
             method: "PUT",
             headers: {
@@ -213,7 +213,7 @@ export const useUserStore = defineStore("user", {
         formData.append("picture", file)
 
         const res = await $fetch<{ data: UserResponse }>(
-          `${config.public.apiBase}/api/${lang}/users/profile/picture`,
+          `${config.public.apiBaseUrl}/api/${lang}/users/profile/picture`,
           {
             method: "PUT",
             headers: {
@@ -243,7 +243,7 @@ export const useUserStore = defineStore("user", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/users/${userId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/users/${userId}`,
           {
             method: "DELETE",
             headers: {

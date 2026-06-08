@@ -32,7 +32,7 @@ export const useDasborStore = defineStore("dasbor", {
 
       try {
         const res = await $fetch<{ data: UserDasborResponse }>(
-          `${config.public.apiBase}/api/${lang}/dasbor/users`,
+          `${config.public.apiBaseUrl}/api/${lang}/dasbor/users`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -60,7 +60,7 @@ export const useDasborStore = defineStore("dasbor", {
 
       try {
         const res = await $fetch<{ data: RoleDasborResponse }>(
-          `${config.public.apiBase}/api/${lang}/dasbor/roles`,
+          `${config.public.apiBaseUrl}/api/${lang}/dasbor/roles`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -88,7 +88,7 @@ export const useDasborStore = defineStore("dasbor", {
 
       try {
         const res = await $fetch<{ data: LingkupDasborResponse }>(
-          `${config.public.apiBase}/api/${lang}/dasbor/lingkup`,
+          `${config.public.apiBaseUrl}/api/${lang}/dasbor/lingkup`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -116,7 +116,7 @@ export const useDasborStore = defineStore("dasbor", {
 
       try {
         const res = await $fetch<{ data: ModulDasborResponse }>(
-          `${config.public.apiBase}/api/${lang}/dasbor/modul`,
+          `${config.public.apiBaseUrl}/api/${lang}/dasbor/modul`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,

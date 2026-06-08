@@ -22,13 +22,13 @@ export const useFm2Store = defineStore("fm2", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: FMInformationResponse }>(`/fm2/periode-modul/${pId}/unit-lingkup-periode-modul/${uId}/informasi`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.informasi = response.data;
@@ -45,13 +45,13 @@ export const useFm2Store = defineStore("fm2", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: ScoreResponse }>(`/fm2/unit-lingkup-periode-modul/${uId}/skor-monitoring`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.skorMonitoring = response.data;
@@ -72,13 +72,13 @@ export const useFm2Store = defineStore("fm2", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: AspectScoreResponse[] }>(`/fm2/unit-lingkup-periode-modul/${uId}/skor-aspek`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.skorAspeks = response.data || [];
@@ -95,14 +95,14 @@ export const useFm2Store = defineStore("fm2", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: ScoreResponse }>(`/fm2/unit-lingkup-periode-modul/${uId}/aspek-periode-modul/${aId}/calculate-skor`, {
           method: 'POST',
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         // Update skor in store list
@@ -126,14 +126,14 @@ export const useFm2Store = defineStore("fm2", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: ScoreResponse }>(`/fm2/unit-lingkup-periode-modul/${uId}/calculate-skor`, {
           method: 'POST',
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.skorMonitoring = response.data;
@@ -150,13 +150,13 @@ export const useFm2Store = defineStore("fm2", {
     async checkIsAuditee(uId: string) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: { is_auditee: boolean } }>(`/periode-modul/unit-lingkup/${uId}/is-auditee`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.isAuditee = response.data.is_auditee;

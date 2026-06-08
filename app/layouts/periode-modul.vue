@@ -172,24 +172,27 @@ watch(selectedUnitLingkup, (newVal) => {
 
 const { data: layoutOptions } = await useAsyncData(`layout-options-${pId}`, async () => {
   const baseURL = useRuntimeConfig().public.apiBaseUrl || 'http://localhost:3001'
-  const headers = { "Accept-Language": locale.value }
+  const headers = { 
+    "Accept-Language": locale.value,
+    "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}`
+  }
   
   let pmOptions: { value: string, label: string }[] = []
   let ulOptions: { value: string, label: string }[] = []
 
   try {
-    const pmData = await $fetch<any>(`/periode-modul/${pId}`, { baseURL, headers, credentials: "include" })
+    const pmData = await $fetch<any>(`/api/periode-modul/${pId}`, { baseURL, headers, credentials: "include" })
     const modulId = pmData?.data?.modul?.id
 
     if (modulId) {
-      const pmRes = await $fetch<any>(`/periode-modul/modul/${modulId}`, { baseURL, headers, credentials: "include" })
+      const pmRes = await $fetch<any>(`/api/periode-modul/modul/${modulId}`, { baseURL, headers, credentials: "include" })
       pmOptions = pmRes?.data?.map((item: any) => ({
         value: item.id,
         label: `${item.periode?.tahun_ajaran || ''} - ${item.periode?.semester || ''}`
       })) || []
     }
 
-    const ulRes = await $fetch<any>(`/periode-modul/${pId}/unit-lingkup`, { baseURL, headers, credentials: "include" })
+    const ulRes = await $fetch<any>(`/api/periode-modul/${pId}/unit-lingkup`, { baseURL, headers, credentials: "include" })
     ulOptions = ulRes?.data?.map((item: any) => ({
       value: item.id,
       label: item.unit_lingkup?.nama || ''

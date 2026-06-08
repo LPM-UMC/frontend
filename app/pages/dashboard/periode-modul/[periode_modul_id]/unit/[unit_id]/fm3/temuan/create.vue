@@ -10,14 +10,14 @@ const route = useRoute()
 const unitId = route.params.unit_id as string
 
 const config = useRuntimeConfig()
-const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001'
+const baseURL = config.public.apiBaseUrl || config.public.apiBaseUrl || 'http://localhost:3001'
 const lang = (useNuxtApp().$i18n as any)?.locale?.value || 'id'
 
 const { data, error } = await useAsyncData(`check-auditee-fm3-create-${unitId}`, async () => {
-  return await $fetch<{ data: { is_auditee: boolean } }>(`/periode-modul/unit-lingkup/${unitId}/is-auditee`, {
+  return await $fetch<{ data: { is_auditee: boolean } }>(`/api/periode-modul/unit-lingkup/${unitId}/is-auditee`, {
     baseURL,
     credentials: 'include',
-    headers: { 'Accept-Language': lang },
+    headers: { 'Accept-Language': lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
   })
 })
 

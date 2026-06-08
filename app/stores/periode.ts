@@ -46,7 +46,7 @@ export const usePeriodeStore = defineStore("periode", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<PeriodeResponse>>(
-          `${config.public.apiBase}/api/${lang}/periode?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/periode?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -75,7 +75,7 @@ export const usePeriodeStore = defineStore("periode", {
 
       try {
         const res = await $fetch<{ data: PeriodeResponse }>(
-          `${config.public.apiBase}/api/${lang}/periode/${periodeId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/periode/${periodeId}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -101,7 +101,7 @@ export const usePeriodeStore = defineStore("periode", {
 
       try {
         const res = await $fetch<{ data: PeriodeResponse }>(
-          `${config.public.apiBase}/api/${lang}/periode/aktif`
+          `${config.public.apiBaseUrl}/api/${lang}/periode/aktif`
         )
 
         this.periodeAktif = res.data
@@ -131,7 +131,7 @@ export const usePeriodeStore = defineStore("periode", {
         formData.append("file_kalender", payload.file_kalender)
 
         const res = await $fetch<{ data: PeriodeResponse }>(
-          `${config.public.apiBase}/api/${lang}/periode`,
+          `${config.public.apiBaseUrl}/api/${lang}/periode`,
           {
             method: "POST",
             headers: {
@@ -173,7 +173,7 @@ export const usePeriodeStore = defineStore("periode", {
         }
 
         const res = await $fetch<{ data: PeriodeResponse }>(
-          `${config.public.apiBase}/api/${lang}/periode/${periodeId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/periode/${periodeId}`,
           {
             method: "PATCH",
             headers: {
@@ -202,7 +202,7 @@ export const usePeriodeStore = defineStore("periode", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/periode/${periodeId}/nonaktif`,
+          `${config.public.apiBaseUrl}/api/${lang}/periode/${periodeId}/nonaktif`,
           {
             method: "PUT",
             headers: {

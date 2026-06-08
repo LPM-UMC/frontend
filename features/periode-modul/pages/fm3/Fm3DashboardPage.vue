@@ -129,12 +129,13 @@ async function goToDetailFinding(rowId: string) {
 async function handleDeleteFinding(id: string) {
   if (!confirm(t('common.confirmDelete', 'Apakah Anda yakin ingin menghapus data ini?'))) return;
   const config = useRuntimeConfig();
-  const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+  const baseURL = config.public.apiBaseUrl || config.public.apiBaseUrl || 'http://localhost:3001';
   try {
-    await $fetch(`/fm3/temuan/${id}`, {
+    await $fetch(`/api/fm3/temuan/${id}`, {
       method: 'DELETE',
       baseURL,
       credentials: 'include',
+      headers: { "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` }
     });
     fetchTemuan();
   } catch (err) {

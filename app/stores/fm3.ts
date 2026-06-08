@@ -31,13 +31,13 @@ export const useFm3Store = defineStore("fm3", {
       this.error = null;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: FMInformationResponse }>(`/fm3/periode-modul/${pId}/unit-lingkup-periode-modul/${uId}/informasi`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.informasi = response.data;
@@ -55,7 +55,7 @@ export const useFm3Store = defineStore("fm3", {
       this.tablePage = page;
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const endpoint = fetchUnvalidatedOnly 
@@ -65,7 +65,7 @@ export const useFm3Store = defineStore("fm3", {
         const response = await $fetch<{ data: TemuanResponse[], meta: any }>(endpoint, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
           query: {
             page: this.tablePage,
             size: 10,
@@ -87,13 +87,13 @@ export const useFm3Store = defineStore("fm3", {
     async checkIsAuditee(unitLingkupId: string) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: { is_auditee: boolean } }>(`/periode-modul/unit-lingkup/${unitLingkupId}/is-auditee`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.isAuditee = response.data.is_auditee;
@@ -106,13 +106,13 @@ export const useFm3Store = defineStore("fm3", {
     async checkIsEvaluator(unitLingkupId: string) {
       try {
         const config = useRuntimeConfig();
-        const baseURL = config.public.apiBaseUrl || config.public.apiBase || 'http://localhost:3001';
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
         const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
 
         const response = await $fetch<{ data: { is_evaluator: boolean } }>(`/periode-modul/unit-lingkup/${unitLingkupId}/is-evaluator`, {
           baseURL,
           credentials: "include",
-          headers: { "Accept-Language": lang },
+          headers: { "Accept-Language": lang, "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` },
         });
 
         this.isEvaluator = response.data.is_evaluator;

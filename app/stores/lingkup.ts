@@ -55,7 +55,7 @@ export const useLingkupStore = defineStore("lingkup", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<LingkupResponse>>(
-          `${config.public.apiBase}/api/${lang}/lingkup?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -84,7 +84,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupResponse }>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -112,7 +112,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupResponse }>(
-          `${config.public.apiBase}/api/${lang}/lingkup`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup`,
           {
             method: "POST",
             headers: {
@@ -145,7 +145,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupResponse }>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}`,
           {
             method: "PUT",
             headers: {
@@ -174,7 +174,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}`,
           {
             method: "DELETE",
             headers: {
@@ -223,7 +223,7 @@ export const useLingkupStore = defineStore("lingkup", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<LingkupUnitResponse>>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}/unit?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/unit?${query.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -252,7 +252,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupUnitResponse }>(
-          `${config.public.apiBase}/api/${lang}/unit-lingkup/${unitId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/unit-lingkup/${unitId}`,
           {
             headers: {
               Authorization: `Bearer ${auth.accessToken}`,
@@ -284,7 +284,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupUnitResponse }>(
-          `${config.public.apiBase}/api/${lang}/lingkup/${lingkupId}/unit`,
+          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/unit`,
           {
             method: "POST",
             headers: {
@@ -317,7 +317,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         const res = await $fetch<{ data: LingkupUnitResponse }>(
-          `${config.public.apiBase}/api/${lang}/unit-lingkup/${unitId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/unit-lingkup/${unitId}`,
           {
             method: "PUT",
             headers: {
@@ -346,7 +346,7 @@ export const useLingkupStore = defineStore("lingkup", {
 
       try {
         await $fetch(
-          `${config.public.apiBase}/api/${lang}/unit-lingkup/${unitId}`,
+          `${config.public.apiBaseUrl}/api/${lang}/unit-lingkup/${unitId}`,
           {
             method: "DELETE",
             headers: {
