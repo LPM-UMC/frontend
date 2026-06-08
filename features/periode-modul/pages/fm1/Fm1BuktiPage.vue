@@ -1,108 +1,77 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { navigateTo, useRoute } from '#imports'
-import { getFm01DummyPageData } from '#features/dashboard/data/fm01Dummy'
-import { useFormSubmission } from '../../composables/useFormSubmission'
-import type { Fm01PageData, Fm01RouteContext } from '../../types/form'
+import { computed, onMounted, ref, watch } from 'vue'
+import { navigateTo, useRoute, useToast } from '#imports'
+import { useFm1Store } from '#stores/fm1'
+import { simpanBuktiInstrumenValidation } from '#validations/fm1-validation'
+import { useI18n } from 'vue-i18n'
 
 interface Fm1BuktiFormState {
-  fileName: string
-  driveLink: string
-  note: string
+  link: string
+  catatan: string
+  errors?: {
+    link?: string
+    catatan?: string
+  }
 }
 
 const FORM_PER_PAGE = 2
-const NOTE_MAX_LENGTH = 100
-const DEFAULT_DRIVE_LINK = 'https://drive.google.com/drive/folders/1UB-hyfGDCGupa1vSI8zi4yEb-qiUUTf'
-const DEFAULT_NOTE = 'Semua dokumen RPS sudah sesuai dengan standar KKNI. Perlu ditambahkan rubrik penilaian untuk setiap mata kuliah yang lebih detail.'
+const NOTE_MAX_LENGTH = 2000
 
-const repository = useFormSubmission('auto')
 const route = useRoute()
+const toast = useToast()
+const fm1Store = useFm1Store()
+const { t } = useI18n()
 
-const pageData = ref<Fm01PageData>(getFm01DummyPageData())
-const formStateByAspect = reactive<Record<string, Fm1BuktiFormState>>({})
-const isSavingByAspect = reactive<Record<string, boolean>>({})
+const routePeriodeModulId = computed(() => route.params.periode_modul_id as string)
+const routeUnitId = computed(() => route.params.unit_id as string)
 
-function normalizeRouteParam(value: string | string[] | undefined): string | null {
-  if (!value) return null
-  if (Array.isArray(value)) return value[0] ?? null
-  return value
-}
-
-function normalizeQueryParam(value: string | string[] | undefined): string | null {
-  if (!value) return null
-  if (Array.isArray(value)) return value[0] ?? null
-  return value
-}
-
-const routePeriodeModulId = computed(() =>
-  normalizeRouteParam(route.params.periode_modul_id as string | string[] | undefined)
-)
-
-const routeUnitId = computed(() =>
-  normalizeRouteParam(route.params.unit_id as string | string[] | undefined)
-)
-
-const pageFromQuery = computed(() => {
-  const raw = normalizeQueryParam(route.query.page as string | string[] | undefined)
-  if (!raw) return 1
-
-  const parsed = Number.parseInt(raw, 10)
-  if (!Number.isFinite(parsed) || parsed < 1) return 1
-  return parsed
+const canInput = computed(() => {
+  const fm = fm1Store.informasi?.fm?.fm;
+  const status = fm1Store.informasi?.fm?.status_pelaksanaan?.kode;
+  return fm?.kode === 'MONITORING' && status === 'SEDANG_BERLANGSUNG';
 })
 
-function getBadgeLabel(index: number): string {
-  if (index <= 1 || index === 6) {
-    return 'PERANGKAT ASSESMEN & RUBRIK'
-  }
+const currentPage = computed(() => {
+  const raw = route.query.page as string
+  if (!raw) return 1
+  const parsed = Number.parseInt(raw, 10)
+  return (!Number.isFinite(parsed) || parsed < 1) ? 1 : parsed
+})
 
-  return 'Loremipsun'
-}
-
-function createDefaultFormState(index: number): Fm1BuktiFormState {
-  return {
-    fileName: index === 0 ? 'RPS' : 'Loremipsun',
-    driveLink: DEFAULT_DRIVE_LINK,
-    note: DEFAULT_NOTE,
-  }
-}
+const formStateByAspect = ref<Record<string, Fm1BuktiFormState>>({})
+const isSavingByAspect = ref<Record<string, boolean>>({})
 
 function initializeFormState() {
-  pageData.value.aspectOptions.forEach((aspect, index) => {
-    if (!formStateByAspect[aspect.id]) {
-      formStateByAspect[aspect.id] = createDefaultFormState(index)
+  fm1Store.buktiInstrumenList.forEach((item) => {
+    if (!formStateByAspect.value[item.aspek.id]) {
+      formStateByAspect.value[item.aspek.id] = {
+        link: item.bukti_instrumen?.link || '',
+        catatan: item.bukti_instrumen?.catatan || '',
+      }
     }
-
-    if (isSavingByAspect[aspect.id] == null) {
-      isSavingByAspect[aspect.id] = false
+    if (isSavingByAspect.value[item.aspek.id] == null) {
+      isSavingByAspect.value[item.aspek.id] = false
     }
   })
 }
 
-const allForms = computed(() => {
-  return pageData.value.aspectOptions.map((aspect, index) => {
-    const detail = pageData.value.aspectDetails[aspect.id]
-
+const paginatedForms = computed(() => {
+  return fm1Store.buktiInstrumenList.map((item, index) => {
+    const globalIndex = showingFrom.value + index
     return {
-      id: aspect.id,
-      number: index + 1,
-      title: detail?.title ?? aspect.label,
-      description: detail?.description ?? 'Loremipsun',
-      badgeLabel: getBadgeLabel(index),
-      form: formStateByAspect[aspect.id] ?? createDefaultFormState(index),
+      id: item.aspek.id,
+      number: globalIndex,
+      title: item.aspek.nama,
+      description: item.aspek.deskripsi || '',
+      badgeLabel: t('fmMonitoring.buktiInstrumen.dokumenBukti'),
+      panduan: item.panduan,
+      form: formStateByAspect.value[item.aspek.id] || { link: '', catatan: '' },
     }
   })
 })
 
-const totalForms = computed(() => allForms.value.length)
-const totalPages = computed(() => Math.max(1, Math.ceil(totalForms.value / FORM_PER_PAGE)))
-const currentPage = computed(() => Math.min(pageFromQuery.value, totalPages.value))
-
-const paginatedForms = computed(() => {
-  const start = (currentPage.value - 1) * FORM_PER_PAGE
-  return allForms.value.slice(start, start + FORM_PER_PAGE)
-})
+const totalForms = computed(() => fm1Store.buktiInstrumenMeta?.total || 0)
+const totalPages = computed(() => fm1Store.buktiInstrumenMeta?.total_pages || 1)
 
 const showingFrom = computed(() => {
   if (!totalForms.value) return 0
@@ -116,7 +85,6 @@ const showingTo = computed(() => {
 
 function buildBuktiRoutePath(): string | null {
   if (!routePeriodeModulId.value || !routeUnitId.value) return null
-
   return `/dashboard/periode-modul/${encodeURIComponent(routePeriodeModulId.value)}/unit/${encodeURIComponent(routeUnitId.value)}/fm1/bukti`
 }
 
@@ -135,245 +103,268 @@ async function goToPage(nextPage: number) {
   })
 }
 
-function handleFileChange(aspectId: string, event: Event) {
-  const input = event.target as HTMLInputElement | null
-  const selectedFile = input?.files?.[0] ?? null
-  if (!selectedFile) return
-
-  const state = formStateByAspect[aspectId]
+function updateCatatan(aspectId: string, value: string) {
+  const state = formStateByAspect.value[aspectId]
   if (!state) return
 
-  state.fileName = selectedFile.name
+  state.catatan = value.slice(0, NOTE_MAX_LENGTH)
+  validateField(aspectId, 'catatan', state.catatan)
 }
 
-function updateNote(aspectId: string, value: string) {
-  const state = formStateByAspect[aspectId]
+function updateLink(aspectId: string, value: string) {
+  const state = formStateByAspect.value[aspectId]
+  if (!state) return
+  
+  state.link = value
+  validateField(aspectId, 'link', value)
+}
+
+function validateField(aspectId: string, field: keyof Fm1BuktiFormState, value: string) {
+  const state = formStateByAspect.value[aspectId]
   if (!state) return
 
-  state.note = value.slice(0, NOTE_MAX_LENGTH)
+  const mockPayload = { ...state, [field]: value }
+  const result = simpanBuktiInstrumenValidation(t).safeParse(mockPayload)
+  
+  if (!state.errors) state.errors = {}
+  
+  if (!result.success) {
+    const errorMsg = result.error.flatten().fieldErrors[field]?.[0]
+    if (errorMsg) {
+      state.errors[field] = errorMsg
+    } else {
+      delete state.errors[field]
+    }
+  } else {
+    delete state.errors[field]
+  }
+}
+
+function validateForm(aspectId: string) {
+  const state = formStateByAspect.value[aspectId]
+  if (!state) return false
+
+  const result = simpanBuktiInstrumenValidation(t).safeParse({ link: state.link, catatan: state.catatan })
+  
+  state.errors = {}
+  if (!result.success) {
+    state.errors.link = result.error.flatten().fieldErrors.link?.[0]
+    state.errors.catatan = result.error.flatten().fieldErrors.catatan?.[0]
+    return false
+  }
+  
+  return true
 }
 
 async function saveBukti(aspectId: string) {
-  if (isSavingByAspect[aspectId]) return
+  if (isSavingByAspect.value[aspectId]) return
+  if (!validateForm(aspectId)) return
 
-  isSavingByAspect[aspectId] = true
-  isSavingByAspect[aspectId] = false
+  isSavingByAspect.value[aspectId] = true
+
+  const state = formStateByAspect.value[aspectId]
+  const payload = {
+    link: state.link,
+    catatan: state.catatan
+  }
+
+  const success = await fm1Store.simpanBuktiInstrumen(aspectId, routeUnitId.value, payload)
+
+  if (success) {
+    toast.add({
+      title: 'Berhasil',
+      description: t('fmMonitoring.buktiInstrumen.berhasilMenyimpan'),
+      color: 'primary'
+    })
+  } else {
+    toast.add({
+      title: 'Gagal Menyimpan',
+      description: t('fmMonitoring.buktiInstrumen.gagalMenyimpan'),
+      color: 'error'
+    })
+  }
+
+  isSavingByAspect.value[aspectId] = false
 }
 
-async function loadPageData() {
-  if (!routePeriodeModulId.value || !routeUnitId.value) {
-    pageData.value = getFm01DummyPageData()
-    return
-  }
-
-  const context: Fm01RouteContext = {
-    periodeModulId: routePeriodeModulId.value,
-    unitId: routeUnitId.value,
-    aspekId: pageData.value.activeAspectId,
-  }
-
-  pageData.value = await repository.getPageData(context)
+async function loadData() {
+  if (!routeUnitId.value) return
+  await fm1Store.fetchBuktiInstrumenList(routeUnitId.value, currentPage.value, FORM_PER_PAGE)
   initializeFormState()
 }
 
-watch([routePeriodeModulId, routeUnitId], async () => {
-  await loadPageData()
-})
-
 watch(
-  [currentPage, totalPages],
+  () => route.fullPath,
   async () => {
-    if (currentPage.value !== pageFromQuery.value) {
-      await goToPage(currentPage.value)
-    }
-  },
-  { immediate: true }
+    await loadData()
+  }
 )
 
 onMounted(async () => {
-  initializeFormState()
-  await loadPageData()
+  await loadData()
 })
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-280 px-2.5 pb-4 pt-3.5 sm:px-3.5 sm:pb-5 md:px-4.5 lg:px-5">
+  <section class="mx-auto w-full max-w-4xl px-3 pb-4 pt-3.5 sm:px-4 sm:pb-5">
     <article class="overflow-hidden rounded-[16px] border border-[#d9dde4] bg-[#f6f7f8]">
       <template v-for="(item, index) in paginatedForms" :key="item.id">
-        <header class="px-3 pb-3 pt-3 sm:px-6 sm:pb-4 sm:pt-4.5">
+        <header class="px-4 pb-3 pt-4 sm:px-6 sm:pb-4 sm:pt-5">
           <div class="flex items-start gap-3">
-            <span class="grid h-8 w-8 place-items-center rounded-full bg-[#e60000] text-[13px] font-semibold text-white">
+            <span class="grid h-7 w-7 sm:h-8 sm:w-8 shrink-0 place-items-center rounded-full bg-[#e60000] text-[12px] sm:text-[13px] font-semibold text-white">
               {{ item.number }}
             </span>
 
             <div>
-              <span class="inline-flex rounded-full bg-[#f8dddf] px-2.5 py-0.5 text-[10px] font-semibold tracking-wide text-[#e60000]">
+              <span class="inline-flex rounded-full bg-[#f8dddf] px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold tracking-wide text-[#e60000]">
                 {{ item.badgeLabel }}
               </span>
-              <h2 class="mt-1.5 text-[20px] font-bold leading-tight text-[#182132] sm:text-[23px] lg:text-[25px]">
+              <h2 class="mt-1 text-[16px] font-bold leading-tight text-[#182132] sm:text-[18px] lg:text-[20px]">
                 {{ item.title }}
               </h2>
-              <p class="mt-1 text-[12px] leading-normal text-[#5f697d] sm:text-[13px]">
+              <p class="mt-1 text-[11px] leading-relaxed text-[#5f697d] sm:text-[12px]">
                 {{ item.description }}
               </p>
             </div>
           </div>
         </header>
 
-        <div class="border-t border-[#dbe0e8] px-3 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4">
+        <div class="border-t border-[#dbe0e8] px-4 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4">
           <div class="flex items-start gap-2.5">
-            <span class="grid h-8 w-8 place-items-center rounded-full bg-[#d8e8ff] text-[#4b75db]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+            <span class="grid h-7 w-7 sm:h-8 sm:w-8 shrink-0 place-items-center rounded-full bg-[#d8e8ff] text-[#4b75db]">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-4.5 sm:w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m5.25 2.25c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9Z" />
               </svg>
             </span>
 
             <div>
-              <h3 class="text-[16px] font-semibold text-[#182132] sm:text-[17px] lg:text-[18px]">
-                Bukti Pendukung Integrasi
+              <h3 class="text-[14px] font-semibold text-[#182132] sm:text-[15px] lg:text-[16px]">
+                {{ $t('fmMonitoring.buktiInstrumen.buktiPendukung') }}
               </h3>
-              <p class="text-[12px] text-[#626d80] sm:text-[14px] lg:text-[15px]">
-                Unggah dokumen dan link pendukung yang menunjukkan integrasi pembelajaran
+              <p class="text-[11px] text-[#626d80] sm:text-[12px] lg:text-[13px]">
+                {{ $t('fmMonitoring.buktiInstrumen.cantumkanLink') }}
               </p>
             </div>
           </div>
 
-          <div class="mt-3 space-y-2.5">
+          <div class="mt-3.5 space-y-4">
             <div>
-              <p class="text-[12px] font-semibold text-[#2b3446] sm:text-[13px] lg:text-[14px]">
-                Dokumen Bukti (PDF)<span class="text-[#e60000]">*</span>
-              </p>
-
-              <label
-                :for="`bukti-file-${item.id}`"
-                class="mt-1.5 block cursor-pointer rounded-[12px] border border-[#d6dce6] bg-[#f4f6f9] px-3 py-2.5 transition hover:bg-[#eef2f7]"
-              >
-                <div class="flex items-center gap-3">
-                  <span
-                    class="grid h-8 w-8 place-items-center rounded-[10px] bg-[#e8edf3] text-[#8590a2]"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5v-9m0 0L8.625 10.875M12 7.5l3.375 3.375M3.75 15.75v2.625A1.875 1.875 0 0 0 5.625 20.25h12.75a1.875 1.875 0 0 0 1.875-1.875V15.75" />
-                    </svg>
-                  </span>
-
-                  <div>
-                    <p class="text-[12px] font-semibold text-[#2a3446] sm:text-[14px] lg:text-[15px]">
-                      Pilih Berkas
-                    </p>
-                    <p class="text-[10px] text-[#6f7b8e] sm:text-[12px] lg:text-[13px]">
-                      ({{ item.form.fileName }})
-                    </p>
-                  </div>
-                </div>
-
-                <input
-                  :id="`bukti-file-${item.id}`"
-                  type="file"
-                  accept=".pdf,application/pdf"
-                  class="hidden"
-                  @change="handleFileChange(item.id, $event)"
-                >
-              </label>
-
-              <p class="mt-1 text-[10px] text-[#8a95a8] sm:text-[11px] lg:text-[12px]">
-                Tidak ada file yang dipilih. Maksimal 10 MB
-              </p>
-            </div>
-
-            <div>
-              <p class="text-[12px] font-semibold text-[#2b3446] sm:text-[13px] lg:text-[14px]">
-                Link Dokumen Google Drive
+              <p class="text-[11px] font-semibold text-[#2b3446] sm:text-[12px] lg:text-[13px]">
+                {{ $t('fmMonitoring.buktiInstrumen.linkGoogleDrive') }} <span class="text-[#e60000]">*</span>
               </p>
 
               <div class="relative mt-1.5">
                 <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9aa5b7]">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.99 14.51 6.02-6.02m-4.51 9.03-1.77 1.77a3 3 0 1 1-4.24-4.24l1.77-1.77m9.03-4.51 1.77-1.77a3 3 0 1 1 4.24 4.24l-1.77 1.77" />
                   </svg>
                 </span>
                 <input
-                  v-model="item.form.driveLink"
+                  :value="item.form.link"
                   type="url"
-                  class="h-10 w-full rounded-[12px] border border-[#d2d8e2] bg-[#f8f9fb] px-9 text-[11px] text-[#3f4a5d] outline-none placeholder:text-[#97a2b4] sm:text-[12px] lg:text-[13px]"
+                  class="h-9 w-full rounded-[10px] border bg-[#f8f9fb] px-8 text-[11px] text-[#3f4a5d] outline-none placeholder:text-[#97a2b4] transition focus:border-[#4b75db] disabled:opacity-80 disabled:cursor-not-allowed sm:h-10 sm:px-9 sm:text-[12px]"
+                  :class="item.form.errors?.link ? 'border-[#e60000] focus:border-[#e60000]' : 'border-[#d2d8e2]'"
+                  :disabled="!canInput"
+                  @input="updateLink(item.id, ($event.target as HTMLInputElement).value)"
+                  placeholder="https://drive.google.com/..."
                 >
               </div>
+              
+              <p v-if="item.form.errors?.link" class="mt-1 text-[10px] text-[#e60000]">
+                {{ item.form.errors.link }}
+              </p>
 
-              <p class="mt-1 text-[10px] text-[#8a95a8] sm:text-[11px] lg:text-[12px]">
-                Lihat Format Bukti <span class="text-[#5f86da]">Disini</span>
+              <p v-if="item.panduan?.link" class="mt-1.5 text-[10px] text-[#8a95a8] sm:text-[11px]">
+                {{ $t('fmMonitoring.buktiInstrumen.lihatFormatBukti') }} <a :href="item.panduan.link" target="_blank" rel="noopener" class="text-[#5f86da] hover:underline">Disini</a>
+              </p>
+              <p v-if="item.panduan?.catatan" class="mt-1 text-[10px] text-[#8a95a8] sm:text-[11px]">
+                {{ $t('fmMonitoring.buktiInstrumen.catatanPanduan') }} {{ item.panduan.catatan }}
               </p>
             </div>
 
             <div>
-              <p class="text-[12px] font-semibold text-[#2b3446] sm:text-[13px] lg:text-[14px]">
-                Catatan Kaprodi
+              <p class="text-[11px] font-semibold text-[#2b3446] sm:text-[12px] lg:text-[13px]">
+                {{ $t('fmMonitoring.buktiInstrumen.catatanTambahan') }}
               </p>
 
               <textarea
-                :value="item.form.note"
-                rows="4"
-                class="mt-1.5 w-full rounded-[12px] border border-[#d2d8e2] bg-[#f8f9fb] px-3 py-2.5 text-[11px] text-[#3f4a5d] outline-none placeholder:text-[#97a2b4] sm:text-[12px] lg:text-[13px]"
-                @input="updateNote(item.id, ($event.target as HTMLTextAreaElement).value)"
+                :value="item.form.catatan"
+                rows="3"
+                class="mt-1.5 w-full rounded-[10px] border bg-[#f8f9fb] px-3 py-2 text-[11px] text-[#3f4a5d] outline-none placeholder:text-[#97a2b4] transition focus:border-[#4b75db] disabled:opacity-80 disabled:cursor-not-allowed sm:py-2.5 sm:text-[12px]"
+                :class="item.form.errors?.catatan ? 'border-[#e60000] focus:border-[#e60000]' : 'border-[#d2d8e2]'"
+                :disabled="!canInput"
+                @input="updateCatatan(item.id, ($event.target as HTMLTextAreaElement).value)"
+                :placeholder="$t('fmMonitoring.buktiInstrumen.berikanDeskripsi')"
               />
+              
+              <p v-if="item.form.errors?.catatan" class="mt-1 text-[10px] text-[#e60000]">
+                {{ item.form.errors.catatan }}
+              </p>
 
-              <div class="mt-1 flex items-center justify-between text-[10px] text-[#8a95a8] sm:text-[11px] lg:text-[12px]">
-                <p>Berikan catatan atau keterangan tambahan, dengan maksimal karakter 100</p>
-                <p>{{ item.form.note.length }} karakter</p>
+              <div class="mt-1 flex items-center justify-between text-[9px] text-[#8a95a8] sm:text-[10px]">
+                <p>{{ $t('fmMonitoring.buktiInstrumen.maksimal2000Karakter') }}</p>
+                <p>{{ item.form.catatan.length }} / 2000</p>
               </div>
             </div>
 
-            <div class="flex justify-end pt-1">
+            <div v-if="canInput" class="flex justify-end pt-1">
               <button
                 type="button"
-                class="rounded-[12px] bg-[#e60000] px-4 py-2 text-[11px] font-semibold text-white transition hover:brightness-95 disabled:opacity-70 sm:text-[12px] lg:px-5 lg:py-2.5 lg:text-[13px]"
+                class="rounded-[10px] bg-[#e60000] px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-[#ca0000] disabled:cursor-not-allowed disabled:opacity-70 sm:text-[12px] cursor-pointer"
                 :disabled="isSavingByAspect[item.id]"
                 @click="saveBukti(item.id)"
               >
-                {{ isSavingByAspect[item.id] ? 'Menyimpan...' : 'Simpan Bukti Pendukung' }}
+                <span class="flex items-center gap-1.5">
+                  <svg v-if="isSavingByAspect[item.id]" class="h-3 w-3 animate-spin text-white sm:h-3.5 sm:w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {{ isSavingByAspect[item.id] ? $t('fmMonitoring.buktiInstrumen.menyimpan') : $t('fmMonitoring.buktiInstrumen.simpanBukti') }}
+                </span>
               </button>
             </div>
           </div>
         </div>
 
-        <div v-if="index < paginatedForms.length - 1" class="px-3 pb-3 sm:px-6 sm:pb-4">
+        <div v-if="index < paginatedForms.length - 1" class="px-4 pb-3 sm:px-6 sm:pb-4">
           <div class="relative flex items-center justify-center">
             <span class="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-[#dde2ea]" />
-            <span class="relative bg-[#f6f7f8] px-2 text-[10px] font-semibold tracking-wide text-[#9aa5b7] sm:text-[11px]">
-              DOKUMEN LAINNYA
+            <span class="relative bg-[#f6f7f8] px-2 text-[9px] font-semibold tracking-wider text-[#9aa5b7] sm:text-[10px]">
+              {{ $t('fmMonitoring.buktiInstrumen.dokumenLainnya') }}
             </span>
           </div>
         </div>
       </template>
 
-      <footer class="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#dde2ea] px-3 py-3 sm:px-6 sm:py-3.5">
-        <p class="text-[11px] text-[#4f5c6f] sm:text-[12px] lg:text-[13px]">
-          Form Pengisian <strong>{{ showingFrom }}-{{ showingTo }}</strong> dari <strong>{{ totalForms }}</strong> data
+      <footer class="flex flex-col gap-3 border-t border-[#dde2ea] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-3.5">
+        <p class="text-[10px] text-[#4f5c6f] sm:text-[11px] lg:text-[12px] text-center sm:text-left">
+          {{ $t('fmMonitoring.buktiInstrumen.formPengisian') }} <strong>{{ showingFrom }}-{{ showingTo }}</strong> {{ $t('fmMonitoring.buktiInstrumen.dari') }} <strong>{{ totalForms }}</strong> {{ $t('fmMonitoring.buktiInstrumen.data') }}
         </p>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-center gap-2">
           <button
             type="button"
-            class="rounded-[10px] border border-[#d5dae3] px-3 py-1 text-[11px] font-semibold text-[#9aa4b5] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 sm:text-[12px] lg:text-[13px]"
+            class="rounded-[8px] border border-[#d5dae3] px-3 py-1 text-[10px] font-semibold text-[#9aa4b5] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 sm:px-3 sm:py-1 sm:text-[11px] cursor-pointer"
             :disabled="currentPage <= 1"
             @click="goToPage(currentPage - 1)"
           >
-            Previous
+            {{ $t('fmMonitoring.buktiInstrumen.previous') }}
           </button>
 
           <button
             type="button"
-            class="rounded-[10px] bg-[#e60000] px-3 py-1 text-[11px] font-semibold text-white sm:text-[12px] lg:text-[13px]"
+            class="rounded-[8px] bg-[#e60000] px-3 py-1 text-[10px] font-semibold text-white sm:text-[11px]"
           >
             {{ currentPage }}
           </button>
 
           <button
             type="button"
-            class="rounded-[10px] border border-[#d5dae3] px-3 py-1 text-[11px] font-semibold text-[#9aa4b5] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 sm:text-[12px] lg:text-[13px]"
+            class="rounded-[8px] border border-[#d5dae3] px-3 py-1 text-[10px] font-semibold text-[#9aa4b5] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 sm:px-3 sm:py-1 sm:text-[11px] cursor-pointer"
             :disabled="currentPage >= totalPages"
             @click="goToPage(currentPage + 1)"
           >
-            Next
+            {{ $t('fmMonitoring.buktiInstrumen.next') }}
           </button>
         </div>
       </footer>

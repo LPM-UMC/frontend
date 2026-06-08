@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import DashboardMenuCard from '../components/DashboardMenuCard.vue'
 import { useAuthStore } from '#stores/auth'
 import { useI18n, useLocalePath } from '#imports'
@@ -32,6 +32,7 @@ import { useI18n, useLocalePath } from '#imports'
 const { t } = useI18n()
 const auth = useAuthStore()
 const localePath = useLocalePath()
+
 
 // ================= ALL MENUS =================
 const allMenus = computed(() => [
@@ -49,7 +50,7 @@ const allMenus = computed(() => [
     title: t('dasborModul.ami.judul'),
     description: t('dasborModul.ami.deskripsi'),
     image: '/img/gedung-umc.jpg',
-    to: localePath('/dashboard/audit'),
+    to: localePath('/dashboard/ami'),
   },
   {
     id: 'modul',
@@ -77,6 +78,14 @@ const allMenus = computed(() => [
   },
 ])
 
+// ================= RULES =================
+const adminWhitelist = [
+  'ketua-lpm',
+  'admin-lpm',
+  'ketua-spi',
+  'admin-spi',
+]
+
 // ================= FILTER =================
 const menus = computed(() => {
   const roleCode = auth.activeRole?.kode
@@ -85,17 +94,21 @@ const menus = computed(() => {
 
   return allMenus.value
     .filter(menu => {
-      // Logic from requirements
-      if (menu.key === 'user') {
-        return roleCode === 'admin-lpm' || roleCode === 'admin-spi' || roleCode === 'ketua-lpm' || roleCode === 'ketua-spi'
-      }
+      switch (menu.key) {
+        case 'monev':
+          return true
+        case 'audit':
+          return true
+        case 'modul':
+          return adminWhitelist.includes(roleCode)
+        case 'periode':
+          return adminWhitelist.includes(roleCode)
+        case 'user':
+          return adminWhitelist.includes(roleCode)
 
-      if (menu.key === 'periode') {
-        return roleCode === 'admin-lpm' || roleCode === 'admin-spi' || roleCode === 'ketua-lpm' || roleCode === 'ketua-spi'
+        default:
+          return true
       }
-
-      // Keep default visibility for other menus for now
-      return true
     })
     .map(menu => ({
       ...menu,

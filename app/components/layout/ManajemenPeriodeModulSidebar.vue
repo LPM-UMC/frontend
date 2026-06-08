@@ -1,10 +1,12 @@
 <template>
+  <!-- MOBILE SIDEBAR (Drawer) -->
   <Transition
 enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
     <div v-if="isMobileOpen" class="fixed inset-0 z-50 bg-black/40 lg:hidden" @click.self="emit('close-mobile')">
       <aside class="flex h-full w-72 max-w-[82vw] flex-col border-r border-[#d4d4d6] bg-[#ececec]">
+        <!-- Header Mobile -->
         <div class="flex h-14 items-center justify-between border-b border-[#d7d7d9] bg-[#f0f1f3] px-3">
           <p class="text-[12px] font-bold tracking-tight text-red-800">
             SI-IMOET
@@ -21,6 +23,7 @@ xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 2
           </button>
         </div>
 
+        <!-- Menu Content -->
         <div class="flex-1 overflow-y-auto p-3">
           <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#71767f] select-none">
             {{ $t('util.menu') }}
@@ -40,11 +43,50 @@ v-for="item in menus" :key="`mob-${item.id}`"
           </div>
         </div>
 
-        <div class="space-y-2 border-t border-[#d7d7d9] p-3">
-          <ULocaleSelect
-:model-value="locale" :locales="locales" class="cursor-pointer"
-            @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
+        <!-- Bottom Actions Mobile -->
+        <div class="space-y-3 border-t border-[#d7d7d9] p-3">
 
+          <!-- Periode Modul -->
+          <div>
+            <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
+              Periode Modul
+            </label>
+
+            <select
+              :value="selectedPeriodeModul"
+              @change="emit('update:selectedPeriodeModul', ($event.target as HTMLSelectElement).value)"
+              class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
+              <option v-for="item in periodeModulOptions" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Unit Lingkup -->
+          <div>
+            <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
+              Unit Lingkup
+            </label>
+
+            <select
+              :value="selectedUnitLingkup"
+              @change="emit('update:selectedUnitLingkup', ($event.target as HTMLSelectElement).value)"
+              class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
+              <option v-for="item in unitLingkupOptions" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Bahasa -->
+          <ULocaleSelect
+            :model-value="locale"
+            :locales="locales"
+            class="cursor-pointer"
+            @update:model-value="(val: any) => setLocale(val.code || val)"
+          />
+
+          <!-- Logout -->
           <button
             class="flex w-full items-center gap-3 rounded-2xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-colors hover:bg-red-50"
             @click="handleLogout">
@@ -63,6 +105,7 @@ stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             </span>
           </button>
 
+          <!-- Profile -->
           <NuxtLink
 :to="localePath('/profile')"
             class="flex w-full items-center gap-3 rounded-2xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white">
@@ -72,16 +115,19 @@ stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               <p class="truncate text-[12px] font-bold leading-tight text-[#3b3f47]">
                 {{ profile.name }}
               </p>
+
               <p class="truncate text-[10px] text-[#91959d]">
                 {{ profile.role }}
               </p>
             </div>
           </NuxtLink>
         </div>
+
       </aside>
     </div>
   </Transition>
 
+  <!-- DESKTOP SIDEBAR -->
   <aside
     class="fixed inset-y-0 left-0 top-16.5 z-20 hidden h-[calc(100vh-66px)] flex-col border-r border-[#d6d6d8] bg-[#ececec] transition-all duration-300 lg:flex"
     :class="isCollapsed ? 'w-20' : 'w-72'">
@@ -94,6 +140,7 @@ v-if="!isCollapsed"
 
       <div class="space-y-1.5">
         <template v-for="item in menus" :key="item.id">
+          <!-- Collapsed -->
           <UTooltip
 v-if="isCollapsed" :text="item.label" :delay-duration="0"
             :content="{ side: 'right', sideOffset: 8 }">
@@ -104,6 +151,7 @@ v-if="isCollapsed" :text="item.label" :delay-duration="0"
             </button>
           </UTooltip>
 
+          <!-- Normal -->
           <button
 v-else
             class="group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[13.5px] font-semibold transition-all active:scale-95 cursor-pointer"
@@ -120,76 +168,45 @@ v-else
       </div>
     </div>
 
-    <div class="space-y-1.5 p-2">
-
-      <UTooltip
-v-if="isCollapsed" :text="$t('navigasi.keluar')" :delay-duration="0"
-        :content="{ side: 'right', sideOffset: 12 }">
-        <button
-          class="group flex h-12 w-12 items-center justify-center rounded-xl transition hover:bg-red-50 active:scale-95 mx-auto cursor-pointer text-red-600"
-          @click="handleLogout">
-          <UIcon name="i-lucide-log-out" class="h-5 w-5" />
-        </button>
-      </UTooltip>
-
-      <button
-v-else
+    <!-- Desktop Bottom -->
+    <div class="space-y-1.5 p-2"> <!-- Logout --> <button
         class="group flex w-full items-center gap-2.5 rounded-xl p-1.5 transition hover:bg-red-50 active:scale-95 cursor-pointer"
         @click="handleLogout">
         <div
           class="flex h-9 w-9 items-center justify-center rounded-lg text-red-600 transition-colors group-hover:bg-white">
-          <UIcon name="i-lucide-log-out" class="h-5 w-5" />
+          <UIcon name="i-lucide-log-out" class="h-5 w-5 " />
         </div>
-        <div class="overflow-hidden">
-          <p class="text-sm font-bold leading-tight text-red-500 transition-colors group-hover:text-red-600">
-            {{ $t('navigasi.keluar') }}
-          </p>
+        <div v-if="!isCollapsed" class="overflow-hidden">
+          <p class="text-sm font-bold leading-tight text-red-500 transition-colors group-hover:text-red-600"> {{
+            $t('navigasi.keluar') }} </p>
         </div>
-      </button>
-
+      </button> <!-- Profile -->
       <div class="border-t border-[#d7d7d9] pt-1.5">
-        <UTooltip
-v-if="isCollapsed" :text="profile.name" :delay-duration="0"
-          :content="{ side: 'right', sideOffset: 12 }">
-          <NuxtLink :to="localePath('/profile')" class="block mx-auto w-12 h-12">
-            <div
-              class="flex h-12 w-12 items-center justify-center rounded-xl border border-[#d7d7d9] bg-[#f4f4f4] transition-all hover:bg-white active:scale-95">
-              <img :src="profile.avatar" class="h-9 w-9 rounded-lg object-cover border border-black/5">
-            </div>
-          </NuxtLink>
-        </UTooltip>
-
-        <NuxtLink v-else :to="localePath('/profile')" class="block">
+        <NuxtLink :to="localePath('/profile')" class="block">
           <div
             class="flex items-center gap-2.5 rounded-xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white active:scale-95">
             <img :src="profile.avatar" class="h-9 w-9 rounded-lg object-cover border border-black/5">
-            <div class="min-w-0">
-              <p class="truncate text-[12px] font-bold text-[#3b3f47]">
-                {{ profile.name }}
-              </p>
-              <p class="truncate text-[10px] text-[#91959d]">
-                {{ profile.role }}
-              </p>
+            <div v-if="!isCollapsed" class="min-w-0">
+              <p class="truncate text-[12px] font-bold text-[#3b3f47]"> {{ profile.name }} </p>
+              <p class="truncate text-[10px] text-[#91959d]"> {{ profile.role }} </p>
             </div>
           </div>
         </NuxtLink>
       </div>
-
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { en, id, ar, ja } from '@nuxt/ui/locale'
-const { locale, setLocale } = useI18n()
 
+const { locale, setLocale } = useI18n()
 const locales = [
   id,
   en,
   ar,
   ja,
 ]
-
 const localePath = useLocalePath()
 
 type MenuItem = {
@@ -201,9 +218,13 @@ type MenuItem = {
 
 const iconMap: Record<string, string> = {
   home: 'i-lucide-home',
-  modul: 'i-lucide-layout-grid',
-  lingkup: 'i-lucide-layers',
-  calendar: 'i-lucide-calendar',
+  monitoring: 'i-lucide-monitor',
+  evaluation: 'i-lucide-clipboard-list',
+  finding: 'i-lucide-search',
+  followup: 'i-lucide-refresh-ccw',
+  minutes: 'i-lucide-file-text',
+  survey: 'i-lucide-clipboard',
+  report: 'i-lucide-bar-chart-2',
 }
 
 interface SidebarProfile {
@@ -218,11 +239,17 @@ const props = defineProps<{
   isCollapsed: boolean
   isMobileOpen: boolean
   profile: SidebarProfile
+  selectedPeriodeModul?: string
+  selectedUnitLingkup?: string
+  periodeModulOptions?: { value: string, label: string }[]
+  unitLingkupOptions?: { value: string, label: string }[]
 }>()
 
 const emit = defineEmits<{
   (event: 'menu-select', item: MenuItem): void
   (event: 'close-mobile' | 'logout'): void
+  (event: 'update:selectedPeriodeModul', val: string): void
+  (event: 'update:selectedUnitLingkup', val: string): void
 }>()
 
 function getMenuClass(itemId: string) {

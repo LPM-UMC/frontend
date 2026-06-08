@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     loginWithGoogle() {
       const config = useRuntimeConfig()
-      const apiBase = config.public.apiBase.replace(/\/api\/?$/, "")
+      const apiBase = config.public.apiBaseUrl ? (config.public.apiBaseUrl as string).replace(/\/api\/?$/, "") : (config.public.apiBase as string).replace(/\/api\/?$/, "")
       return navigateTo(
         `${apiBase}/api/auth/google`,
         { external: true }
@@ -77,7 +77,7 @@ export const useAuthStore = defineStore("auth", {
       this.refreshPromise = (async () => {
         try {
           const config = useRuntimeConfig()
-          const apiBase = config.public.apiBase.replace(/\/api\/?$/, "")
+          const apiBase = config.public.apiBaseUrl ? (config.public.apiBaseUrl as string).replace(/\/api\/?$/, "") : (config.public.apiBase as string).replace(/\/api\/?$/, "")
 
           const res = await $fetch<{ data: AccessTokenResponse }>(
             `${apiBase}/api/auth/refresh`,
@@ -106,7 +106,7 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         const config = useRuntimeConfig()
-        const apiBase = config.public.apiBase.replace(/\/api\/?$/, "")
+        const apiBase = config.public.apiBaseUrl ? (config.public.apiBaseUrl as string).replace(/\/api\/?$/, "") : (config.public.apiBase as string).replace(/\/api\/?$/, "")
 
         const res = await $fetch<{ data: UserResponse }>(
           `${apiBase}/api/auth/me`,
@@ -163,7 +163,7 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       try {
         const config = useRuntimeConfig()
-        const apiBase = config.public.apiBase.replace(/\/api\/?$/, "")
+        const apiBase = config.public.apiBaseUrl ? (config.public.apiBaseUrl as string).replace(/\/api\/?$/, "") : (config.public.apiBase as string).replace(/\/api\/?$/, "")
 
         if (this.accessToken) {
           await $fetch(`${apiBase}/api/auth/logout`, {

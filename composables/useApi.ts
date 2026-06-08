@@ -26,7 +26,7 @@ export function useApi() {
   const authStore = useAuthStore()
   const { locale } = useI18n()
 
-  const apiBase = (config.public.apiBase as string).replace(/\/api\/?$/, '')
+  const apiBase = (config.public.apiBaseUrl as string).replace(/\/api\/?$/, '')
 
   /**
    * Wrapper around $fetch that injects auth & locale headers.

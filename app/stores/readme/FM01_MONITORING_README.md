@@ -153,9 +153,11 @@ Contoh struktur ringkas:
 ### 4) Get jawaban indikator (form penilaian per unit objek)
 
 - **Method**: `GET`
-- **URL**: `/api/fm1/unit-objek/:unitObjekId/jawaban`
+- **URL**: `/api/fm1/aspek-periode-modul/:aspekPeriodeModulId/unit-objek/:unitObjekId/jawaban`
 - **Fungsi**: Daftar semua indikator pada objek terkait + opsi penilaian + jawaban existing (jika ada).
-- **Path params**: `unitObjekId` = id `UnitObjekEvaluasi`
+- **Path params**:
+  - `aspekPeriodeModulId` = id `AspekPeriodeModul`
+  - `unitObjekId` = id `UnitObjekEvaluasi`
 - **Response (200)**:
 
 ```json

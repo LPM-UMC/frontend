@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { RoleResponse } from '#types/role'
 import { ref } from 'vue'
+import type { RoleResponse } from '#types/role'
 
 interface ProfileUser {
   nama: string
@@ -8,7 +8,7 @@ interface ProfileUser {
   roles: RoleResponse[]
   avatar: string
   online?: boolean
-  activeRole: RoleResponse | null
+  activeRole?: RoleResponse | null
 }
 
 const props = withDefaults(defineProps<{
@@ -56,7 +56,7 @@ function selectRole(role: RoleResponse) {
           <button
             type="button"
             aria-label="Close profile dialog"
-            class="cursor-pointer absolute right-4 top-3 text-[#9ca3af] transition hover:text-[#6b7280]"
+            class="absolute cursor-pointer right-4 top-3 text-[#9ca3af] transition hover:text-[#6b7280]"
             @click="emit('close')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -133,7 +133,7 @@ function selectRole(role: RoleResponse) {
             <!-- SIGN OUT -->
             <button
               type="button"
-              class="cursor-pointer mt-5 flex w-full items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px]"
+              class="mt-5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px]"
               @click="emit('signout')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"

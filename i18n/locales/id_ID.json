@@ -1,4 +1,13 @@
 {
+  "toast": {
+    "common": {
+      "unexpectedError": "Terjadi kendala saat memproses permintaan Anda. Silakan coba beberapa saat lagi."
+    },
+    "auth": {
+      "loginSuccess": "Selamat datang kembali. Anda berhasil masuk ke sistem.",
+      "invalidCredentials": "Akun tidak terdaftar atau kombinasi email/password salah."
+    }
+  },
   "basic": {
     "namaAplikasi": "Sistem Informasi Monitoring dan Evaluasi Terintegrasi",
     "namaKampus": "Universitas Muhammadiyah Cirebon"
@@ -8,11 +17,19 @@
     "siimoet": "SI-IMOET UMC",
     "pmb": "Penerimaan Mahasiswa Baru UMC"
   },
+  "sedangTahapPengembangan": {
+    "judul": "Tahap Pengembangan",
+    "deskripsi": "Maaf, halaman ini sedang dalam tahap pengembangan. Kami sedang bekerja keras untuk menyelesaikannya secepat mungkin. Terima kasih atas kesabaran Anda."
+  },
   "util": {
     "menu": "Menu",
     "paginasi": {
       "sebelumnya": "Sebelumnya",
       "berikutnya": "Berikutnya"
+    },
+    "boolean": {
+      "true": "Ya",
+      "false": "Tidak"
     },
     "buat": "Buat",
     "edit": "Edit",
@@ -21,7 +38,10 @@
     "kembali": "Kembali",
     "simpan": "Simpan",
     "batal": "Batal",
-    "berhasil": "Berhasil"
+    "berhasil": "Berhasil",
+    "tidakAdaData": "Tidak ada data yang tersedia",
+    "terbaru": "Terbaru",
+    "terlama": "Terlama"
   },
   "footer": {
     "copyright": "© 2026 Semua Hak Dilindungi."
@@ -55,7 +75,22 @@
     "silahkanMasuk": "Silakan masuk untuk melanjutkan",
     "masukGoogle": "Masuk dengan Google",
     "mengalihkan": "Mengalihkan...",
-    "kembali": "Kembali"
+    "kembali": "Kembali",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Ingat Saya",
+    "masuk": "Masuk",
+    "atau": "Atau",
+    "emailRequired": "Email wajib diisi",
+    "invalidEmail": "Format email tidak valid",
+    "passwordRequired": "Password wajib diisi",
+    "passwordMin": "Password minimal 8 karakter",
+    "passwordMax": "Password maksimal 255 karakter",
+    "userNotFound": "Email tidak ditemukan",
+    "invalidPassword": "Password yang dimasukkan salah",
+    "accountDisabled": "Akun Anda telah dinonaktifkan",
+    "unauthorized": "Anda tidak memiliki akses",
+    "unknownError": "Terjadi kesalahan, silakan coba lagi"
   },
   "dasborModul": {
     "selamatDatang": {
@@ -510,5 +545,216 @@
     "batal": "Batal",
     "simpan": "Simpan",
     "daftarAspek": "Daftar Aspek"
+  },
+  "monev": {
+    "judul": "Monitoring dan Evaluasi",
+    "lihatEvaluasiTerbaru": "Lihat Evaluasi Terbaru",
+    "placeholder": {
+      "cari": "Cari modul monev berdasarkan nama atau deskripsi..."
+    },
+    "kosong": {
+      "judul": "Modul Tidak Ditemukan",
+      "deskripsi": "Saat ini belum ada modul monitoring dan evaluasi yang tersedia atau sesuai dengan kriteria pencarian Anda."
+    }
+  },
+  "ami": {
+    "judul": "Audit Mutu Internal",
+    "lihatAuditTerbaru": "Lihat Audit Terbaru",
+    "placeholder": {
+      "cari": "Cari modul AMI berdasarkan nama atau deskripsi..."
+    },
+    "kosong": {
+      "judul": "Modul Tidak Ditemukan",
+      "deskripsi": "Saat ini belum ada modul audit mutu internal yang tersedia atau sesuai dengan kriteria pencarian Anda."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "Monitoring"
+    },
+    "hasilEvaluasi": {
+      "judul": "Hasil Evaluasi"
+    },
+    "temuan": {
+      "judul": "Temuan"
+    },
+    "rtl": {
+      "judul": "Rencana Tindak Lanjut"
+    },
+    "beritaAcara": {
+      "judul": "Berita Acara"
+    },
+    "survei": {
+      "judul": "Survei"
+    },
+    "laporan": {
+      "judul": "Laporan"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "Waktu Dimulai",
+    "waktuBerakhir": "Waktu Berakhir",
+    "status": "Status",
+    "semuaStatus": "Semua Status",
+    "sudahDievaluasi": "Sudah Dievaluasi",
+    "belumDievaluasi": "Belum Dievaluasi",
+    "pilihAspek": "Pilih Aspek",
+    "evaluasi": "Evaluasi",
+    "lihatHasilEvaluasi": "Lihat Hasil Evaluasi",
+    "detailAspek": "Detail Aspek",
+    "objekEvaluasi": "Objek Evaluasi",
+    "indikatoEvaluasi": "Indikator Evaluasi",
+    "pastikanIndikatorDinilai": "Pastikan semua indikator evluasi telah dinilai sebelum waktu berakhir.",
+    "lingkupEvaluasi": "Lingkup Evaluasi",
+    "unitLingkupEvaluasi": "Unit Lingkup Evaluasi",
+    "pihakTerkait": "Pihak Terkait",
+    "daftarObjekEvaluasi": "Daftar Objek Evaluasi",
+    "unitObjekEvaluasi": {
+      "tambah": "Tambah Unit Objek Evaluasi",
+      "deskripsi": "Klik untuk menambahkan unit objek evaluasi baru pada aspek ini"
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "Belum ada riwayat pelaksanaan",
+      "deskripsi": "Belum ada data pelaksanaan yang tersedia untuk modul ini. Silakan cek kembali nanti atau hubungi administrator untuk informasi lebih lanjut."
+    },
+    "belumAdaAspek": {
+      "judul": "Tidak Ada Aspek",
+      "deskripsi": "Modul ini belum memiliki konfigurasi aspek yang dapat dievaluasi."
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "Berkas Bukti Belum Tersedia",
+      "deskripsi": "Auditee belum menginputkan berkas bukti pendukung untuk aspek ini."
+    },
+    "roles": {
+      "auditee": "Auditee",
+      "evaluator": "Evaluator",
+      "reviewer": "Reviewer"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "Belum Dimulai",
+      "SEDANG_BERLANGSUNG": "Sedang Berlangsung",
+      "SELESAI": "Selesai",
+      "DIBATALKAN": "Dibatalkan"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "Berikan justifikasi untuk penilaian ini...",
+      "cariObjekEvaluasi": "Cari objek evaluasi berdasarkan nama atau deskripsi..."
+    },
+    "evaluasi": {
+      "tipeBiner": "Penilaian Biner (Ya/Tidak)",
+      "tipeSkala": "Penilaian Skala",
+      "tipeCek": "Penilaian Checklist",
+      "catatanLabel": "Catatan",
+      "menyimpan": "Menyimpan...",
+      "simpan": "Simpan",
+      "toast": {
+        "berhasilMenyimpan": "Jawaban indikator berhasil disimpan.",
+        "gagalMenyimpan": "Gagal menyimpan jawaban. Silakan coba lagi.",
+        "validasiGagal": "Mohon periksa kembali isian form Anda.",
+        "gagalJudul": "Gagal"
+      },
+      "validasi": {
+        "binerRequired": "Silakan pilih salah satu opsi penilaian (Ya/Tidak)",
+        "skalaRequired": "Silakan pilih skala penilaian",
+        "cekRequired": "Minimal satu opsi ceklis harus dipilih"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "Objek Evaluasi",
+      "deskripsi": "Objek evaluasi merupakan entitas atau aspek yang menjadi fokus penilaian dalam proses monitoring dan evaluasi, yang dapat berupa program, kegiatan, atau unit organisasi yang dievaluasi untuk menilai kinerja, efektivitas, dan pencapaian tujuan.",
+      "model": {
+        "nama": "Nama",
+        "deskripsi": "Deskripsi"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "Input Bukti Instrumen",
+      "deskripsiInput": "Mulai input bukti instrumen dengan mengunggah link pendukung yang relevan untuk aspek evaluasi ini. Pastikan file yang diunggah sesuai dengan kriteria yang ditentukan untuk memastikan proses evaluasi berjalan lancar.",
+      "mulaiInput": "Mulai Input Bukti",
+      "validasi": {
+        "link": {
+          "required": "Link dokumen wajib diisi",
+          "invalid": "Format link dokumen tidak valid",
+          "max": "Link dokumen maksimal 255 karakter"
+        },
+        "catatan": {
+          "min": "Catatan wajib diisi",
+          "max": "Catatan maksimal 2000 karakter"
+        }
+      },
+      "dokumenBukti": "DOKUMEN BUKTI",
+      "buktiPendukung": "Bukti Pendukung",
+      "cantumkanLink": "Cantumkan link pendukung dokumen dan beri keterangan secukupnya",
+      "linkGoogleDrive": "Link Dokumen Google Drive",
+      "lihatFormatBukti": "Lihat Format Bukti Disini",
+      "catatanPanduan": "Catatan Panduan:",
+      "catatanTambahan": "Catatan Tambahan",
+      "berikanDeskripsi": "Berikan deskripsi singkat atau keterangan tambahan",
+      "maksimal2000Karakter": "Maksimal 2000 karakter",
+      "simpanBukti": "Simpan Bukti Pendukung",
+      "menyimpan": "Menyimpan...",
+      "dokumenLainnya": "DOKUMEN LAINNYA",
+      "formPengisian": "Form Pengisian",
+      "dari": "dari",
+      "data": "data",
+      "berhasilMenyimpan": "Bukti instrumen berhasil disimpan.",
+      "gagalMenyimpan": "Gagal menyimpan bukti instrumen. Silakan coba lagi."
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "Email wajib diisi",
+        "invalid": "Format email tidak valid",
+        "min": "Email minimal 5 karakter",
+        "max": "Email maksimal 255 karakter"
+      },
+      "password": {
+        "required": "Password wajib diisi",
+        "min": "Password minimal 8 karakter",
+        "max": "Password maksimal 255 karakter"
+      }
+    }
+  },
+  "fm2": {
+    "title": "Form Monitoring 02",
+    "description": "Dashboard untuk memantau capaian indikator penilaian kesiapan di lingkungan Universitas. Data diperbarui secara berkala untuk memberikan gambaran terkini mengenai progres dan capaian setiap unit.",
+    "startTime": "Waktu Dimulai",
+    "endTime": "Waktu Selesai",
+    "status": "Status",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "aspectVeryGood": "Aspek Sangat Baik",
+    "aspectGood": "Aspek Baik",
+    "aspectFair": "Aspek Cukup Baik",
+    "aspectPoor": "Aspek Kurang Baik",
+    "chartTitle": "Chart Capaian",
+    "totalReadinessScore": "Total Skor Kesiapan",
+    "readinessPercentage": "Persentase Kesiapan",
+    "category": "Kategori",
+    "reviewerProfile": "Profil Pemeriksa",
+    "assessmentIndicators": "Indikator Penilaian",
+    "aspectEvaluationResult": "Hasil Evaluasi Aspek",
+    "table": {
+      "no": "No",
+      "aspect": "Aspek",
+      "achievement": "Capaian",
+      "action": "Aksi",
+      "calculateScore": "Hitung Nilai",
+      "calculateAllScore": "Hitung Nilai Monitoring",
+      "empty": "Data aspek tidak ditemukan untuk filter yang dipilih."
+    },
+    "pagination": {
+      "previous": "Sebelumnya",
+      "next": "Selanjutnya"
+    },
+    "toast": {
+      "calculateSuccess": "Nilai berhasil dihitung",
+      "calculateError": "Gagal menghitung nilai",
+      "calculateAllSuccess": "Nilai monitoring berhasil dihitung",
+      "calculateAllError": "Gagal menghitung nilai monitoring"
+    }
   }
 }
