@@ -119,18 +119,15 @@ onUnmounted(() => {
       <div class="mx-auto flex h-14.5 w-full max-w-470 items-center justify-between px-3 sm:h-21.5 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
 
         <!-- LOGO -->
-        <NuxtLink to="/" class="flex min-w-0 items-center gap-3">
-          <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
-            <img src="/img/logo-umc.jpg" class="h-full w-full object-cover">
+        <NuxtLink dir="ltr" to="/" class="flex min-w-0 items-center gap-2">
+          <div class="grid h-10.5 w-10.5 place-items-center rounded-[12px] border border-[#d8dde4] bg-white shadow-[0_6px_16px_rgba(15,23,42,0.1)]">
+            <img src="/img/logo-umc.jpg" alt="Logo UMC" class="h-8 w-8 rounded-full object-cover">
           </div>
 
-          <div class="min-w-0 leading-tight">
-            <span class="block truncate text-[15px] font-bold md:text-xl text-red-700">
+          <div class="hidden min-w-0 leading-tight sm:block" :dir="locale === 'ar' ? 'rtl' : 'ltr'" :class="locale === 'ar' ? 'text-right' : 'text-left'">
+            <p class="truncate text-[14px] font-bold text-red-800">
               SI-IMOET
-            </span>
-            <span class="hidden truncate text-[11px] text-gray-500 sm:block">
-              LPM & SPI UMC
-            </span>
+            </p>
           </div>
         </NuxtLink>
 

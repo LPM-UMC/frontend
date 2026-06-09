@@ -799,5 +799,32 @@
     "sop": "標準作業手順書",
     "monev": "モニタリングと評価",
     "tindakLanjut": "フォローアップ"
+  },
+  "profil": {
+    "header": {
+      "title": "役割プロフィールの詳細",
+      "description": "このページには、統合モニタリングおよび評価情報システム (SI-IMOET) で使用されるユーザーID情報、アクティブな役割、およびアカウントステータスが表示されます。提供された情報は、ユーザーがシステム内の役割と権限が一致していることを確認するのに役立ちます。"
+    },
+    "card": {
+      "title": "プロフィール",
+      "email": "メールアドレス",
+      "peranUtama": "主な役割",
+      "peranSaatIni": "現在の役割",
+      "bergabungSejak": "参加日",
+      "statusAktif": "アクティブステータス"
+    },
+    "edit": {
+      "title": "プロフィールを編集",
+      "description": "プロフィール情報を更新します",
+      "fotoClick": "写真をクリックしてポートフォリオ/写真を変更します。",
+      "fotoMaxSize": "（最大サイズ 2MB）",
+      "namaLengkap": "氏名",
+      "email": "メールアドレス",
+      "instagram": "Instagramユーザー名",
+      "linkedin": "LinkedIn URL",
+      "simpan": "変更を保存",
+      "berhasil": "プロフィールが正常に更新されました",
+      "gagal": "プロフィールの更新中にエラーが発生しました"
+    }
   }
 }

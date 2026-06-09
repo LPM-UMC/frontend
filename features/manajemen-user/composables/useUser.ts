@@ -60,6 +60,32 @@ export function useUser() {
     return api.removeUser(userId)
   }
 
+  async function updateProfile(payload: { nama: string; email: string; instagram: string; linkedin: string }) {
+    loading.value = true
+    error.value = null
+    try {
+      return await api.updateProfile(payload)
+    } catch {
+      error.value = 'Gagal memperbarui profil.'
+      return null
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function updateProfileImage(formData: FormData) {
+    loading.value = true
+    error.value = null
+    try {
+      return await api.updateProfileImage(formData)
+    } catch {
+      error.value = 'Gagal memperbarui foto profil.'
+      return null
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     rows,
     meta,
@@ -70,5 +96,7 @@ export function useUser() {
     createUser,
     updateUser,
     deleteUser,
+    updateProfile,
+    updateProfileImage,
   }
 }

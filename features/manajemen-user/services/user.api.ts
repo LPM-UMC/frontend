@@ -71,6 +71,20 @@ export function useUserApi() {
     })
   }
 
+  async function updateProfile(payload: { nama: string; email: string; instagram: string; linkedin: string }) {
+    return request<UserResponse>('/api/users/profile', {
+      method: 'PUT',
+      body: payload,
+    })
+  }
+
+  async function updateProfileImage(formData: FormData) {
+    return request<UserResponse>('/api/users/profile/picture', {
+      method: 'PUT',
+      body: formData,
+    })
+  }
+
   return {
     endpoints: USER_ENDPOINTS,
     listUsers,
@@ -78,5 +92,7 @@ export function useUserApi() {
     getUser,
     updateUser,
     removeUser,
+    updateProfile,
+    updateProfileImage,
   }
 }

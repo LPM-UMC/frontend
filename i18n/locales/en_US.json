@@ -799,5 +799,32 @@
     "sop": "Standard Operating Procedures",
     "monev": "Monitoring and Evaluation",
     "tindakLanjut": "Follow-up"
+  },
+  "profil": {
+    "header": {
+      "title": "Role Profile Details",
+      "description": "This page displays user identity information, active roles, and account status used in the Integrated Monitoring and Evaluation Information System (SI-IMOET). The provided information helps users ensure their account and permissions match their role in the system."
+    },
+    "card": {
+      "title": "Profile",
+      "email": "EMAIL",
+      "peranUtama": "MAIN ROLE",
+      "peranSaatIni": "CURRENT ROLE",
+      "bergabungSejak": "joined since",
+      "statusAktif": "ACTIVE STATUS"
+    },
+    "edit": {
+      "title": "Edit Profile",
+      "description": "Update your profile information",
+      "fotoClick": "Click photo to change portfolio/photo.",
+      "fotoMaxSize": "(Maximum size 2MB)",
+      "namaLengkap": "Full Name",
+      "email": "Email",
+      "instagram": "Instagram Username",
+      "linkedin": "LinkedIn URL",
+      "simpan": "Save Changes",
+      "berhasil": "Profile successfully updated",
+      "gagal": "An error occurred while updating the profile"
+    }
   }
 }

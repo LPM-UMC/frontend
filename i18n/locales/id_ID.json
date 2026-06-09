@@ -799,5 +799,32 @@
     "sop": "Standar Operasional Prosedur",
     "monev": "Monitoring dan Evaluasi",
     "tindakLanjut": "Tindak Lanjut"
+  },
+  "profil": {
+    "header": {
+      "title": "Detail Profil Role",
+      "description": "Halaman ini menampilkan informasi identitas pengguna, peran aktif, serta status akun yang digunakan dalam Sistem Informasi Monitoring dan Evaluasi Terpadu (SI-IMOET). Informasi yang tersedia membantu pengguna memastikan akun dan kewenangan yang dimiliki sesuai dengan perannya di dalam sistem."
+    },
+    "card": {
+      "title": "Profil",
+      "email": "EMAIL",
+      "peranUtama": "PERAN UTAMA",
+      "peranSaatIni": "PERAN SAAT INI",
+      "bergabungSejak": "bergabung sejak",
+      "statusAktif": "STATUS AKTIF"
+    },
+    "edit": {
+      "title": "Edit Profil",
+      "description": "Perbarui informasi profil Anda",
+      "fotoClick": "Klik foto untuk mengganti portfolio/foto.",
+      "fotoMaxSize": "(Maksimal size 2MB)",
+      "namaLengkap": "Nama Lengkap",
+      "email": "Email",
+      "instagram": "Username Instagram",
+      "linkedin": "URL LinkedIn",
+      "simpan": "Simpan Perubahan",
+      "berhasil": "Profil berhasil diperbarui",
+      "gagal": "Terjadi kesalahan saat memperbarui profil"
+    }
   }
 }

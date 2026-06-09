@@ -3,7 +3,10 @@ export const getAvatar = (
   avatar?: string | null,
 ) => {
   if (avatar && avatar !== '') {
-    return avatar
+    if (avatar.startsWith('http')) return avatar
+    const config = useRuntimeConfig()
+    const baseURL = (config.public.apiBaseUrl as string || 'http://localhost:3001').replace(/\/api\/?$/, '')
+    return `${baseURL}${avatar.startsWith('/') ? '' : '/'}${avatar}`
   }
 
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(

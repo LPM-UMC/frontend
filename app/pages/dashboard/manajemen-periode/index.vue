@@ -49,16 +49,42 @@
               <span class="text-[13px] font-medium text-[#4a515d]">
                 {{ $t('manajemenPeriode.create.form.tanggalMulai') }} <span class="text-[#e1121b]">*</span>
               </span>
-              <input v-model="createForm.tanggal_mulai" type="date"
-                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b]">
+              <ClientOnly>
+                <VueDatePicker 
+                  v-model="createForm.tanggal_mulai" 
+                  model-type="yyyy-MM-dd"
+                  format="dd / MM / yyyy"
+                  :enable-time-picker="false" 
+                  auto-apply
+                  hide-input-icon
+                  input-class-name="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] w-full"
+                >
+                  <template #input-icon>
+                    <UIcon name="i-lucide-calendar" class="w-4.5 h-4.5 text-gray-500 ml-3" />
+                  </template>
+                </VueDatePicker>
+              </ClientOnly>
             </label>
 
             <label class="flex flex-col gap-1.5">
               <span class="text-[13px] font-medium text-[#4a515d]">
                 {{ $t('manajemenPeriode.create.form.tanggalSelesai') }} <span class="text-[#e1121b]">*</span>
               </span>
-              <input v-model="createForm.tanggal_selesai" type="date"
-                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b]">
+              <ClientOnly>
+                <VueDatePicker 
+                  v-model="createForm.tanggal_selesai" 
+                  model-type="yyyy-MM-dd"
+                  format="dd / MM / yyyy"
+                  :enable-time-picker="false" 
+                  auto-apply
+                  hide-input-icon
+                  input-class-name="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] w-full"
+                >
+                  <template #input-icon>
+                    <UIcon name="i-lucide-calendar" class="w-4.5 h-4.5 text-gray-500 ml-3" />
+                  </template>
+                </VueDatePicker>
+              </ClientOnly>
             </label>
 
             <label class="flex flex-col gap-1.5">
@@ -150,16 +176,42 @@
               <span class="text-[13px] font-medium text-[#4a515d]">
                 {{ $t('manajemenPeriode.update.form.tanggalMulai') }} <span class="text-[#e1121b]">*</span>
               </span>
-              <input v-model="updateForm.tanggal_mulai" type="date"
-                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b]">
+              <ClientOnly>
+                <VueDatePicker 
+                  v-model="updateForm.tanggal_mulai" 
+                  model-type="yyyy-MM-dd"
+                  format="dd / MM / yyyy"
+                  :enable-time-picker="false" 
+                  auto-apply
+                  hide-input-icon
+                  input-class-name="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] w-full"
+                >
+                  <template #input-icon>
+                    <UIcon name="i-lucide-calendar" class="w-4.5 h-4.5 text-gray-500 ml-3" />
+                  </template>
+                </VueDatePicker>
+              </ClientOnly>
             </label>
 
             <label class="flex flex-col gap-1.5">
               <span class="text-[13px] font-medium text-[#4a515d]">
                 {{ $t('manajemenPeriode.update.form.tanggalSelesai') }} <span class="text-[#e1121b]">*</span>
               </span>
-              <input v-model="updateForm.tanggal_selesai" type="date"
-                class="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b]">
+              <ClientOnly>
+                <VueDatePicker 
+                  v-model="updateForm.tanggal_selesai" 
+                  model-type="yyyy-MM-dd"
+                  format="dd / MM / yyyy"
+                  :enable-time-picker="false" 
+                  auto-apply
+                  hide-input-icon
+                  input-class-name="h-11 rounded-[10px] border border-[#d8dbe2] bg-white px-3 text-[13px] text-[#2f3744] outline-none transition focus:border-[#e1121b] w-full"
+                >
+                  <template #input-icon>
+                    <UIcon name="i-lucide-calendar" class="w-4.5 h-4.5 text-gray-500 ml-3" />
+                  </template>
+                </VueDatePicker>
+              </ClientOnly>
             </label>
 
             <label class="flex flex-col gap-1.5">
@@ -323,6 +375,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
 import { useApi } from '#composables/useApi'
 import { useRuntimeConfig, useI18n } from '#imports'
 import type { PeriodeResponse } from '#types/periode'

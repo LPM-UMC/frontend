@@ -26,6 +26,8 @@ const emit = defineEmits<{
   (e: 'change-role', role: RoleResponse): void
 }>()
 
+const localePath = useLocalePath()
+
 const isRoleOpen = ref(false)
 
 function selectRole(role: RoleResponse) {
@@ -130,10 +132,20 @@ function selectRole(role: RoleResponse) {
               </div>
             </div>
 
+            <!-- PROFIL SAYA -->
+            <NuxtLink
+              :to="localePath('/dashboard/profile')"
+              class="mt-4 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[12px] border border-gray-300 bg-white px-4 py-2.5 text-[14px] font-semibold text-gray-700 transition hover:bg-gray-50 sm:text-[15px]"
+              @click="emit('close')"
+            >
+              <UIcon name="i-lucide-user" class="h-4 w-4" />
+              <span>{{ $t('navigasi.profil') }}</span>
+            </NuxtLink>
+
             <!-- SIGN OUT -->
             <button
               type="button"
-              class="mt-5 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px]"
+              class="mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-[12px] bg-[#f1020a] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:brightness-95 sm:text-[15px]"
               @click="emit('signout')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
