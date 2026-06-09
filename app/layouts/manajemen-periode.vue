@@ -233,13 +233,17 @@ watch(
   }
 )
 
+import { useAuthStore } from '#stores/auth'
+
+const authStore = useAuthStore()
+
 const sidebarProfile =
   computed(() => {
     return {
-      name: 'John Doe',
-      role: 'Administrator',
+      name: authStore.user?.nama || 'Unknown',
+      role: authStore.activeRole?.nama || 'Unknown',
       avatar:
-        'https://i.pravatar.cc/150?img=33',
+        authStore.user?.picture || 'https://i.pravatar.cc/150?img=33',
     }
   })
 </script>

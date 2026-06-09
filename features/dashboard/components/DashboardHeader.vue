@@ -82,7 +82,7 @@ onMounted(async () => {
     name: authStore.user.nama,
     email: authStore.user.email ?? '', // ✅ FIX
     roles: authStore.roles ?? [], // ✅ FIX
-    avatar: getAvatar(authStore.user.nama, authStore.user.picture),
+    avatar: getAvatar(authStore.user.nama, authStore.user.picture, authStore.user.id),
     isOnline: true,
   }
 })

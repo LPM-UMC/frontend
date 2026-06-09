@@ -44,10 +44,14 @@ const roles = computed(() => authStore.roles.length
   ? authStore.roles
   : (user.value?.roles ?? []))
 const activeRole = computed(() => authStore.activeRole ?? roles.value[0] ?? null)
-const avatar = computed(() =>
-  picturePreview.value
-  || user.value?.picture
-  || '/img/profile-user-dummy.png')
+const avatar = computed(() => {
+  if (picturePreview.value) return picturePreview.value
+  if (user.value?.picture) {
+    if (user.value.picture.startsWith('http')) return user.value.picture
+    return `${config.public.apiBase}/api/users/${user.value.id}/picture`
+  }
+  return '/img/profile-user-dummy.png'
+})
 const identifier = computed(() => user.value?.nidn || user.value?.nim || '-')
 const identifierLabel = computed(() => user.value?.nidn ? 'NIDN' : user.value?.nim ? 'NIM' : 'ID')
 const joinedAt = computed(() => {
@@ -153,11 +157,12 @@ async function saveProfile() {
 
   try {
     const updated = await $fetch<{ data: UserResponse }>(
-      `${config.public.apiBase}/api/${locale.value}/users/profile`,
+      `${config.public.apiBase}/api/users/profile`,
       {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authStore.accessToken}`,
+          'Accept-Language': locale.value,
         },
         body: {
           nama: form.nama,
@@ -174,11 +179,12 @@ async function saveProfile() {
       formData.append('picture', selectedPicture.value)
 
       const updatedPicture = await $fetch<{ data: UserResponse }>(
-        `${config.public.apiBase}/api/${locale.value}/users/profile/picture`,
+        `${config.public.apiBase}/api/users/profile/picture`,
         {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${authStore.accessToken}`,
+            'Accept-Language': locale.value,
           },
           body: formData,
         },

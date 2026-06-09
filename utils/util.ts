@@ -1,9 +1,12 @@
 export const getAvatar = (
   name?: string | null,
   avatar?: string | null,
+  userId?: string | null,
 ) => {
   if (avatar && avatar !== '') {
-    return avatar
+    if (avatar.startsWith('http')) return avatar
+    const config = useRuntimeConfig()
+    return `${config.public.apiBase}/api/users/${userId}/picture`
   }
 
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(
