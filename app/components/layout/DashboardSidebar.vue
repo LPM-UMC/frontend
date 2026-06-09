@@ -1,7 +1,6 @@
 <template>
   <!-- MOBILE SIDEBAR (Drawer) -->
-  <Transition
-enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0"
+  <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
     <div v-if="isMobileOpen" class="fixed inset-0 z-50 bg-black/40 lg:hidden" @click.self="emit('close-mobile')">
@@ -15,8 +14,7 @@ enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-
           <button
             class="flex h-8 w-8 items-center justify-center rounded-lg border border-[#d8d8da] bg-white text-[#4d5563] transition hover:bg-gray-50"
             @click="emit('close-mobile')">
-            <svg
-xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 6 12 12M18 6 6 18" />
             </svg>
@@ -30,11 +28,10 @@ xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 2
           </p>
 
           <div class="space-y-1.5">
-            <button
-v-for="item in menus" :key="`mob-${item.id}`"
+            <button v-for="item in menus" :key="`mob-${item.id}`"
               class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all active:scale-[0.98] cursor-pointer"
               :class="getMenuClass(item.id)" @click="handleMenuSelect(item)">
-              <UIcon :name="iconMap[item.icon]" class="h-5 w-5 shrink-0" />
+              <UIcon :name="item.icon" class="h-5 w-5 shrink-0" />
 
               <span class="truncate cursor-pointer">
                 {{ item.label }}
@@ -44,58 +41,20 @@ v-for="item in menus" :key="`mob-${item.id}`"
         </div>
 
         <!-- Bottom Actions Mobile -->
-        <div class="space-y-3 border-t border-[#d7d7d9] p-3">
+        <div class="space-y-2 border-t border-[#d7d7d9] p-3">
+          <!-- Optional Slot for extra actions like Dropdowns -->
+          <slot name="mobile-actions" />
 
-          <!-- Periode Modul -->
-          <div>
-            <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
-              Periode Modul
-            </label>
-
-            <select
-              :value="selectedPeriodeModul"
-              @change="emit('update:selectedPeriodeModul', ($event.target as HTMLSelectElement).value)"
-              class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
-              <option v-for="item in periodeModulOptions" :key="item.value" :value="item.value">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Unit Lingkup -->
-          <div>
-            <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
-              Unit Lingkup
-            </label>
-
-            <select
-              :value="selectedUnitLingkup"
-              @change="emit('update:selectedUnitLingkup', ($event.target as HTMLSelectElement).value)"
-              class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
-              <option v-for="item in unitLingkupOptions" :key="item.value" :value="item.value">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Bahasa -->
-          <ULocaleSelect
-            :model-value="locale"
-            :locales="locales"
-            class="cursor-pointer"
-            @update:model-value="(val: any) => setLocale(val.code || val)"
-          />
-
+          <ULocaleSelect :model-value="locale" :locales="locales" class="cursor-pointer"
+            @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
           <!-- Logout -->
           <button
             class="flex w-full items-center gap-3 rounded-2xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-colors hover:bg-red-50"
             @click="handleLogout">
             <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 text-red-500">
-              <svg
-xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
-                <path
-stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
             </div>
@@ -106,8 +65,7 @@ stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           </button>
 
           <!-- Profile -->
-          <NuxtLink
-:to="localePath('/profile')"
+          <NuxtLink :to="localePath('/profile')"
             class="flex w-full items-center gap-3 rounded-2xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white">
             <img :src="profile.avatar" class="h-10 w-10 rounded-xl object-cover">
 
@@ -122,7 +80,6 @@ stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             </div>
           </NuxtLink>
         </div>
-
       </aside>
     </div>
   </Transition>
@@ -132,8 +89,7 @@ stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
     class="fixed inset-y-0 left-0 top-16.5 z-20 hidden h-[calc(100vh-66px)] flex-col border-r border-[#d6d6d8] bg-[#ececec] transition-all duration-300 lg:flex"
     :class="isCollapsed ? 'w-20' : 'w-72'">
     <div class="flex-1 overflow-y-auto py-6" :class="isCollapsed ? 'px-2' : 'px-4'">
-      <p
-v-if="!isCollapsed"
+      <p v-if="!isCollapsed"
         class="mb-4 px-2 text-[11px] font-bold uppercase tracking-widest text-[#71767f] select-none">
         {{ $t('util.menu') }}
       </p>
@@ -141,24 +97,22 @@ v-if="!isCollapsed"
       <div class="space-y-1.5">
         <template v-for="item in menus" :key="item.id">
           <!-- Collapsed -->
-          <UTooltip
-v-if="isCollapsed" :text="item.label" :delay-duration="0"
+          <UTooltip v-if="isCollapsed" :text="item.label" :delay-duration="0"
             :content="{ side: 'right', sideOffset: 8 }">
             <button
               class="flex h-12 w-12 items-center justify-center rounded-xl transition-all active:scale-95 mx-auto cursor-pointer"
               :class="getMenuClass(item.id)" @click="handleMenuSelect(item)">
-              <UIcon :name="iconMap[item.icon]" class="h-5 w-5" />
+              <UIcon :name="item.icon" class="h-5 w-5" />
             </button>
           </UTooltip>
 
           <!-- Normal -->
-          <button
-v-else
+          <button v-else
             class="group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[13.5px] font-semibold transition-all active:scale-95 cursor-pointer"
             :class="getMenuClass(item.id)" @click="handleMenuSelect(item)">
             <span v-if="activeMenuId === item.id" class="absolute -left-4 h-8 w-1.5 rounded-r-full bg-[#e60000]" />
 
-            <UIcon :name="iconMap[item.icon]" class="h-5 w-5 shrink-0" />
+            <UIcon :name="item.icon" class="h-5 w-5 shrink-0" />
 
             <span class="truncate">
               {{ item.label }}
@@ -169,26 +123,37 @@ v-else
     </div>
 
     <!-- Desktop Bottom -->
-    <div class="space-y-1.5 p-2"> <!-- Logout --> <button
+    <div class="space-y-1.5 p-2">
+      <!-- Logout -->
+      <button
         class="group flex w-full items-center gap-2.5 rounded-xl p-1.5 transition hover:bg-red-50 active:scale-95 cursor-pointer"
         @click="handleLogout">
         <div
           class="flex h-9 w-9 items-center justify-center rounded-lg text-red-600 transition-colors group-hover:bg-white">
           <UIcon name="i-lucide-log-out" class="h-5 w-5 " />
         </div>
+
         <div v-if="!isCollapsed" class="overflow-hidden">
-          <p class="text-sm font-bold leading-tight text-red-500 transition-colors group-hover:text-red-600"> {{
-            $t('navigasi.keluar') }} </p>
+          <p class="text-sm font-bold leading-tight text-red-500 transition-colors group-hover:text-red-600">
+            {{ $t('navigasi.keluar') }}
+          </p>
         </div>
-      </button> <!-- Profile -->
+      </button>
+
+      <!-- Profile -->
       <div class="border-t border-[#d7d7d9] pt-1.5">
         <NuxtLink :to="localePath('/profile')" class="block">
           <div
             class="flex items-center gap-2.5 rounded-xl border border-[#d7d7d9] bg-[#f4f4f4] p-1.5 transition-all hover:bg-white active:scale-95">
             <img :src="profile.avatar" class="h-9 w-9 rounded-lg object-cover border border-black/5">
+
             <div v-if="!isCollapsed" class="min-w-0">
-              <p class="truncate text-[12px] font-bold text-[#3b3f47]"> {{ profile.name }} </p>
-              <p class="truncate text-[10px] text-[#91959d]"> {{ profile.role }} </p>
+              <p class="truncate text-[12px] font-bold text-[#3b3f47]">
+                {{ profile.name }}
+              </p>
+              <p class="truncate text-[10px] text-[#91959d]">
+                {{ profile.role }}
+              </p>
             </div>
           </div>
         </NuxtLink>
@@ -199,14 +164,15 @@ v-else
 
 <script setup lang="ts">
 import { en, id, ar, ja } from '@nuxt/ui/locale'
-
 const { locale, setLocale } = useI18n()
+
 const locales = [
   id,
   en,
   ar,
   ja,
 ]
+
 const localePath = useLocalePath()
 
 type MenuItem = {
@@ -216,16 +182,7 @@ type MenuItem = {
   icon: string
 }
 
-const iconMap: Record<string, string> = {
-  home: 'i-lucide-home',
-  monitoring: 'i-lucide-monitor',
-  evaluation: 'i-lucide-clipboard-list',
-  finding: 'i-lucide-search',
-  followup: 'i-lucide-refresh-ccw',
-  minutes: 'i-lucide-file-text',
-  survey: 'i-lucide-clipboard',
-  report: 'i-lucide-bar-chart-2',
-}
+
 
 interface SidebarProfile {
   name: string
@@ -239,17 +196,11 @@ const props = defineProps<{
   isCollapsed: boolean
   isMobileOpen: boolean
   profile: SidebarProfile
-  selectedPeriodeModul?: string
-  selectedUnitLingkup?: string
-  periodeModulOptions?: { value: string, label: string }[]
-  unitLingkupOptions?: { value: string, label: string }[]
 }>()
 
 const emit = defineEmits<{
   (event: 'menu-select', item: MenuItem): void
   (event: 'close-mobile' | 'logout'): void
-  (event: 'update:selectedPeriodeModul', val: string): void
-  (event: 'update:selectedUnitLingkup', val: string): void
 }>()
 
 function getMenuClass(itemId: string) {

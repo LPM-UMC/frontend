@@ -66,7 +66,7 @@
     </header>
 
     <!-- SIDEBAR -->
-    <ManajemenModulSidebar :menus="modulMenus" :active-menu-id="activeMenuId" :is-collapsed="isSidebarCollapsed"
+    <DashboardSidebar :menus="modulMenus" :active-menu-id="activeMenuId" :is-collapsed="isSidebarCollapsed"
       :is-mobile-open="isMobileSidebarOpen" :profile="sidebarProfile" @menu-select="handleMenuSelect" @close-mobile="
         isMobileSidebarOpen = false
         " />
@@ -97,8 +97,8 @@ import {
   ar,
   ja,
 } from '@nuxt/ui/locale'
-import ManajemenModulSidebar
-  from '~/components/layout/ManajemenModulSidebar.vue'
+import DashboardSidebar
+  from '~/components/layout/DashboardSidebar.vue'
 
 const localePath =
   useLocalePath()
@@ -143,7 +143,7 @@ const modulMenus =
         to: localePath(
           '/dashboard'
         ),
-        icon: 'home',
+        icon: 'i-lucide-home',
       },
       {
         id: 'user',
@@ -153,7 +153,7 @@ const modulMenus =
         to: localePath(
           '/dashboard/manajemen-modul'
         ),
-        icon: 'modul',
+        icon: 'i-lucide-layout-grid',
       },
       {
         id: 'role',
@@ -163,7 +163,7 @@ const modulMenus =
         to: localePath(
           '/dashboard/manajemen-lingkup'
         ),
-        icon: 'lingkup',
+        icon: 'i-lucide-layers',
       },
     ]
   )
@@ -243,13 +243,17 @@ watch(
   }
 )
 
+import { useAuthStore } from '#stores/auth'
+
+const authStore = useAuthStore()
+
 const sidebarProfile =
   computed(() => {
     return {
-      name: 'John Doe',
-      role: 'Administrator',
+      name: authStore.user?.nama || 'Unknown',
+      role: authStore.activeRole?.nama || 'Unknown',
       avatar:
-        'https://i.pravatar.cc/150?img=33',
+        authStore.user?.picture || 'https://i.pravatar.cc/150?img=33',
     }
   })
 </script>

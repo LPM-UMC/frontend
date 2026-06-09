@@ -1,22 +1,24 @@
 <template>
   <header :dir="'ltr'" class="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white">
-    <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
-      <NuxtLink to="/" class="flex min-w-0 items-center gap-3" @click="closeMobileMenu">
-        <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
-          <img src="/img/logo-umc.jpg" alt="Logo UMC" class="h-full w-full object-cover">
-        </div>
+    <div class="mx-auto flex h-16 w-full max-w-470 items-center justify-between gap-4 px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <!-- Left side: Logo & Nav -->
+      <div class="flex items-center gap-8 lg:gap-12">
+        <NuxtLink to="/" class="flex min-w-0 items-center gap-3" @click="closeMobileMenu">
+          <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-gray-200">
+            <img src="/img/logo-umc.jpg" alt="Logo UMC" class="h-full w-full object-cover">
+          </div>
 
-        <div class="min-w-0 leading-tight">
-          <span class="block truncate text-[15px] font-bold text-red-700 md:text-xl">
-            SI-IMOET
-          </span>
-          <span class="hidden truncate text-[11px] text-gray-500 sm:block font-bold">
-            LPM &amp; SPI UMC
-          </span>
-        </div>
-      </NuxtLink>
+          <div class="min-w-0 leading-tight">
+            <span class="block truncate text-[15px] font-bold text-red-700 md:text-xl">
+              SI-IMOET
+            </span>
+            <span class="hidden truncate text-[11px] text-gray-500 sm:block font-bold">
+              LPM &amp; SPI UMC
+            </span>
+          </div>
+        </NuxtLink>
 
-      <nav class="hidden md:flex md:items-center md:gap-5">
+        <nav class="hidden md:flex md:items-center md:gap-5">
         <div>
           <NuxtLink to="/" :class="simpleNavClass('/')">
             {{ $t('navigasi.beranda') }}
@@ -198,16 +200,17 @@ to="/informasi/semua-postingan" :class="dropdownItemClass('/informasi/semua-post
             </NuxtLink>
           </div>
         </div>
-      </nav>
+        </nav>
+      </div>
 
       <div class="flex items-center gap-2 md:gap-3">
         <NuxtLink
-v-if="!authStore.isLoading && !authStore.isAuthenticated" :to="localePath('/login')"
+v-if="authStore.initialized && !authStore.isAuthenticated" :to="localePath('/login')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
           {{ $t('navigasi.masuk') }}
         </NuxtLink>
         <NuxtLink
-v-if="!authStore.isLoading && authStore.isAuthenticated" :to="localePath('/dashboard')"
+v-if="authStore.initialized && authStore.isAuthenticated" :to="localePath('/dashboard')"
           class="h-9 items-center justify-center rounded-full bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm hidden md:inline-flex">
           {{ $t('navigasi.dasbor') }}
         </NuxtLink>
@@ -267,12 +270,12 @@ v-for="link in group.links" :key="link.to" :to="link.to" :class="mobileLinkClass
               @update:model-value="setLocale($event as 'id' | 'en' | 'ar' | 'ja')" />
 
             <NuxtLink
-v-if="!authStore.isLoading && !authStore.isAuthenticated" :to="localePath('/login')"
+v-if="authStore.initialized && !authStore.isAuthenticated" :to="localePath('/login')"
               class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.masuk') }}
             </NuxtLink>
             <NuxtLink
-v-if="!authStore.isLoading && authStore.isAuthenticated" :to="localePath('/dashboard')"
+v-if="authStore.initialized && authStore.isAuthenticated" :to="localePath('/dashboard')"
               class="inline-flex h-9 items-center justify-center rounded-md bg-[#e30613] px-3 text-xs font-medium text-white shadow-sm transition hover:bg-[#c10510] md:h-auto md:px-5 md:py-2 md:text-sm">
               {{ $t('navigasi.dasbor') }}
             </NuxtLink>

@@ -67,7 +67,8 @@
       "judul": "Academic Calendar",
       "deskripsi": "The academic calendar serves as an integrated information source that provides a reliable reference for all important academic dates and deadlines, enabling academics to effectively plan their activities throughout the semester.",
       "belumTersedia": "Academic calendar is not available yet.",
-      "kalenderUniversitas": "Muhammadiyah University of Cirebon Academic Calendar"
+      "kalenderUniversitas": "Muhammadiyah University of Cirebon Academic Calendar",
+      "bukaDiTabBaru": "Open Calendar in New Tab"
     }
   },
   "login": {
@@ -759,5 +760,44 @@
       "calculateAllSuccess": "Monitoring score successfully calculated",
       "calculateAllError": "Failed to calculate monitoring score"
     }
+  },
+  "amiDokumen": {
+    "unggahDokumen": "Upload Document",
+    "uploadDeskripsi": "Upload {modul} Document",
+    "seretFile": "Drag and drop your PDF here, or click to browse",
+    "maksimalFile": "Maximum 5 MB (PDF)",
+    "pilihFile": "Select File",
+    "unggah": "Upload",
+    "daftarDokumen": "Document List",
+    "tabelDeskripsi": "Table of {modul} Files",
+    "cari": "Search document...",
+    "tabel": {
+      "no": "No",
+      "namaDokumen": "Document Name",
+      "tanggalUpload": "Upload Date",
+      "aksi": "Action",
+      "download": "Download",
+      "hapus": "Delete",
+      "kosong": "No documents uploaded yet."
+    },
+    "hapusKonfirmasi": {
+      "judul": "Delete Document",
+      "deskripsi": "Are you sure you want to delete this document?",
+      "tombol": "Delete"
+    },
+    "validasi": {
+      "fileRequired": "Please select a file first",
+      "fileSize": "File size exceeds 5MB",
+      "fileType": "Only PDF files are allowed"
+    },
+    "toast": {
+      "unggahBerhasil": "Document successfully uploaded",
+      "hapusBerhasil": "Document successfully deleted"
+    }
+  },
+  "amiMenus": {
+    "sop": "Standard Operating Procedures",
+    "monev": "Monitoring and Evaluation",
+    "tindakLanjut": "Follow-up"
   }
 }

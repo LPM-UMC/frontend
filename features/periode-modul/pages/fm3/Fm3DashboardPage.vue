@@ -75,11 +75,12 @@ const showingTo = computed(() => {
   return Math.min(currentPage.value * fm3Store.temuanMeta.size, fm3Store.temuanMeta.total)
 })
 
-function resolveFindingStatusMeta(kode: string) {
-  if (kode === 'DRAFT') return { badgeClass: 'bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20', label: 'Draft' }
-  if (kode === 'DIVALIDASI') return { badgeClass: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20', label: 'Divalidasi' }
-  if (kode === 'DITOLAK') return { badgeClass: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20', label: 'Revisi' }
-  return { badgeClass: 'bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20', label: kode }
+function resolveFindingStatusMeta(kode: any) {
+  const k = String(kode || '')
+  if (k === 'DRAFT') return { badgeClass: 'bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20', label: 'Draft' }
+  if (k === 'DIVALIDASI') return { badgeClass: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20', label: 'Divalidasi' }
+  if (k === 'DITOLAK') return { badgeClass: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20', label: 'Revisi' }
+  return { badgeClass: 'bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20', label: k || '-' }
 }
 
 function buildPendingValidationRoute(): string {
@@ -367,7 +368,7 @@ const users = computed(() => {
                   <td class="whitespace-nowrap px-6 py-4 text-center text-sm font-medium">
                     <div class="flex items-center justify-center gap-2">
                       <button
-                        v-if="fm3Store.isAuditee && row.status?.kode === 'DRAFT'"
+                        v-if="fm3Store.isAuditee && String(row.status?.kode) === 'DRAFT'"
                         type="button"
                         class="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         @click="goToEditFinding(row.id)"
@@ -375,7 +376,7 @@ const users = computed(() => {
                         Edit
                       </button>
                       <button
-                        v-if="fm3Store.isEvaluator && row.status?.kode === 'DRAFT'"
+                        v-if="fm3Store.isEvaluator && String(row.status?.kode) === 'DRAFT'"
                         type="button"
                         class="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         @click="goToValidation(row.id)"
@@ -383,7 +384,7 @@ const users = computed(() => {
                         Validasi
                       </button>
                       <button
-                        v-if="fm3Store.isAuditee && row.status?.kode === 'DRAFT'"
+                        v-if="fm3Store.isAuditee && String(row.status?.kode) === 'DRAFT'"
                         type="button"
                         class="rounded-lg bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-600/20 hover:bg-red-100"
                         @click="handleDeleteFinding(row.id)"

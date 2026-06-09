@@ -66,7 +66,7 @@
     </header>
 
     <!-- SIDEBAR -->
-    <ManajemenUserRoleSidebar :menus="modulMenus" :active-menu-id="activeMenuId" :is-collapsed="isSidebarCollapsed"
+    <DashboardSidebar :menus="modulMenus" :active-menu-id="activeMenuId" :is-collapsed="isSidebarCollapsed"
       :is-mobile-open="isMobileSidebarOpen" :profile="sidebarProfile" @menu-select="handleMenuSelect" @close-mobile="
         isMobileSidebarOpen = false
         " />
@@ -97,8 +97,8 @@ import {
   ar,
   ja,
 } from '@nuxt/ui/locale'
-import ManajemenUserRoleSidebar
-  from '~/components/layout/ManajemenUserRoleSidebar.vue'
+import DashboardSidebar
+  from '~/components/layout/DashboardSidebar.vue'
 
 const localePath =
   useLocalePath()
@@ -143,7 +143,7 @@ const modulMenus =
         to: localePath(
           '/dashboard'
         ),
-        icon: 'home',
+        icon: 'i-lucide-home',
       },
       {
         id: 'manajemen-periode',
@@ -153,7 +153,7 @@ const modulMenus =
         to: localePath(
           '/dashboard/manajemen-periode'
         ),
-        icon: 'calendar',
+        icon: 'i-lucide-calendar',
       },
     ]
   )

@@ -67,7 +67,8 @@
       "judul": "学事暦",
       "deskripsi": "学事暦は、重要な学術日程や締切に関する信頼できる情報を一元的に提供し、教職員や学生が学期を通じて活動を効果的に計画できるようにする統合情報源として機能します。",
       "belumTersedia": "学事暦はまだ利用できません。",
-      "kalenderUniversitas": "ムハマディヤ・チルボン大学学事暦"
+      "kalenderUniversitas": "ムハマディヤ・チルボン大学学事暦",
+      "bukaDiTabBaru": "新しいタブでカレンダーを開く"
     }
   },
   "login": {
@@ -759,5 +760,44 @@
       "calculateAllSuccess": "監視スコアが正常に計算されました",
       "calculateAllError": "監視スコアの計算に失敗しました"
     }
+  },
+  "amiDokumen": {
+    "unggahDokumen": "ドキュメントをアップロード",
+    "uploadDeskripsi": "{modul}ドキュメントをアップロード",
+    "seretFile": "ここにPDFをドラッグ＆ドロップするか、クリックして参照してください",
+    "maksimalFile": "最大5 MB（PDF）",
+    "pilihFile": "ファイルを選択",
+    "unggah": "アップロード",
+    "daftarDokumen": "ドキュメントリスト",
+    "tabelDeskripsi": "{modul}ファイルテーブル",
+    "cari": "ドキュメントを検索...",
+    "tabel": {
+      "no": "番号",
+      "namaDokumen": "ドキュメント名",
+      "tanggalUpload": "アップロード日",
+      "aksi": "アクション",
+      "download": "ダウンロード",
+      "hapus": "削除",
+      "kosong": "まだドキュメントがアップロードされていません。"
+    },
+    "hapusKonfirmasi": {
+      "judul": "ドキュメントの削除",
+      "deskripsi": "このドキュメントを削除してもよろしいですか？",
+      "tombol": "削除"
+    },
+    "validasi": {
+      "fileRequired": "最初にファイルを選択してください",
+      "fileSize": "ファイルサイズが5MBを超えています",
+      "fileType": "PDFファイルのみ許可されています"
+    },
+    "toast": {
+      "unggahBerhasil": "ドキュメントが正常にアップロードされました",
+      "hapusBerhasil": "ドキュメントが正常に削除されました"
+    }
+  },
+  "amiMenus": {
+    "sop": "標準作業手順書",
+    "monev": "モニタリングと評価",
+    "tindakLanjut": "フォローアップ"
   }
 }

@@ -15,7 +15,7 @@
 
       <!-- CTA -->
       <span dir="ltr" class="mt-auto inline-flex items-center gap-1 pt-3 text-[12px] font-semibold text-[#e1121b]">
-        {{ $t('monev.lihatEvaluasiTerbaru') }}
+        {{ props.ctaText || $t('monev.lihatEvaluasiTerbaru') }}
 
         <svg xmlns="http://www.w3.org/2000/svg"
           class="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-0.5" fill="none"
@@ -57,6 +57,8 @@ const props = withDefaults(
     periodeModulId?: string | number | null
     unitLingkupPeriodeModulId?: string | number | null
     aspekPeriodeModulId?: string | number | null
+    to?: string
+    ctaText?: string
     accentVariant?: 'wave' | 'curve' | 'corner'
     surfaceColor?: string
   }>(),
@@ -70,6 +72,11 @@ const toast = useToast()
 const router = useRouter()
 
 function handleClick() {
+  if (props.to) {
+    router.push(localePath(props.to))
+    return
+  }
+
   if (!props.periodeModulId || !props.unitLingkupPeriodeModulId) {
     toast.add({
       title: t('periodeModul.belumAdaRiwayatPelaksanaan.judul'),

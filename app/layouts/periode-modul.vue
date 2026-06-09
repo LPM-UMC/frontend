@@ -97,21 +97,45 @@ v-model="selectedUnitLingkup"
     </header>
 
     <!-- SIDEBAR -->
-    <ManajemenPeriodeModulSidebar
+    <DashboardSidebar
       :menus="modulMenus"
       :active-menu-id="activeMenuId"
       :is-collapsed="isSidebarCollapsed"
       :is-mobile-open="isMobileSidebarOpen"
       :profile="sidebarProfile"
-      :selected-periode-modul="selectedPeriodeModul"
-      :selected-unit-lingkup="selectedUnitLingkup"
-      :periode-modul-options="periodeModulOptions"
-      :unit-lingkup-options="unitLingkupOptions"
-      @update:selected-periode-modul="selectedPeriodeModul = $event"
-      @update:selected-unit-lingkup="selectedUnitLingkup = $event"
       @menu-select="handleMenuSelect"
       @close-mobile="isMobileSidebarOpen = false"
-    />
+    >
+      <template #mobile-actions>
+        <!-- Periode Modul -->
+        <div>
+          <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
+            Periode Modul
+          </label>
+          <select
+            v-model="selectedPeriodeModul"
+            class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
+            <option v-for="item in periodeModulOptions" :key="item.value" :value="item.value">
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Unit Lingkup -->
+        <div>
+          <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
+            Unit Lingkup
+          </label>
+          <select
+            v-model="selectedUnitLingkup"
+            class="h-10 w-full rounded-xl border border-[#d8dde4] bg-white px-3 text-[13px] text-[#3b3f47]">
+            <option v-for="item in unitLingkupOptions" :key="item.value" :value="item.value">
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+      </template>
+    </DashboardSidebar>
 
     <!-- MAIN -->
     <main
@@ -129,7 +153,7 @@ import { useI18n } from 'vue-i18n'
 import { computed, ref, watch, } from 'vue'
 import { navigateTo, useRoute, } from '#imports'
 import { en, id, ar, ja, } from '@nuxt/ui/locale'
-import ManajemenPeriodeModulSidebar from '~/components/layout/ManajemenPeriodeModulSidebar.vue'
+import DashboardSidebar from '~/components/layout/DashboardSidebar.vue'
 
 const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
@@ -223,49 +247,49 @@ const modulMenus = computed<MenuItem[]>(
         id: 'home',
         label: t('navigasi.dasbor'),
         to: localePath('/dashboard'),
-        icon: 'home',
+        icon: 'i-lucide-home',
       },
       {
         id: 'fm01',
         label: t('fm.monitoring.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm1/aspek/${aId}`),
-        icon: 'monitoring',
+        icon: 'i-lucide-monitor',
       },
       {
         id: 'fm02',
         label: t('fm.hasilEvaluasi.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm2`),
-        icon: 'evaluation',
+        icon: 'i-lucide-clipboard-list',
       },
       {
         id: 'fm03',
         label: t('fm.temuan.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm3`),
-        icon: 'finding',
+        icon: 'i-lucide-search',
       },
       {
         id: 'fm04',
         label: t('fm.rtl.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm4`),
-        icon: 'followup',
+        icon: 'i-lucide-refresh-ccw',
       },
       {
         id: 'fm05',
         label: t('fm.beritaAcara.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm5`),
-        icon: 'minutes',
+        icon: 'i-lucide-file-text',
       },
       {
         id: 'fm06',
         label: t('fm.survei.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm6`),
-        icon: 'survey',
+        icon: 'i-lucide-clipboard',
       },
       {
         id: 'fm07',
         label: t('fm.laporan.judul'),
         to: localePath(`/dashboard/periode-modul/${pId}/unit/${uId}/fm7`),
-        icon: 'report',
+        icon: 'i-lucide-bar-chart-2',
       },
     ]
   }
@@ -324,13 +348,17 @@ watch(
   }
 )
 
+import { useAuthStore } from '#stores/auth'
+
+const authStore = useAuthStore()
+
 const sidebarProfile =
   computed(() => {
     return {
-      name: 'John Doe',
-      role: 'Administrator',
+      name: authStore.user?.nama || 'Unknown',
+      role: authStore.activeRole?.nama || 'Unknown',
       avatar:
-        'https://i.pravatar.cc/150?img=33',
+        authStore.user?.picture || 'https://i.pravatar.cc/150?img=33',
     }
   })
 </script>

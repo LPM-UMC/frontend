@@ -67,7 +67,8 @@
       "judul": "Kalender Akademik",
       "deskripsi": "Kalender akademik berfungsi sebagai informasi terpadu yang menyediakan satu sumber terpercaya untuk semua tanggal dan tenggat waktu akademik penting, memungkinkan akademisi merencanakan kegiatan mereka secara efektif sepanjang semester.",
       "belumTersedia": "Kalender akademik belum tersedia.",
-      "kalenderUniversitas": "Kalender Akademik Universitas Muhammadiyah Cirebon"
+      "kalenderUniversitas": "Kalender Akademik Universitas Muhammadiyah Cirebon",
+      "bukaDiTabBaru": "Buka Kalender di Tab Baru"
     }
   },
   "login": {
@@ -759,5 +760,44 @@
       "calculateAllSuccess": "Nilai monitoring berhasil dihitung",
       "calculateAllError": "Gagal menghitung nilai monitoring"
     }
+  },
+  "amiDokumen": {
+    "unggahDokumen": "Unggah Dokumen",
+    "uploadDeskripsi": "Upload Dokumen {modul}",
+    "seretFile": "Seret file PDF ke sini atau klik untuk memilih",
+    "maksimalFile": "Maksimal 5 MB (PDF)",
+    "pilihFile": "Pilih File",
+    "unggah": "Unggah",
+    "daftarDokumen": "Daftar Dokumen",
+    "tabelDeskripsi": "Tabel File {modul}",
+    "cari": "Cari dokumen...",
+    "tabel": {
+      "no": "No",
+      "namaDokumen": "Nama Dokumen",
+      "tanggalUpload": "Tanggal Upload",
+      "aksi": "Aksi",
+      "download": "Download",
+      "hapus": "Hapus",
+      "kosong": "Belum ada dokumen yang diunggah."
+    },
+    "hapusKonfirmasi": {
+      "judul": "Hapus Dokumen",
+      "deskripsi": "Apakah Anda yakin ingin menghapus dokumen ini?",
+      "tombol": "Hapus"
+    },
+    "validasi": {
+      "fileRequired": "Pilih file terlebih dahulu",
+      "fileSize": "Ukuran file melebihi 5MB",
+      "fileType": "Hanya file PDF yang diperbolehkan"
+    },
+    "toast": {
+      "unggahBerhasil": "Dokumen berhasil diunggah",
+      "hapusBerhasil": "Dokumen berhasil dihapus"
+    }
+  },
+  "amiMenus": {
+    "sop": "Standar Operasional Prosedur",
+    "monev": "Monitoring dan Evaluasi",
+    "tindakLanjut": "Tindak Lanjut"
   }
 }

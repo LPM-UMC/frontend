@@ -29,8 +29,13 @@
         </p>
       </header>
 
+      <!-- Loading State -->
+      <div v-if="pending" class="mt-4 flex justify-center py-10">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-red-600"></div>
+      </div>
+
       <!-- PDF + label (dibikin seperti figma) -->
-      <div v-if="embedUrl" class="mt-2 flex justify-center">
+      <div v-else-if="embedUrl" class="mt-2 flex justify-center">
         <!-- Atur max width supaya viewer tidak terlalu lebar -->
         <div class="w-full max-w-7-xl">
           <div
@@ -60,9 +65,9 @@
               :href="driveViewUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center px-3 py-1.5 rounded-full border border-gray-200 text-xs md:text-sm text-gray-700 bg-white hover:bg-gray-50"
+              class="inline-flex items-center px-3 py-1.5 rounded-full border border-gray-200 text-xs md:text-sm text-white-700 bg-red-600 hover:bg-red-700"
             >
-              Buka di Tab Baru
+              {{ $t('beranda.kalenderAkademik.bukaDiTabBaru') }}
             </a>
           </div>
         </div>
@@ -82,30 +87,29 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAsyncData, useRuntimeConfig } from '#imports'
 
 const { locale } = useI18n()
-
-const isRTL = computed(() => locale.value === 'ar')
 const config = useRuntimeConfig()
 
-// ID PDF dari runtimeConfig / .env, cukup setup sekali
-const fileId = computed(
-  () =>
-    config.public.academicCalendarFileId ||
-    '1wEuY2Ld5LWC569sxWCmRHaduMxO3RGKI' // bisa kamu ganti, tapi idealnya dari .env
+const isRTL = computed(() => locale.value === 'ar')
+
+const baseURL = computed(() =>
+  ((config.public.apiBaseUrl as string) || 'http://localhost:3001').replace(/\/api\/?$/, '')
 )
 
-// Pakai viewer bawaan Google Drive
+const { data, pending } = await useAsyncData('active-periode', () =>
+  $fetch<{ data: { kalender?: any } }>(`${baseURL.value}/api/periode/aktif`)
+    .catch(() => ({ data: null }))
+)
+
+const hasActiveCalendar = computed(() => !!data.value?.data?.kalender)
+
 const embedUrl = computed(() =>
-  fileId.value
-    ? `https://drive.google.com/file/d/${fileId.value}/preview`
+  hasActiveCalendar.value
+    ? `${baseURL.value}/api/periode/aktif/kalender`
     : ''
 )
 
-// Link ke tampilan Drive biasa untuk "Buka di Tab Baru"
-const driveViewUrl = computed(() =>
-  fileId.value
-    ? `https://drive.google.com/file/d/${fileId.value}/view`
-    : '#'
-)
+const driveViewUrl = computed(() => embedUrl.value || '#')
 </script>

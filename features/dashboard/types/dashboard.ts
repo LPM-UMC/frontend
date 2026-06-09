@@ -1,4 +1,4 @@
-export type DashboardLocale = 'id' | 'en'
+export type DashboardLocale = 'id' | 'en' | 'ar' | 'ja'
 
 export type DashboardSourceMode = 'auto' | 'api' | 'dummy'
 
@@ -9,7 +9,7 @@ export type DashboardModuleKey =
   | 'survey-generator'
   | 'kalender-generator'
 
-export type ModuleCardAccentVariant = 'wave' | 'curve'
+export type ModuleCardAccentVariant = 'wave' | 'curve' | 'corner'
 
 export interface DashboardUser {
   id: string

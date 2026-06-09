@@ -55,9 +55,7 @@
 
       <div class="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4  min-[1800px]:grid-cols-5">
         <ModuleCard v-for="entry in filteredModules" :key="entry.item.id" :title="entry.item.title"
-          :description="entry.item.description" :periode-modul-id="entry.item.periodeModulId"
-          :unit-lingkup-periode-modul-id="entry.item.unitLingkupPeriodeModulId"
-          :aspek-periode-modul-id="entry.item.aspekPeriodeModulId"
+          :description="entry.item.description" :to="entry.item.to" cta-text="Lihat Data Terbaru"
           :accent-variant="useAlternateColorPattern(entry.originalIndex) ? 'wave' : entry.item.accentVariant"
           :surface-color="useAlternateColorPattern(entry.originalIndex) ? alternateCardColor : defaultCardColor" />
           
@@ -114,15 +112,25 @@ onMounted(() => {
 })
 
 const modules = computed(() => {
-  return modulStore.modulAmi.map((item, index) => ({
-    id: item.id,
-    title: item.nama,
-    description: item.deskripsi || '',
-    periodeModulId: item.periode_modul_id,
-    unitLingkupPeriodeModulId: item.unit_lingkup_periode_modul_id,
-    aspekPeriodeModulId: item.aspek_periode_modul_id,
-    accentVariant: (index % 2 === 0) ? 'wave' : 'curve',
-  }))
+  return modulStore.modulAmi.map((item, index) => {
+    const isSOP = item.nama === t('amiMenus.sop');
+    const isMonev = item.nama === t('amiMenus.monev');
+    const isTindakLanjut = item.nama === t('amiMenus.tindakLanjut');
+
+    let toRoute = '';
+    if (isSOP) toRoute = '/dashboard/ami/sop';
+    else if (isMonev) toRoute = '/dashboard/ami/monev';
+    else if (isTindakLanjut) toRoute = '/dashboard/ami/tindak-lanjut';
+    else toRoute = '/dashboard/ami/sop'; // default fallback
+
+    return {
+      id: item.id,
+      title: item.nama,
+      description: item.deskripsi || '',
+      to: toRoute,
+      accentVariant: ((index % 2 === 0) ? 'wave' : 'curve') as 'wave' | 'curve',
+    }
+  })
 })
 
 const indexedModules = computed(() =>
