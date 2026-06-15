@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "ingest": "node scripts/ai/ingest.js"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.10.0",
@@ -17,12 +18,14 @@
     "@nuxt/ui": "^4.1.0",
     "@nuxtjs/i18n": "^10.2.1",
     "@pinia/nuxt": "^0.11.3",
+    "@qdrant/js-client-rest": "^1.17.0",
     "@vuepic/vue-datepicker": "^12.1.0",
     "axios": "^1.13.3",
     "chart.js": "^4.5.1",
     "eslint": "^9.39.1",
     "http-status-codes": "^2.3.0",
     "nuxt": "^4.2.1",
+    "pdf-parse": "^2.4.5",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "typescript": "^5.9.3",

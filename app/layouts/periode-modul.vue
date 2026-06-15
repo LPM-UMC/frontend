@@ -105,6 +105,7 @@ v-model="selectedUnitLingkup"
       :profile="sidebarProfile"
       @menu-select="handleMenuSelect"
       @close-mobile="isMobileSidebarOpen = false"
+      @logout="handleLogout"
     >
       <template #mobile-actions>
         <!-- Periode Modul -->
@@ -154,7 +155,10 @@ import { computed, ref, watch, } from 'vue'
 import { navigateTo, useRoute, } from '#imports'
 import { en, id, ar, ja, } from '@nuxt/ui/locale'
 import DashboardSidebar from '~/components/layout/DashboardSidebar.vue'
+import { usePeriodeModulStore } from '#stores/periode-modul'
+import { useAuthStore } from '#stores/auth'
 
+const authStore = useAuthStore()
 const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
 
@@ -195,32 +199,90 @@ watch(selectedUnitLingkup, (newVal) => {
 })
 
 const { data: layoutOptions } = await useAsyncData(`layout-options-${pId}`, async () => {
-  const baseURL = useRuntimeConfig().public.apiBaseUrl || 'http://localhost:3001'
-  const headers = { 
-    "Accept-Language": locale.value,
-    "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}`
-  }
+  const pmStore = usePeriodeModulStore()
   
   let pmOptions: { value: string, label: string }[] = []
   let ulOptions: { value: string, label: string }[] = []
 
   try {
+    // 1. Fetch Modul Info to get modulId
+    const baseURL = useRuntimeConfig().public.apiBaseUrl || 'http://localhost:3001'
+    const headers = { 
+      "Accept-Language": locale.value,
+      "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}`
+    }
     const pmData = await $fetch<any>(`/api/periode-modul/${pId}`, { baseURL, headers, credentials: "include" })
     const modulId = pmData?.data?.modul?.id
 
+    // 2. Fetch all Periode Moduls and sort descending (terbaru)
     if (modulId) {
-      const pmRes = await $fetch<any>(`/api/periode-modul/modul/${modulId}`, { baseURL, headers, credentials: "include" })
+      const pmRes = await pmStore.fetchPeriodeModulByModul(modulId, { order: 'desc' })
       pmOptions = pmRes?.data?.map((item: any) => ({
         value: item.id,
         label: `${item.periode?.tahun_ajaran || ''} - ${item.periode?.semester || ''}`
       })) || []
     }
 
-    const ulRes = await $fetch<any>(`/api/periode-modul/${pId}/unit-lingkup`, { baseURL, headers, credentials: "include" })
+    // 3. Fetch all Unit Lingkups for this periode modul
+    const ulRes = await pmStore.fetchUnitLingkup(pId)
     ulOptions = ulRes?.data?.map((item: any) => ({
       value: item.id,
       label: item.unit_lingkup?.nama || ''
     })) || []
+
+    // 4. Default Unit Lingkup based on user role
+    if (ulOptions.length > 0) {
+      const activeRoleKode = authStore.activeRole?.kode?.toLowerCase() || ''
+      const isRoleAuditee = activeRoleKode.includes('auditee')
+      const isRoleEvaluator = activeRoleKode.includes('evaluator')
+
+      const isCurrentAuditee = await pmStore.checkIsAuditee(uId)
+      const isCurrentEvaluator = await pmStore.checkIsEvaluator(uId)
+
+      let needsRedirect = false
+      if (isRoleAuditee && !isCurrentAuditee) {
+        needsRedirect = true
+      } else if (isRoleEvaluator && !isCurrentEvaluator) {
+        needsRedirect = true
+      } else if (!isRoleAuditee && !isRoleEvaluator && !isCurrentAuditee && !isCurrentEvaluator) {
+         // Optionally, if they are just a generic user without admin rights, we might want to redirect.
+         // But to be safe for admins, we only redirect if they are explicitly in an auditee/evaluator role.
+         // Actually, if they have neither role active, we leave them alone so admins can browse freely.
+      }
+
+      if (needsRedirect) {
+        let targetUnitId = null;
+
+        // Pass 1: Find a unit that matches their ACTIVE ROLE
+        for (const ul of ulOptions) {
+          if (ul.value === uId) continue;
+          if (isRoleAuditee) {
+            const isAud = await pmStore.checkIsAuditee(ul.value)
+            if (isAud) { targetUnitId = ul.value; break; }
+          } else if (isRoleEvaluator) {
+            const isEv = await pmStore.checkIsEvaluator(ul.value)
+            if (isEv) { targetUnitId = ul.value; break; }
+          }
+        }
+
+        // Pass 2: If not found, find ANY unit where they are Auditee or Evaluator
+        if (!targetUnitId) {
+          for (const ul of ulOptions) {
+            if (ul.value === uId) continue;
+            const isAud = await pmStore.checkIsAuditee(ul.value)
+            const isEv = await pmStore.checkIsEvaluator(ul.value)
+            if (isAud || isEv) {
+              targetUnitId = ul.value; break;
+            }
+          }
+        }
+
+        if (targetUnitId) {
+          await navigateTo({ name: route.name as string, params: { ...route.params, unit_id: targetUnitId } })
+        }
+      }
+    }
+
   } catch (err) {
     console.error("Failed to load layout options", err)
   }
@@ -348,9 +410,9 @@ watch(
   }
 )
 
-import { useAuthStore } from '#stores/auth'
-
-const authStore = useAuthStore()
+async function handleLogout() {
+  await authStore.logout()
+}
 
 const sidebarProfile =
   computed(() => {

@@ -8,8 +8,8 @@ export const simpanBuktiInstrumenValidation = (t: ComposerTranslation) => z.obje
     .max(255, t("fmMonitoring.buktiInstrumen.validasi.link.max")),
   catatan: z
     .string()
-    .min(1, t("fmMonitoring.buktiInstrumen.validasi.catatan.min"))
     .max(2000, t("fmMonitoring.buktiInstrumen.validasi.catatan.max"))
+    .optional()
 })
 
 export const jawabInstrumenValidation = (t: ComposerTranslation, tipeEvaluasi: string) => z.object({

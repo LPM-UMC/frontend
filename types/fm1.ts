@@ -85,6 +85,7 @@ export type BuktiInstrumenResponse = {
 };
 
 export type BuktiInstrumenDetailResponse = {
+  id: string;
   aspek: {
     id: string;
     nama: string;

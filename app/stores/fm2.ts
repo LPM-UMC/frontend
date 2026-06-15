@@ -147,6 +147,29 @@ export const useFm2Store = defineStore("fm2", {
       }
     },
 
+    async exportPdf(uId: string) {
+      try {
+        const config = useRuntimeConfig();
+        const baseURL = (config.public.apiBaseUrl || 'http://localhost:3001') + '/api';
+        const lang = (useNuxtApp().$i18n as any)?.locale?.value || "id";
+
+        const response = await $fetch(`/fm2/unit-lingkup-periode-modul/${uId}/export/pdf`, {
+          baseURL,
+          credentials: "include",
+          headers: { 
+            "Accept-Language": lang, 
+            "Authorization": `Bearer ${useNuxtApp().$pinia.state.value.auth?.accessToken || ""}` 
+          },
+          responseType: 'blob'
+        });
+
+        return response as Blob;
+      } catch (err: any) {
+        console.error("Failed to export PDF:", err);
+        throw err;
+      }
+    },
+
     async checkIsAuditee(uId: string) {
       try {
         const config = useRuntimeConfig();

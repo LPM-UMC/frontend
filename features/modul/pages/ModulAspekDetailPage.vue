@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute, useLocalePath } from '#imports'
+import { useRoute, useLocalePath, useRuntimeConfig, useRouter } from '#imports'
 import { useI18n } from 'vue-i18n'
-import { useModulApi } from '#features/modul/services/modul.api'
-import { useAspekApi } from '#features/modul/services/aspek.api'
-import type { AspekRecord } from '#features/modul/types/aspek'
+import { useModulStore } from '../../../app/stores/modul'
+import { useAspekStore } from '../../../app/stores/aspek'
+import type { AspekResponse } from '#types/aspek'
 
 const route = useRoute()
+const router = useRouter()
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const modulApi = useModulApi()
-const aspekApi = useAspekApi()
+const config = useRuntimeConfig()
+const baseURL = config.public.apiBaseUrl as string || 'http://localhost:3001'
+const modulStore = useModulStore()
+const aspekStore = useAspekStore()
 
 const isRTL = computed(() => locale.value.startsWith('ar'))
 
@@ -25,7 +28,9 @@ const aspekId = computed(() => {
 })
 
 const pageLoading = ref(true)
-const detailData = ref<AspekRecord | null>(null)
+const isDeleting = ref(false)
+const showDeleteModal = ref(false)
+const detailData = ref<AspekResponse | null>(null)
 const modulName = ref('')
 
 const breadcrumbItems = computed(() => [
@@ -59,9 +64,10 @@ async function loadDetail() {
   if (!modulId.value || !aspekId.value) return
   pageLoading.value = true
   try {
+    const lang = locale.value || 'id'
     const [aspekRes, modulRes] = await Promise.all([
-      aspekApi.getAspek(modulId.value, aspekId.value),
-      modulApi.getModul(modulId.value)
+      aspekStore.fetchAspekById(lang, baseURL, aspekId.value),
+      modulStore.fetchModulById(lang, baseURL, modulId.value)
     ])
     detailData.value = aspekRes
     modulName.value = modulRes?.nama || 'Modul'
@@ -69,6 +75,30 @@ async function loadDetail() {
     console.error(e)
   } finally {
     pageLoading.value = false
+  }
+}
+
+async function confirmDelete() {
+  isDeleting.value = true
+  const toast = useToast()
+  try {
+    const lang = locale.value || 'id'
+    await aspekStore.deleteAspek(lang, baseURL, aspekId.value)
+    showDeleteModal.value = false
+    toast.add({
+      title: 'Berhasil',
+      description: 'Aspek berhasil dihapus dari modul',
+      color: 'green'
+    })
+    router.push(localePath(`/dashboard/manajemen-modul/${modulId.value}`))
+  } catch(e: any) {
+    toast.add({
+      title: 'Gagal Menghapus',
+      description: e?.data?.errors || e.message || 'Gagal menghapus aspek',
+      color: 'red'
+    })
+  } finally {
+    isDeleting.value = false
   }
 }
 
@@ -152,15 +182,52 @@ onMounted(() => {
           </div>
 
           <div class="mt-6 flex flex-wrap gap-2 border-t border-[#e5e9f0] pt-4">
-            <NuxtLink :to="`/dashboard/manajemen-modul/${modulId}/aspek/${aspekId}/edit`" class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] bg-gradient-to-b from-[#E7000B] to-[#B91C1C] px-5 text-[16px] font-semibold text-white shadow-[0_4px_14px_rgba(227,0,11,0.25)] transition hover:from-[#cc0f17] hover:to-[#a01818]">
+            <NuxtLink :to="localePath(`/dashboard/manajemen-modul/${modulId}/aspek/${aspekId}/edit`)" class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] bg-gradient-to-b from-[#E7000B] to-[#B91C1C] px-5 text-[16px] font-semibold text-white shadow-[0_4px_14px_rgba(227,0,11,0.25)] transition hover:from-[#cc0f17] hover:to-[#a01818]">
               {{ t('manajemenAspek.editAspek') }}
             </NuxtLink>
-            <button class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] border border-[#cfd5df] bg-[#f3f4f6] px-5 text-[16px] font-semibold text-[#1f2634] transition hover:bg-[#e0e0e0]">
+            <button @click="showDeleteModal = true" class="inline-flex h-10 min-w-28 items-center justify-center rounded-[14px] border border-[#cfd5df] bg-[#f3f4f6] px-5 text-[16px] font-semibold text-[#1f2634] transition hover:bg-[#e0e0e0] cursor-pointer">
               {{ t('manajemenAspek.hapus') }}
             </button>
           </div>
         </div>
       </article>
     </section>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0b1120]/40 px-4 backdrop-blur-[2px] transition-opacity">
+      <div class="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-2xl transition-all">
+        <div class="mb-5 flex items-center justify-center">
+          <div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
+            <svg class="h-7 w-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-center text-xl font-bold leading-6 text-gray-900">
+          {{ t('manajemenAspek.konfirmasiHapus') || 'Hapus Aspek' }}
+        </h3>
+        <div class="mt-2">
+          <p class="text-center text-[0.95rem] text-gray-500">
+            Apakah Anda yakin ingin menghapus aspek ini? Tindakan ini tidak dapat dibatalkan.
+          </p>
+        </div>
+
+        <div class="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
+          <button type="button" @click="showDeleteModal = false" :disabled="isDeleting" class="inline-flex w-full cursor-pointer justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-base font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none sm:w-auto sm:text-sm">
+            Batal
+          </button>
+          <button type="button" @click="confirmDelete" :disabled="isDeleting" class="inline-flex w-full cursor-pointer justify-center rounded-xl border border-transparent bg-red-600 px-4 py-2.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-red-700 focus:outline-none sm:w-auto sm:text-sm">
+            <span v-if="isDeleting" class="flex items-center gap-2">
+              <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Menghapus...
+            </span>
+            <span v-else>Ya, Hapus</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
 </template>

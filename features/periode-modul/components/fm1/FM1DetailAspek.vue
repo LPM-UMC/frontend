@@ -49,7 +49,7 @@
               {{ detail.objek?.deskripsi || '' }}
           </p>
 
-          <NuxtLink v-if="fm1Store.isAuditee === true" :to="localePath(`/dashboard/periode-modul/${route.params.periode_modul_id}/unit/${route.params.unit_id}/fm1/objek`)" class="block">
+          <!-- <NuxtLink v-if="fm1Store.isAuditee === true" :to="localePath(`/dashboard/periode-modul/${route.params.periode_modul_id}/unit/${route.params.unit_id}/fm1/objek`)" class="block">
             <button
               type="button"
               class="mt-3 flex w-full items-center gap-2.5 rounded-[12px] bg-[#e60000] px-3 py-2 text-left text-white transition hover:brightness-95 cursor-pointer"
@@ -67,7 +67,7 @@
                 </span>
               </span>
             </button>
-          </NuxtLink>
+          </NuxtLink> -->
 
         </div>
       </div>

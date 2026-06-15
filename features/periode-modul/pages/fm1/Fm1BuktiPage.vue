@@ -14,7 +14,7 @@ interface Fm1BuktiFormState {
   }
 }
 
-const FORM_PER_PAGE = 2
+const FORM_PER_PAGE = 5
 const NOTE_MAX_LENGTH = 2000
 
 const route = useRoute()
@@ -28,7 +28,7 @@ const routeUnitId = computed(() => route.params.unit_id as string)
 const canInput = computed(() => {
   const fm = fm1Store.informasi?.fm?.fm;
   const status = fm1Store.informasi?.fm?.status_pelaksanaan?.kode;
-  return fm?.kode === 'MONITORING' && status === 'SEDANG_BERLANGSUNG';
+  return status === 'SEDANG_BERLANGSUNG';
 })
 
 const currentPage = computed(() => {
@@ -43,14 +43,14 @@ const isSavingByAspect = ref<Record<string, boolean>>({})
 
 function initializeFormState() {
   fm1Store.buktiInstrumenList.forEach((item) => {
-    if (!formStateByAspect.value[item.aspek.id]) {
-      formStateByAspect.value[item.aspek.id] = {
+    if (!formStateByAspect.value[item.id]) {
+      formStateByAspect.value[item.id] = {
         link: item.bukti_instrumen?.link || '',
         catatan: item.bukti_instrumen?.catatan || '',
       }
     }
-    if (isSavingByAspect.value[item.aspek.id] == null) {
-      isSavingByAspect.value[item.aspek.id] = false
+    if (isSavingByAspect.value[item.id] == null) {
+      isSavingByAspect.value[item.id] = false
     }
   })
 }
@@ -59,13 +59,13 @@ const paginatedForms = computed(() => {
   return fm1Store.buktiInstrumenList.map((item, index) => {
     const globalIndex = showingFrom.value + index
     return {
-      id: item.aspek.id,
+      id: item.id,
       number: globalIndex,
       title: item.aspek.nama,
       description: item.aspek.deskripsi || '',
       badgeLabel: t('fmMonitoring.buktiInstrumen.dokumenBukti'),
       panduan: item.panduan,
-      form: formStateByAspect.value[item.aspek.id] || { link: '', catatan: '' },
+      form: formStateByAspect.value[item.id] || { link: '', catatan: '' },
     }
   })
 })
@@ -338,7 +338,6 @@ onMounted(async () => {
 
       <footer class="flex flex-col gap-3 border-t border-[#dde2ea] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-3.5">
         <p class="text-[10px] text-[#4f5c6f] sm:text-[11px] lg:text-[12px] text-center sm:text-left">
-          {{ $t('fmMonitoring.buktiInstrumen.formPengisian') }} <strong>{{ showingFrom }}-{{ showingTo }}</strong> {{ $t('fmMonitoring.buktiInstrumen.dari') }} <strong>{{ totalForms }}</strong> {{ $t('fmMonitoring.buktiInstrumen.data') }}
         </p>
 
         <div class="flex items-center justify-center gap-2">

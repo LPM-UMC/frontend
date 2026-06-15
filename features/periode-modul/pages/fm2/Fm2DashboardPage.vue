@@ -6,7 +6,7 @@
     <template v-else>
       <section
         class="rounded-xl bg-gradient-to-br from-[#d90000] to-[#f30000] px-5 py-6 text-white shadow-md sm:px-6 lg:p-8">
-        <div class="flex flex-col md:flex-row md:items-start md:justify-between">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div class="max-w-3xl">
             <h1 class="text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
               {{ t('fm2.title') }}
@@ -14,6 +14,22 @@
             <p class="mt-2 text-sm leading-relaxed text-white/90 sm:text-base">
               {{ t('fm2.description') }}
             </p>
+          </div>
+          
+          <div class="flex-shrink-0">
+            <button
+              @click="handleExportPdf"
+              :disabled="isExporting"
+              class="inline-flex h-10 sm:h-11 items-center justify-center rounded-xl border border-transparent bg-white/20 px-4 py-2 text-sm sm:text-[0.95rem] font-semibold text-white backdrop-blur-sm shadow-[0_2px_6px_rgba(15,23,42,0.1)] transition hover:bg-white/30 disabled:opacity-50 cursor-pointer">
+              <svg v-if="!isExporting" xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <svg v-else class="mr-2 h-4.5 w-4.5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Export PDF
+            </button>
           </div>
         </div>
 
@@ -23,7 +39,7 @@
               {{ t('fm2.startTime') }}
             </p>
             <p class="mt-1 text-base font-bold sm:text-lg">
-              {{ fm2Store.informasi?.tanggal_mulai ? new Date(fm2Store.informasi.tanggal_mulai).toLocaleString(locale) : '-' }}
+              {{ fm2Store.informasi?.fm?.tanggal_mulai ? new Date(fm2Store.informasi.fm.tanggal_mulai).toLocaleString(locale) : '-' }}
             </p>
           </article>
           <article class="rounded-lg bg-white/10 px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4">
@@ -31,7 +47,7 @@
               {{ t('fm2.endTime') }}
             </p>
             <p class="mt-1 text-base font-bold sm:text-lg">
-              {{ fm2Store.informasi?.tanggal_selesai ? new Date(fm2Store.informasi.tanggal_selesai).toLocaleString(locale) : '-' }}
+              {{ fm2Store.informasi?.fm?.tanggal_selesai ? new Date(fm2Store.informasi.fm.tanggal_selesai).toLocaleString(locale) : '-' }}
             </p>
           </article>
           <article class="rounded-lg bg-white/10 px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4">
@@ -39,7 +55,7 @@
               {{ t('fm2.status') }}
             </p>
             <p class="mt-1 text-base font-bold sm:text-lg">
-              {{ fm2Store.informasi?.status_pelaksanaan === 'SEDANG_BERLANGSUNG' ? t('fm2.active') : t('fm2.inactive') }}
+              {{ fm2Store.informasi?.fm?.status_pelaksanaan?.kode === 'SEDANG_BERLANGSUNG' ? t('fm2.active') : t('fm2.inactive') }}
             </p>
           </article>
         </div>
@@ -221,12 +237,12 @@
                   </p>
                 </td>
                 <td class="px-4 py-4 text-center align-top">
-                  <button v-if="canCalculate && !row.skor" @click="calculateAspect(row.aspek_periode_modul_id)"
+                  <button v-if="canCalculate && !row.skor?.skor" @click="calculateAspect(row.aspek_periode_modul_id)"
                     class="inline-flex w-full items-center justify-center rounded-lg border border-red-600 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white disabled:opacity-50"
                     :disabled="fm2Store.isCalculating">
                     {{ t('fm2.table.calculateScore') }}
                   </button>
-                  <span v-else-if="row.skor" class="inline-flex w-full items-center justify-center px-3 py-1.5 text-xs font-semibold text-gray-500">
+                  <span v-else-if="row.skor?.skor" class="inline-flex w-full items-center justify-center px-3 py-1.5 text-xs font-semibold text-gray-500">
                     -
                   </span>
                 </td>
@@ -240,7 +256,7 @@
           </table>
         </div>
 
-        <div v-if="canCalculate && allAspectsCalculated && !fm2Store.skorMonitoring" class="mt-4 flex justify-end">
+        <div v-if="canCalculate && allAspectsCalculated && !fm2Store.skorMonitoring?.skor" class="mt-4 flex justify-end">
           <button @click="calculateMonitoring"
             class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
             :disabled="fm2Store.isCalculating">
@@ -284,8 +300,42 @@ import { useToast } from '#imports'
 
 const { locale, t } = useI18n()
 const toast = useToast()
+const localePath = useLocalePath()
 const fm2Store = useFm2Store()
 const route = useRoute()
+
+const routeUnitId = computed(() => route.params.unit_id as string)
+const isExporting = ref(false)
+
+async function handleExportPdf() {
+  if (isExporting.value) return
+  isExporting.value = true
+  try {
+    const blob = await fm2Store.exportPdf(routeUnitId.value)
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Hasil_Evaluasi_${routeUnitId.value}.pdf`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
+    toast.add({
+      title: 'Berhasil',
+      description: 'Laporan berhasil diunduh.',
+      color: 'green'
+    })
+  } catch (err) {
+    console.error('Export failed:', err)
+    toast.add({
+      title: 'Gagal',
+      description: 'Terjadi kesalahan saat mengunduh laporan.',
+      color: 'red'
+    })
+  } finally {
+    isExporting.value = false
+  }
+}
 
 const isRTL = computed(() => locale.value === 'ar')
 
@@ -337,12 +387,12 @@ onMounted(async () => {
 })
 
 const isAuditee = computed(() => fm2Store.isAuditee)
-const isBerlangsung = computed(() => fm2Store.informasi?.status_pelaksanaan === 'SEDANG_BERLANGSUNG')
+const isBerlangsung = computed(() => fm2Store.informasi?.periode_modul?.status_pelaksanaan?.kode === 'SEDANG_BERLANGSUNG' && fm2Store.informasi?.fm?.status_pelaksanaan?.kode === 'SEDANG_BERLANGSUNG')
 const canCalculate = computed(() => isAuditee.value && isBerlangsung.value)
 
 const allAspectsCalculated = computed(() => {
   if (!fm2Store.skorAspeks.length) return false;
-  return fm2Store.skorAspeks.every(a => !!a.skor);
+  return fm2Store.skorAspeks.every(a => a.skor?.skor != null);
 })
 
 const filteredRows = computed(() => fm2Store.skorAspeks)
@@ -357,10 +407,10 @@ const paginatedRows = computed(() => {
   }))
 })
 
-const countSangatBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 90).length)
-const countBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 75 && a.skor.persentase < 90).length)
-const countCukup = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.persentase && a.skor.persentase >= 50 && a.skor.persentase < 75).length)
-const countKurang = computed(() => fm2Store.skorAspeks.filter(a => (a.skor?.persentase && a.skor.persentase < 50) || !a.skor).length)
+const countSangatBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.skor != null && a.skor.persentase! >= 90).length)
+const countBaik = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.skor != null && a.skor.persentase! >= 75 && a.skor.persentase! < 90).length)
+const countCukup = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.skor != null && a.skor.persentase! >= 50 && a.skor.persentase! < 75).length)
+const countKurang = computed(() => fm2Store.skorAspeks.filter(a => a.skor?.skor != null && a.skor.persentase! < 50).length)
 
 const radarAxes = computed(() => {
   if (!fm2Store.skorAspeks.length) return []

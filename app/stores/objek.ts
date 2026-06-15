@@ -48,9 +48,10 @@ export const useObjekStore = defineStore("objek", {
         if (params?.order) query.append("order", params.order)
 
         const res = await $fetch<PagingResponse<ObjekResponse>>(
-          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/objek?${query.toString()}`,
+          `${config.public.apiBaseUrl}/api/lingkup/${lingkupId}/objek?${query.toString()}`,
           {
             headers: {
+              "Accept-Language": lang,
               Authorization: `Bearer ${auth.accessToken}`,
             },
           }
@@ -79,9 +80,10 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/objek/${objekId}`,
           {
             headers: {
+              "Accept-Language": lang,
               Authorization: `Bearer ${auth.accessToken}`,
             },
           }
@@ -113,10 +115,11 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBaseUrl}/api/${lang}/lingkup/${lingkupId}/objek`,
+          `${config.public.apiBaseUrl}/api/lingkup/${lingkupId}/objek`,
           {
             method: "POST",
             headers: {
+              "Accept-Language": lang,
               Authorization: `Bearer ${auth.accessToken}`,
             },
             body: payload,
@@ -150,10 +153,11 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         const res = await $fetch<{ data: ObjekResponse }>(
-          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/objek/${objekId}`,
           {
             method: "PUT",
             headers: {
+              "Accept-Language": lang,
               Authorization: `Bearer ${auth.accessToken}`,
             },
             body: payload,
@@ -190,10 +194,11 @@ export const useObjekStore = defineStore("objek", {
 
       try {
         await $fetch(
-          `${config.public.apiBaseUrl}/api/${lang}/objek/${objekId}`,
+          `${config.public.apiBaseUrl}/api/objek/${objekId}`,
           {
             method: "DELETE",
             headers: {
+              "Accept-Language": lang,
               Authorization: `Bearer ${auth.accessToken}`,
             },
           }

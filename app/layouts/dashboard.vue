@@ -7,9 +7,12 @@
     </main>
 
     <AppFooter />
+    
+    <AdminChatbotWidget />
   </div>
 </template>
 
 <script setup lang="ts">
 import DashboardHeader from '#features/dashboard/components/DashboardHeader.vue'
+import AdminChatbotWidget from '~/components/AdminChatbotWidget.vue'
 </script>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute, navigateTo } from '#imports'
 import { useFm1Store } from '#stores/fm1'
 
+const route = useRoute()
 const fm1Store = useFm1Store()
 
 import type { BuktiInstrumenDetailResponse } from '#types/fm1'
@@ -27,6 +29,17 @@ function openLink() {
   if (fileUrl.value && fileUrl.value !== '-') {
     window.open(fileUrl.value, '_blank')
   }
+}
+
+const canInput = computed(() => {
+  const status = fm1Store.informasi?.fm?.status_pelaksanaan?.kode;
+  return status === 'SEDANG_BERLANGSUNG';
+})
+
+function handleEdit() {
+  const pId = route.params.periode_modul_id as string
+  const uId = route.params.unit_id as string
+  navigateTo(`/dashboard/periode-modul/${pId}/unit/${uId}/fm1/bukti`)
 }
 </script>
 
@@ -94,6 +107,19 @@ function openLink() {
           {{ senderNote }}
         </p>
       </div>
+    </div>
+
+    <!-- Edit Button for Auditee -->
+    <div v-if="fm1Store.isAuditee && canInput" class="mt-6 flex justify-end border-t border-[#e2e6ec] pt-5">
+      <button 
+        @click="handleEdit" 
+        class="flex items-center gap-2 rounded-[8px] border border-[#e30000] bg-white px-5 py-2 text-[13px] font-semibold text-[#e30000] transition hover:bg-[#fff3f3] cursor-pointer"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+        Ubah Berkas Bukti
+      </button>
     </div>
   </div>
 </template>

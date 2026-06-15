@@ -2,16 +2,19 @@
 import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { useRoute, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
-import { useModulApi } from '#features/modul/services/modul.api'
-import { useAspekApi } from '#features/modul/services/aspek.api'
+import { useRuntimeConfig } from '#imports'
+import { useModulStore } from '../../../app/stores/modul'
+import { useAspekStore } from '../../../app/stores/aspek'
+import { useDebounceFn } from '@vueuse/core'
 import type { ModulRecord } from '#features/modul/types/modul'
-import type { AspekRecord } from '#features/modul/types/aspek'
 
 const route = useRoute()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const modulApi = useModulApi()
-const aspekApi = useAspekApi()
+const config = useRuntimeConfig()
+const baseURL = config.public.apiBaseUrl as string || 'http://localhost:3001'
+const modulStore = useModulStore()
+const aspekStore = useAspekStore()
 
 const modulId = computed(() => {
   const id = route.params.modul_id
@@ -19,7 +22,6 @@ const modulId = computed(() => {
 })
 
 const detailData = ref<ModulRecord | null>(null)
-const aspekRows = ref<AspekRecord[]>([])
 const pageLoading = ref(true)
 
 const breadcrumbItems = computed(() => [
@@ -45,19 +47,28 @@ const detailSectionOpen = reactive({
 const aspekSearchQuery = ref('')
 const aspekSortOrder = ref('a-z')
 
-const filteredAspekRows = computed(() => {
-  let rows = [...aspekRows.value]
-  const query = aspekSearchQuery.value.trim().toLowerCase()
+const aspekCurrentPage = ref(1)
+const aspekPageSize = 10
 
-  rows.sort((a, b) => {
-    const compare = (a.nama || '').localeCompare(b.nama || '')
-    return aspekSortOrder.value === 'a-z' ? compare : compare * -1
-  })
+const aspekTotalPages = computed(() => Math.max(1, aspekStore.meta?.total_pages || 1))
 
-  if (query) {
-    rows = rows.filter(r => (r.nama || '').toLowerCase().includes(query) || (r.deskripsi || '').toLowerCase().includes(query))
+const aspekVisiblePages = computed(() => {
+  const pages = []
+  let start = Math.max(1, aspekCurrentPage.value - 1)
+  let end = Math.min(aspekTotalPages.value, aspekCurrentPage.value + 1)
+
+  if (end - start < 2) {
+    if (start === 1) {
+      end = Math.min(aspekTotalPages.value, 3)
+    } else if (end === aspekTotalPages.value) {
+      start = Math.max(1, aspekTotalPages.value - 2)
+    }
   }
-  return rows
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
 })
 
 function toggleDetailSection(section: 'informasi' | 'aspek') {
@@ -68,18 +79,41 @@ async function loadDetail() {
   if (!modulId.value) return
   pageLoading.value = true
   try {
-    const [modulRes, aspekRes] = await Promise.all([
-      modulApi.getModul(modulId.value),
-      aspekApi.listAspek(modulId.value)
-    ])
-    detailData.value = modulRes || null
-    aspekRows.value = aspekRes?.items || []
+    const lang = locale.value || 'id'
+    const modulRes = await modulStore.fetchModulById(lang, baseURL, modulId.value)
+    // Map ModulResponse to ModulRecord if necessary, but here we can just cast or assign it.
+    detailData.value = (modulRes as unknown) as ModulRecord || null
+    await loadAspek()
   } catch(e) {
     console.error(e)
   } finally {
     pageLoading.value = false
   }
 }
+
+async function loadAspek() {
+  if (!modulId.value) return
+  try {
+    const lang = locale.value || 'id'
+    await aspekStore.fetchAspeks(lang, baseURL, modulId.value, {
+      page: aspekCurrentPage.value,
+      size: aspekPageSize,
+      search: aspekSearchQuery.value,
+      order: aspekSortOrder.value === 'a-z' ? 'asc' : 'desc'
+    })
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+watch([aspekCurrentPage, aspekSortOrder], () => {
+  loadAspek()
+})
+
+watch(aspekSearchQuery, useDebounceFn(() => {
+  aspekCurrentPage.value = 1
+  loadAspek()
+}, 500))
 
 onMounted(() => {
   loadDetail()
@@ -180,7 +214,7 @@ onMounted(() => {
         <button type="button" class="flex w-full items-center justify-between px-6 py-5 text-left" @click="toggleDetailSection('aspek')">
           <div class="flex items-center gap-3">
             <h2 class="text-[clamp(1.35rem,1.8vw,1.9rem)] font-semibold text-[#1e293b]">{{ t('manajemenAspek.daftarAspek') }}</h2>
-            <span class="rounded-full bg-[#eceff5] px-3 py-1 text-[0.95rem] font-semibold text-[#637085]">{{ filteredAspekRows.length }} data</span>
+            <span class="rounded-full bg-[#eceff5] px-3 py-1 text-[0.95rem] font-semibold text-[#637085]">{{ aspekStore.meta?.total || 0 }} data</span>
           </div>
           <span class="inline-flex h-11 w-11 items-center justify-center rounded-[16px] border border-[#d8dce4] bg-[#f6f7f9] text-[#697286]">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform" :class="detailSectionOpen.aspek ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
@@ -212,8 +246,8 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(row, index) in filteredAspekRows" :key="row.id" class="border-t border-[#e8edf3] hover:bg-gray-50 transition">
-                  <td class="border-b border-[#e8edf3] px-4 py-4 text-[14px] text-[#2f3744]">{{ index + 1 }}</td>
+                <tr v-for="(row, index) in aspekStore.aspeks" :key="row.id" class="border-t border-[#e8edf3] hover:bg-gray-50 transition">
+                  <td class="border-b border-[#e8edf3] px-4 py-4 text-[14px] text-[#2f3744]">{{ ((aspekCurrentPage - 1) * aspekPageSize) + index + 1 }}</td>
                   <td class="border-b border-[#e8edf3] px-4 py-4 text-[14px] font-semibold text-[#3b3f46]">
                     <NuxtLink :to="localePath(`/dashboard/manajemen-modul/${modulId}/aspek/${row.id}`)" class="text-[#E7000B] hover:text-[#B91C1C] transition hover:underline">
                       {{ row.nama }}
@@ -221,11 +255,39 @@ onMounted(() => {
                   </td>
                   <td class="border-b border-[#e8edf3] px-4 py-4 text-[14px] text-[#3f4551]">{{ row.deskripsi || '-' }}</td>
                 </tr>
-                <tr v-if="filteredAspekRows.length === 0">
+                <tr v-if="aspekStore.aspeks.length === 0">
                   <td colspan="3" class="px-4 py-8 text-center text-[#7a8392]">{{ t('manajemenModul.detail.belumAdaData') }}</td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="mt-4 flex justify-end">
+            <div class="flex gap-2 text-sm">
+              <button
+                :disabled="aspekCurrentPage === 1"
+                class="rounded-[7px] border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer transition hover:bg-[#f6f7f9]"
+                @click="aspekCurrentPage--">
+                {{ t('util.paginasi.sebelumnya') }}
+              </button>
+
+              <template v-for="pageNumber in aspekVisiblePages" :key="pageNumber">
+                <button 
+                  @click="aspekCurrentPage = pageNumber"
+                  :class="aspekCurrentPage === pageNumber ? 'bg-[#e1121b] text-white border-[#e1121b]' : 'border border-[#d8dde4] text-[#2f3744] hover:bg-[#f6f7f9]'"
+                  class="rounded-[7px] px-4 py-2 transition cursor-pointer">
+                  {{ pageNumber }}
+                </button>
+              </template>
+
+              <button
+                :disabled="aspekCurrentPage === aspekTotalPages"
+                class="rounded-[7px] border border-[#d8dde4] px-3 py-2 disabled:opacity-50 cursor-pointer transition hover:bg-[#f6f7f9]"
+                @click="aspekCurrentPage++">
+                {{ t('util.paginasi.berikutnya') }}
+              </button>
+            </div>
           </div>
         </div>
       </article>

@@ -11,6 +11,7 @@ export const useModulStore = defineStore("modul", {
     amiPage: 1,
     amiTotalPages: 1,
     amiSearch: "",
+    detailModul: null as ModulResponse | null,
     isLoading: false,
     error: null as any,
   }),
@@ -108,6 +109,29 @@ export const useModulStore = defineStore("modul", {
         this.error = err;
         console.error("Failed to fetch Modul AMI:", err);
         if (loadMore) this.amiPage -= 1;
+        throw err;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async fetchModulById(lang: string, baseURL: string, modulId: string) {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const authStore = useAuthStore();
+        const response = await $fetch<{ data: ModulResponse }>(`/api/modul/${modulId}`, {
+          baseURL,
+          headers: {
+            "Accept-Language": lang,
+            ...(authStore.accessToken ? { Authorization: `Bearer ${authStore.accessToken}` } : {})
+          }
+        });
+        
+        this.detailModul = response.data;
+        return response.data;
+      } catch (err) {
+        this.error = err;
+        console.error("Failed to fetch Modul Detail:", err);
         throw err;
       } finally {
         this.isLoading = false;

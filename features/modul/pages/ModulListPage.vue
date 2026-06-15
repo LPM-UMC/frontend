@@ -177,9 +177,14 @@
             {{ $t('util.paginasi.sebelumnya') }}
           </button>
 
-          <button class="rounded-[7px] bg-[#e1121b] px-4 py-2 text-white">
-            {{ currentPage }}
-          </button>
+          <template v-for="pageNumber in visiblePages" :key="pageNumber">
+            <button 
+              @click="currentPage = pageNumber"
+              :class="currentPage === pageNumber ? 'bg-[#e1121b] text-white border-[#e1121b]' : 'border border-[#d8dde4] text-[#2f3744] hover:bg-[#f6f7f9]'"
+              class="rounded-[7px] px-4 py-2 transition cursor-pointer">
+              {{ formatNumber(pageNumber) }}
+            </button>
+          </template>
 
           <button
             :disabled="currentPage === totalPages"
@@ -274,6 +279,25 @@ const totalPages =
       )
     )
   )
+
+const visiblePages = computed(() => {
+  const pages = []
+  let start = Math.max(1, currentPage.value - 1)
+  let end = Math.min(totalPages.value, currentPage.value + 1)
+
+  if (end - start < 2) {
+    if (start === 1) {
+      end = Math.min(totalPages.value, 3)
+    } else if (end === totalPages.value) {
+      start = Math.max(1, totalPages.value - 2)
+    }
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
 
 function resolveStatusClass(status: string) {
   return 'bg-gray-100 text-gray-700'
