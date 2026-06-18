@@ -1,0 +1,830 @@
+{
+  "toast": {
+    "common": {
+      "unexpectedError": "An unexpected issue occurred while processing your request. Please try again later."
+    },
+    "auth": {
+      "loginSuccess": "Welcome back. You have successfully signed in.",
+      "invalidCredentials": "The email address or password you entered is incorrect. Please verify your credentials and try again."
+    }
+  },
+  "basic": {
+    "namaAplikasi": "Integrated Monitoring and Evaluation Information System",
+    "namaKampus": "Muhammadiyah University of Cirebon"
+  },
+  "website": {
+    "umc": "Muhammadiyah University of Cirebon",
+    "siimoet": "SI-IMOET UMC",
+    "pmb": "UMC Admissions"
+  },
+  "sedangTahapPengembangan": {
+    "judul": "Page Under Development",
+    "deskripsi": "We apologize, but this page is currently under development. We are working hard to bring you a better experience. Please check back later or explore other sections of our website."
+  },
+  "util": {
+    "menu": "Menu",
+    "paginasi": {
+      "sebelumnya": "Previous",
+      "berikutnya": "Next"
+    },
+    "boolean": {
+      "true": "Yes",
+      "false": "No"
+    },
+    "buat": "Create",
+    "edit": "Edit",
+    "hapus": "Delete",
+    "lihat": "View",
+    "kembali": "Back",
+    "simpan": "Save",
+    "batal": "Cancel",
+    "berhasil": "Success",
+    "tidakAdaData": "No data available.",
+    "terbaru": "Newest",
+    "terlama": "Oldest"
+  },
+  "footer": {
+    "copyright": "© 2026 All Rights Reserved."
+  },
+  "navigasi": {
+    "beranda": "Home",
+    "profil": "Profile",
+    "akreditasi": "Accreditation",
+    "informasi": "Information",
+    "masuk": "Login",
+    "keluar": "Logout",
+    "dasbor": "Dashboard",
+    "pilih": "Select"
+  },
+  "beranda": {
+    "heroSection": {
+      "selamatDatang": "Welcome to",
+      "deskripsi": "Quality assurance and internal supervision are essential pillars in implementing the university's vision and mission toward a dignified and high-quality higher education institution.",
+      "infoMonev": "Monev Info",
+      "tentang": "About Us"
+    },
+    "kalenderAkademik": {
+      "judul": "Academic Calendar",
+      "deskripsi": "The academic calendar serves as an integrated information source that provides a reliable reference for all important academic dates and deadlines, enabling academics to effectively plan their activities throughout the semester.",
+      "belumTersedia": "Academic calendar is not available yet.",
+      "kalenderUniversitas": "Muhammadiyah University of Cirebon Academic Calendar",
+      "bukaDiTabBaru": "Open Calendar in New Tab"
+    }
+  },
+  "login": {
+    "welcome": "Welcome",
+    "silahkanMasuk": "Please sign in to continue",
+    "masukGoogle": "Sign in with Google",
+    "mengalihkan": "Redirecting...",
+    "kembali": "Back",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "masuk": "Sign In",
+    "atau": "Or",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordMax": "Password must be a maximum of 255 characters",
+    "userNotFound": "Email not found",
+    "invalidPassword": "Incorrect password",
+    "accountDisabled": "Your account has been disabled",
+    "unauthorized": "You do not have access",
+    "unknownError": "An error occurred, please try again"
+  },
+  "dasborModul": {
+    "selamatDatang": {
+      "judul": "Welcome to the dashboard",
+      "deskripsi": "You have successfully accessed the dashboard. From here, you can access various modules, monitor data, and manage activities according to your role in the system."
+    },
+    "monev": {
+      "judul": "Monitoring and Evaluation",
+      "deskripsi": "The Monev module provides an integrated platform to monitor and evaluate the implementation of academic and institutional activities, helping users analyze performance, identify improvement opportunities, and support data-driven decision-making."
+    },
+    "ami": {
+      "judul": "Internal Quality Audit",
+      "deskripsi": "The Internal Quality Audit (AMI) module supports structured and documented internal audit processes to assess compliance with quality standards, identify improvement areas, and strengthen a culture of continuous quality enhancement."
+    },
+    "manajemenModul": {
+      "judul": "Module Management",
+      "deskripsi": "The Module Management module facilitates structured system module management, including adding, updating, and configuring modules, ensuring optimal system integration and operation."
+    },
+    "manajemenPeriode": {
+      "judul": "Period Management",
+      "deskripsi": "The Period Management module supports planned academic period management, including schedule setting and time range configuration, ensuring academic activities run in an orderly and coordinated manner."
+    },
+    "manajemenPengguna": {
+      "judul": "User Management",
+      "deskripsi": "The User Management module provides centralized tools for managing user accounts, roles, and access permissions, helping administrators maintain system security, organization, and operational efficiency."
+    }
+  },
+  "manajemenUser": {
+    "judul": "User Management",
+    "deskripsi": "The User Management module provides a centralized means to manage user accounts, roles, and access permissions, helping administrators maintain system security, order, and efficiency.",
+    "daftarUser": "User List",
+    "card": {
+      "totalUser": "Total Users",
+      "totalUserAktif": "Total Active Users",
+      "totalRole": "Total Roles",
+      "totalRoleTerbanyak": "Most Common Role"
+    },
+    "placeholder": {
+      "cari": "Search users by name, email, or role...",
+      "nama": "Enter user name",
+      "email": "Enter user email",
+      "role": "Select user role",
+      "nidn": "Enter NIDN (for lecturers)",
+      "nim": "Enter NIM (for students)"
+    },
+    "filter": {
+      "semuaRole": "All Roles"
+    },
+    "nonaktif": {
+      "judul": "Deactivate User",
+      "deskripsi": "Deactivating a user will restrict their access to the system and prevent them from performing any actions. This action is typically taken when a user leaves the organization or no longer requires access.",
+      "tombol": "Deactivate User"
+    },
+    "create": {
+      "judul": "Create New User",
+      "deskripsi": "Form to create a new user with the required information, including name, email, and role.",
+      "judulForm": "Create New User Form",
+      "tombol": "Create User",
+      "validasi": {
+        "berhasil": "User successfully created",
+        "nidn": {
+          "required": "NIDN cannot be empty",
+          "max": "NIDN must be a maximum of 20 characters"
+        },
+        "nim": {
+          "required": "NIM cannot be empty",
+          "max": "NIM must be a maximum of 20 characters"
+        },
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 30 characters"
+        },
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "roleIds": {
+          "min": "You must select at least 1 role",
+          "max": "Maximum of 10 roles",
+          "invalid": "Invalid role ID"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit User",
+      "deskripsi": "Form to edit existing user information, including name, email, and role.",
+      "judulForm": "Edit User Form",
+      "tombol": "Update User",
+      "validasi": {
+        "berhasil": "User successfully updated",
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "roleIds": {
+          "min": "You must select at least 1 role",
+          "max": "Maximum of 10 roles",
+          "invalid": "Invalid role ID"
+        }
+      }
+    },
+    "updateProfile": {
+      "judul": "Edit Profile",
+      "deskripsi": "Form to edit user profile, including name, email, and other contact information.",
+      "judulForm": "Edit Profile Form",
+      "tombol": "Update Profile",
+      "validasi": {
+        "berhasil": "Profile successfully updated",
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 255 characters"
+        },
+        "email": {
+          "required": "Email cannot be empty",
+          "max": "Email must be a maximum of 255 characters",
+          "invalid": "Invalid email format"
+        },
+        "instagram": {
+          "required": "Instagram cannot be empty",
+          "max": "Instagram must be a maximum of 255 characters"
+        },
+        "linkedin": {
+          "required": "LinkedIn cannot be empty",
+          "max": "LinkedIn must be a maximum of 255 characters"
+        }
+      }
+    },
+    "updateProfileImage": {
+      "judul": "Change Profile Picture",
+      "deskripsi": "Form to change user profile picture.",
+      "judulForm": "Change Profile Picture Form",
+      "tombol": "Update Profile Picture",
+      "validasi": {
+        "berhasil": "Profile picture successfully updated",
+        "picture": {
+          "required": "Image file must be uploaded",
+          "maxSize": "Maximum image size is 5 MB",
+          "invalidType": "File must be an image"
+        }
+      }
+    },
+    "updatePassword": {
+      "judul": "Change Password",
+      "deskripsi": "Form to change user password.",
+      "judulForm": "Change Password Form",
+      "tombol": "Update Password",
+      "validasi": {
+        "berhasil": "Password successfully updated",
+        "password": {
+          "required": "Password cannot be empty",
+          "min": "Password must be at least 8 characters",
+          "max": "Password must be a maximum of 128 characters"
+        }
+      }
+    },
+    "model": {
+      "role": "Role",
+      "no": "No",
+      "nama": "Name",
+      "email": "Email",
+      "status": "Status",
+      "tanggalBergabung": "Date Joined"
+    }
+  },
+  "manajemenRole": {
+    "judul": "Role Management",
+    "deskripsi": "The Role Management module facilitates role administration within the system, including creating, updating, and configuring access permissions to ensure an effective role structure that aligns with organizational needs.",
+    "list": "Role List",
+    "card": {
+      "totalUser": "Total Users",
+      "totalUserAktif": "Active Users",
+      "totalRole": "Total Roles",
+      "totalRoleTerbanyak": "Most Assigned Role"
+    },
+    "placeholder": {
+      "cari": "Search roles by name or description...",
+      "nama": "Enter role name",
+      "deskripsi": "Enter role description"
+    },
+    "create": {
+      "judul": "Create New Role",
+      "deskripsi": "Form for creating a new role with the required information, including role name and description.",
+      "judulForm": "Create New Role Form",
+      "tombol": "Create Role",
+      "validasi": {
+        "berhasil": "Role created successfully",
+        "nama": {
+          "required": "Name is required",
+          "max": "Name must not exceed 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description is required",
+          "max": "Description must not exceed 255 characters"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Role",
+      "deskripsi": "Form for editing an existing role, including its name and description.",
+      "judulForm": "Edit Role Form",
+      "tombol": "Update Role",
+      "validasi": {
+        "berhasil": "Role updated successfully",
+        "nama": {
+          "required": "Name is required",
+          "max": "Name must not exceed 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description is required",
+          "max": "Description must not exceed 255 characters"
+        }
+      }
+    },
+    "nonaktif": {
+      "judul": "Deactivate Role",
+      "deskripsi": "Are you sure you want to deactivate this role? Deactivated roles can no longer be assigned to users, but the role data will remain available for future reference.",
+      "tombol": "Deactivate Role"
+    },
+    "model": {
+      "no": "No",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "jumlahUser": "User Count",
+      "tanggalDibuat": "Created Date"
+    }
+  },
+  "manajemenPeriode": {
+    "judul": "Period Management",
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "create": {
+      "judul": "Create New Period",
+      "tombol": "Create",
+      "form": {
+        "periode": "Period",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Example: 2023/2024"
+      }
+    },
+    "update": {
+      "judul": "Current Period",
+      "tombolUpdate": "Update",
+      "tombolNonaktif": "Deactivate",
+      "form": {
+        "periode": "Period",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "semester": "Semester"
+      },
+      "placeholder": {
+        "periode": "Example: 2023/2024"
+      }
+    },
+    "upload": {
+      "judul": "Upload Calendar PDF",
+      "hintDragDrop": "Drag and drop your PDF here, or click to browse",
+      "hintMaksimal": "Supports PDF files up to 5 MB",
+      "tombolBrowse": "Browse Files"
+    },
+    "list": {
+      "judul": "Period List",
+      "searchPlaceholder": "Search academic year...",
+      "sorting": {
+        "terbaru": "Newest",
+        "terlama": "Oldest"
+      },
+      "tabel": {
+        "no": "No",
+        "tahun": "Year",
+        "semester": "Semester",
+        "tanggalMulai": "Start Date",
+        "tanggalSelesai": "End Date",
+        "status": "Status",
+        "statusAktif": "Active",
+        "statusSelesai": "Finished",
+        "kalender": "Calendar",
+        "tombolDownload": "Download",
+        "kosong": "No period data available."
+      },
+      "pagination": {
+        "info": "Showing {shownFrom}-{shownTo} of {totalItems} entries",
+        "tombolSebelumnya": "Previous",
+        "tombolSelanjutnya": "Next"
+      }
+    }
+  },
+  "manajemenModul": {
+    "judul": "Module Management",
+    "deskripsi": "A module is a monitoring and evaluation framework that regulates assessment aspects, evaluated objects, as well as the scope and evaluation indicators within a period. Modules serve as the foundation for M&E implementation to ensure the assessment process runs in a structured, measurable, and consistent manner.",
+    "list": "Module List",
+    "card": {
+      "totalModul": "Total Modules",
+      "totalModulAktif": "Total Active Modules",
+      "ModulTerbanyakDibuka": "Most Opened Modules",
+      "ModulTerakhirDibuka": "Last Opened Module"
+    },
+    "placeholder": {
+      "cari": "Search module by name or description...",
+      "nama": "Enter module name",
+      "deskripsi": "Enter module description"
+    },
+    "create": {
+      "judul": "Create New Module",
+      "deskripsi": "Form to create a new module with the required information, including name, evaluation scope, and description.",
+      "judulForm": "Create New Module Form",
+      "tombol": "Create Module",
+      "pilihLingkup": "Select Evaluation Scope",
+      "validasi": {
+        "berhasil": "Module successfully created",
+        "nama": {
+          "required": "Name cannot be empty",
+          "max": "Name must be a maximum of 30 characters"
+        },
+        "deskripsi": {
+          "required": "Description cannot be empty",
+          "max": "Description must be a maximum of 255 characters"
+        },
+        "lingkupId": {
+          "required": "Evaluation scope must be selected",
+          "invalid": "Invalid evaluation scope ID"
+        }
+      }
+    },
+    "update": {
+      "judul": "Edit Module",
+      "deskripsi": "Form to edit existing module information.",
+      "judulForm": "Edit Module Form",
+      "tombol": "Update Module",
+      "validasi": {
+        "berhasil": "Module successfully updated",
+        "deskripsi": {
+          "required": "Description cannot be empty",
+          "max": "Description must be a maximum of 255 characters"
+        }
+      }
+    },
+    "model": {
+      "no": "No",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "lingkup": "Evaluation Scope",
+      "totalAspek": "Total Aspects",
+      "status": "Status",
+      "tanggalDibuat": "Date Created"
+    },
+    "detail": {
+      "judul": "Evaluation Module Detail",
+      "deskripsiDetail": "Use this page to view the details of the evaluation module along with its assessment indicators. The information displayed includes the name, description, and evaluation object.",
+      "informasiModul": "Module Information",
+      "nama": "Name",
+      "deskripsi": "Description",
+      "tipeModul": "Module Type",
+      "editModul": "Edit Module",
+      "no": "No",
+      "cariAspek": "Search aspect...",
+      "urutkan": {
+        "az": "A - Z",
+        "za": "Z - A"
+      },
+      "belumAdaData": "No aspect data available yet."
+    }
+  },
+  "manajemenLingkup": {
+    "judul": "Evaluation Scope",
+    "deskripsi": "Use this feature to define the scope of evaluation objects (e.g., Study Programs/Faculties/Units) to be used by the module during object mapping, data retrieval, and reporting. Integration status affects data sources and object availability.",
+    "buatLingkup": "Create Scope",
+    "card": {
+      "totalLingkup": "Total Evaluation Scopes",
+      "lingkupAktif": "Active Evaluation Scopes",
+      "lingkupTerbanyak": "Most Used Scope",
+      "lingkupTerakhir": "Last Created Scope"
+    },
+    "daftarLingkup": "List of Evaluation Scopes",
+    "placeholder": {
+      "cari": "Search..."
+    },
+    "urutkan": {
+      "az": "A - Z",
+      "za": "Z - A"
+    },
+    "filter": {
+      "semua": "All",
+      "aktif": "Active",
+      "tidakAktif": "Inactive"
+    },
+    "tabel": {
+      "no": "No",
+      "nama": "Name",
+      "status": "Status",
+      "lingkupEvaluasi": "Evaluation Scope",
+      "dibuatPada": "Created At",
+      "deskripsi": "Description",
+      "penanggungJawab": "Person in Charge",
+      "evaluator": "Evaluator",
+      "integrasiSistem": "System Integration"
+    },
+    "create": {
+      "breadcrumb": "Create Scope",
+      "judul": "Create New Evaluation Scope",
+      "deskripsi": "Use this feature to create a new evaluation scope as a boundary for objects to be assessed. This scope will be used to structure and track the monitoring process consistently.",
+      "formJudul": "Evaluation Scope Form",
+      "nama": "Name",
+      "namaPlaceholder": "Enter name here",
+      "namaHint": "Max 100 characters. Use consistent format.",
+      "deskripsiLabel": "Description",
+      "deskripsiPlaceholder": "Enter description here",
+      "deskripsiHint": "Max 100 characters. Use consistent format.",
+      "rolePj": "Select Person in Charge Role",
+      "roleEvaluator": "Select Evaluator Role",
+      "pilih": "Select",
+      "batal": "Cancel",
+      "simpan": "Save"
+    },
+    "detail": {
+      "judul": "View Evaluation Scope",
+      "deskripsi": "Use this page to view evaluation scope details along with connected units and objects. You can expand the scope information, unit list, and evaluation object list for easier data management.",
+      "informasi": "Evaluation Scope Information",
+      "namaLingkup": "Scope Name",
+      "deskripsiLabel": "Description",
+      "penanggungJawab": "Person in Charge",
+      "evaluator": "Evaluator",
+      "totalUnit": "Total Units",
+      "integrasiSistem": "System Integration",
+      "tanggalDiperbarui": "Last Updated",
+      "edit": "Edit",
+      "hapus": "Delete",
+      "tambahUnit": "Add Unit",
+      "tambahLingkup": "Add Scope",
+      "tambahObjek": "Add Evaluation Object",
+      "daftarUnit": "Unit List",
+      "daftarObjek": "Evaluation Object List",
+      "belumAdaData": "No data available."
+    }
+  },
+  "manajemenAspek": {
+    "judul": "Aspect Detail",
+    "deskripsiDetail": "Use this page to view the evaluation aspect details.",
+    "informasiAspek": "Aspect Information",
+    "namaAspek": "Aspect Name",
+    "deskripsi": "Description",
+    "editAspek": "Edit Aspect",
+    "hapus": "Delete",
+    "buatAspek": "Create Aspect",
+    "formAspek": "Aspect Form",
+    "deskripsiBuat": "Form to create a new aspect.",
+    "editAspekJudul": "Edit Aspect",
+    "deskripsiEdit": "Use this page to update an evaluation aspect.",
+    "batal": "Cancel",
+    "simpan": "Save",
+    "daftarAspek": "Aspect List"
+  },
+  "monev": {
+    "judul": "Monitoring and Evaluation",
+    "lihatEvaluasiTerbaru": "View Latest Evaluations",
+    "placeholder": {
+      "cari": "Search evaluations by name or description..."
+    },
+    "kosong": {
+      "judul": "Module Not Found",
+      "deskripsi": "Currently, there are no monitoring and evaluation modules available or matching your search criteria."
+    }
+  },
+  "ami": {
+    "judul": "Internal Quality Audit",
+    "lihatAuditTerbaru": "View Latest Audits",
+    "placeholder": {
+      "cari": "Search audits by name or description..."
+    },
+    "kosong": {
+      "judul": "Module Not Found",
+      "deskripsi": "Currently, there are no internal quality audit modules available or matching your search criteria."
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "Monitoring"
+    },
+    "hasilEvaluasi": {
+      "judul": "Evaluation Results"
+    },
+    "temuan": {
+      "judul": "Findings"
+    },
+    "rtl": {
+      "judul": "Follow-up Plan"
+    },
+    "beritaAcara": {
+      "judul": "Minutes of Meeting"
+    },
+    "survei": {
+      "judul": "Survey"
+    },
+    "laporan": {
+      "judul": "Report"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "Start Time",
+    "waktuBerakhir": "End Time",
+    "status": "Status",
+    "semuaStatus": "All Statuses",
+    "sudahDievaluasi": "Evaluated",
+    "belumDievaluasi": "Not Evaluated",
+    "pilihAspek": "Select Aspect",
+    "evaluasi": "Evaluate",
+    "lihatHasilEvaluasi": "View Evaluation Results",
+    "detailAspek": "Aspect Details",
+    "objekEvaluasi": "Evaluation Object",
+    "indikatoEvaluasi": "Evaluation Indicator",
+    "pastikanIndikatorDinilai": "Make sure all evaluation indicators have been assessed before the end time.",
+    "lingkupEvaluasi": "Evaluation Scope",
+    "unitLingkupEvaluasi": "Evaluation Scope Unit",
+    "pihakTerkait": "Related Parties",
+    "daftarObjekEvaluasi": "List of Evaluation Objects",
+    "unitObjekEvaluasi": {
+      "tambah": "Add Evaluation Object Unit",
+      "deskripsi": "Evaluation object units are specific entities or groups that are evaluated within the scope of a module. These units can include departments, programs, or other organizational components that are relevant to the evaluation process."
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "No Evaluation History Available",
+      "deskripsi": "No implementation data is available for this module yet. Please check back later or contact the administrator for more information."
+    },
+    "belumAdaAspek": {
+      "judul": "No Aspects Available",
+      "deskripsi": "There are currently no evaluation aspects available for this module. Please check back later or contact the administrator for more information."
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "Berkas Bukti Belum Tersedia",
+      "deskripsi": "Currently, there are no supporting documents available for this evaluation aspect. Please check back later or contact the administrator for more information."
+    },
+    "roles": {
+      "auditee": "Auditee",
+      "evaluator": "Evaluator",
+      "reviewer": "Reviewer"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "Not Started",
+      "SEDANG_BERLANGSUNG": "In Progress",
+      "SELESAI": "Completed",
+      "DIBATALKAN": "Cancelled"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "Provide justification for this evaluation result...",
+      "cariObjekEvaluasi": "Search evaluation objects by name or description..."
+    },
+    "evaluasi": {
+      "tipeBiner": "Binary Evaluation (Yes/No)",
+      "tipeSkala": "Scale Evaluation",
+      "tipeCek": "Checklist Evaluation",
+      "catatanLabel": "Note",
+      "menyimpan": "Saving...",
+      "simpan": "Save",
+      "toast": {
+        "berhasilMenyimpan": "Indicator answer saved successfully.",
+        "gagalMenyimpan": "Failed to save answer. Please try again.",
+        "validasiGagal": "Please check your form input again.",
+        "gagalJudul": "Failed"
+      },
+      "validasi": {
+        "binerRequired": "Please select one of the evaluation options (Yes/No)",
+        "skalaRequired": "Please select the evaluation scale",
+        "cekRequired": "At least one checklist option must be selected"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "Evaluation Object",
+      "deskripsi": "Evaluation objects are specific entities or groups that are evaluated within the scope of a module. These units can include departments, programs, or other organizational components that are relevant to the evaluation process.",
+      "model": {
+        "nama": "Name",
+        "deskripsi": "Description"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "Input Instrument Evidence",
+      "deskripsiInput": "Provide evidence for the evaluation indicator by uploading relevant documents, images, or other supporting files that demonstrate compliance with the evaluation criteria.",
+      "mulaiInput": "Start Input",
+      "validasi": {
+        "link": {
+          "required": "Document link is required",
+          "invalid": "Invalid document link format",
+          "max": "Document link maximum 255 characters"
+        },
+        "catatan": {
+          "min": "Note is required",
+          "max": "Note maximum 2000 characters"
+        }
+      },
+      "dokumenBukti": "EVIDENCE DOCUMENT",
+      "buktiPendukung": "Supporting Evidence",
+      "cantumkanLink": "Include a link to the supporting document and provide brief details",
+      "linkGoogleDrive": "Google Drive Document Link",
+      "lihatFormatBukti": "View Evidence Format Here",
+      "catatanPanduan": "Guide Note:",
+      "catatanTambahan": "Additional Notes",
+      "berikanDeskripsi": "Provide a brief description or additional details",
+      "maksimal2000Karakter": "Maximum 2000 characters",
+      "simpanBukti": "Save Supporting Evidence",
+      "menyimpan": "Saving...",
+      "dokumenLainnya": "OTHER DOCUMENTS",
+      "formPengisian": "Form",
+      "dari": "of",
+      "data": "data",
+      "berhasilMenyimpan": "Instrument evidence saved successfully.",
+      "gagalMenyimpan": "Failed to save instrument evidence. Please try again."
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "Email is required",
+        "invalid": "Invalid email format",
+        "min": "Email must be at least 5 characters",
+        "max": "Email must be a maximum of 255 characters"
+      },
+      "password": {
+        "required": "Password is required",
+        "min": "Password must be at least 8 characters",
+        "max": "Password must be a maximum of 255 characters"
+      }
+    }
+  },
+  "fm2": {
+    "title": "Monitoring Form 02",
+    "description": "Dashboard to monitor the achievement of readiness assessment indicators at the University. Data is updated periodically to provide the latest overview of the progress and achievements of each unit.",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "aspectVeryGood": "Very Good Aspect",
+    "aspectGood": "Good Aspect",
+    "aspectFair": "Fair Aspect",
+    "aspectPoor": "Poor Aspect",
+    "chartTitle": "Achievement Chart",
+    "totalReadinessScore": "Total Readiness Score",
+    "readinessPercentage": "Readiness Percentage",
+    "category": "Category",
+    "reviewerProfile": "Reviewer Profile",
+    "assessmentIndicators": "Assessment Indicators",
+    "aspectEvaluationResult": "Aspect Evaluation Result",
+    "table": {
+      "no": "No",
+      "aspect": "Aspect",
+      "achievement": "Achievement",
+      "action": "Action",
+      "calculateScore": "Calculate Score",
+      "calculateAllScore": "Calculate Monitoring Score",
+      "empty": "Aspect data not found for the selected filter."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "toast": {
+      "calculateSuccess": "Score successfully calculated",
+      "calculateError": "Failed to calculate score",
+      "calculateAllSuccess": "Monitoring score successfully calculated",
+      "calculateAllError": "Failed to calculate monitoring score"
+    }
+  },
+  "amiDokumen": {
+    "unggahDokumen": "Upload Document",
+    "uploadDeskripsi": "Upload {modul} Document",
+    "seretFile": "Drag and drop your PDF here, or click to browse",
+    "maksimalFile": "Maximum 5 MB (PDF)",
+    "pilihFile": "Select File",
+    "unggah": "Upload",
+    "daftarDokumen": "Document List",
+    "tabelDeskripsi": "Table of {modul} Files",
+    "cari": "Search document...",
+    "tabel": {
+      "no": "No",
+      "namaDokumen": "Document Name",
+      "tanggalUpload": "Upload Date",
+      "aksi": "Action",
+      "download": "Download",
+      "hapus": "Delete",
+      "kosong": "No documents uploaded yet."
+    },
+    "hapusKonfirmasi": {
+      "judul": "Delete Document",
+      "deskripsi": "Are you sure you want to delete this document?",
+      "tombol": "Delete"
+    },
+    "validasi": {
+      "fileRequired": "Please select a file first",
+      "fileSize": "File size exceeds 5MB",
+      "fileType": "Only PDF files are allowed"
+    },
+    "toast": {
+      "unggahBerhasil": "Document successfully uploaded",
+      "hapusBerhasil": "Document successfully deleted"
+    }
+  },
+  "amiMenus": {
+    "sop": "Standard Operating Procedures",
+    "monev": "Monitoring and Evaluation",
+    "tindakLanjut": "Follow-up"
+  },
+  "profil": {
+    "header": {
+      "title": "Role Profile Details",
+      "description": "This page displays user identity information, active roles, and account status used in the Integrated Monitoring and Evaluation Information System (SI-IMOET). The provided information helps users ensure their account and permissions match their role in the system."
+    },
+    "card": {
+      "title": "Profile",
+      "email": "EMAIL",
+      "peranUtama": "MAIN ROLE",
+      "peranSaatIni": "CURRENT ROLE",
+      "bergabungSejak": "joined since",
+      "statusAktif": "ACTIVE STATUS"
+    },
+    "edit": {
+      "title": "Edit Profile",
+      "description": "Update your profile information",
+      "fotoClick": "Click photo to change portfolio/photo.",
+      "fotoMaxSize": "(Maximum size 2MB)",
+      "namaLengkap": "Full Name",
+      "email": "Email",
+      "instagram": "Instagram Username",
+      "linkedin": "LinkedIn URL",
+      "simpan": "Save Changes",
+      "berhasil": "Profile successfully updated",
+      "gagal": "An error occurred while updating the profile"
+    }
+  }
+}

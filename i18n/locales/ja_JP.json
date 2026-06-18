@@ -1,0 +1,830 @@
+{
+  "toast": {
+    "common": {
+      "unexpectedError": "リクエストの処理中に問題が発生しました。しばらくしてからもう一度お試しください。"
+    },
+    "auth": {
+      "loginSuccess": "お帰りなさい。ログインに成功しました。",
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。内容をご確認のうえ、再度お試しください。"
+    }
+  },
+  "basic": {
+    "namaAplikasi": "統合モニタリング・評価情報システム",
+    "namaKampus": "ムハマディヤ・チルボン大学"
+  },
+  "website": {
+    "umc": "チルボン・ムハマディヤ大学",
+    "siimoet": "SI-IMOET UMC",
+    "pmb": "UMC入学案内"
+  },
+  "sedangTahapPengembangan": {
+    "judul": "ページは開発中です",
+    "deskripsi": "申し訳ありませんが、このページは現在開発中です。より良い体験を提供するために一生懸命取り組んでいます。後ほど再度ご確認いただくか、当サイトの他のセクションを探索してください。"
+  },
+  "util": {
+    "menu": "メニュー",
+    "paginasi": {
+      "sebelumnya": "前へ",
+      "berikutnya": "次へ"
+    },
+    "boolean": {
+      "true": "はい",
+      "false": "いいえ"
+    },
+    "buat": "作成",
+    "edit": "編集",
+    "hapus": "削除",
+    "lihat": "表示",
+    "kembali": "戻る",
+    "simpan": "保存",
+    "batal": "キャンセル",
+    "berhasil": "成功",
+    "tidakAdaData": "データがありません",
+    "terbaru": "最新",
+    "terlama": "最古"
+  },
+  "footer": {
+    "copyright": "© 2026 無断転載を禁じます。"
+  },
+  "navigasi": {
+    "beranda": "ホーム",
+    "profil": "プロフィール",
+    "akreditasi": "認定",
+    "informasi": "情報",
+    "masuk": "ログイン",
+    "keluar": "ログアウト",
+    "dasbor": "ダッシュボード",
+    "pilih": "選択"
+  },
+  "beranda": {
+    "heroSection": {
+      "selamatDatang": "ようこそ",
+      "deskripsi": "品質保証と内部監査は、大学のビジョンとミッションを実現し、品格と優れた品質を備えた高等教育機関を目指すうえで重要な柱です",
+      "infoMonev": "モニタリング・評価情報",
+      "tentang": "私たちについて"
+    },
+    "kalenderAkademik": {
+      "judul": "学事暦",
+      "deskripsi": "学事暦は、重要な学術日程や締切に関する信頼できる情報を一元的に提供し、教職員や学生が学期を通じて活動を効果的に計画できるようにする統合情報源として機能します。",
+      "belumTersedia": "学事暦はまだ利用できません。",
+      "kalenderUniversitas": "ムハマディヤ・チルボン大学学事暦",
+      "bukaDiTabBaru": "新しいタブでカレンダーを開く"
+    }
+  },
+  "login": {
+    "welcome": "ようこそ",
+    "silahkanMasuk": "続行するにはログインしてください",
+    "masukGoogle": "Googleでログイン",
+    "mengalihkan": "リダイレクト中...",
+    "kembali": "戻る",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "rememberMe": "ログイン状態を保持する",
+    "masuk": "ログイン",
+    "atau": "または",
+    "emailRequired": "メールアドレスは必須です",
+    "invalidEmail": "無効なメールアドレス形式です",
+    "passwordRequired": "パスワードは必須です",
+    "passwordMin": "パスワードは8文字以上である必要があります",
+    "passwordMax": "パスワードは最大255文字までです",
+    "userNotFound": "メールアドレスが見つかりません",
+    "invalidPassword": "パスワードが間違っています",
+    "accountDisabled": "アカウントが無効化されています",
+    "unauthorized": "アクセス権限がありません",
+    "unknownError": "エラーが発生しました。もう一度お試しください"
+  },
+  "dasborModul": {
+    "selamatDatang": {
+      "judul": "ダッシュボードへようこそ",
+      "deskripsi": "ダッシュボードへのアクセスに成功しました。ここから各モジュールにアクセスし、データを監視し、システム内での役割に応じて業務を管理できます。"
+    },
+    "monev": {
+      "judul": "モニタリングおよび評価",
+      "deskripsi": "Monevモジュールは、学術および組織活動の実施状況を統合的に監視・評価するための手段を提供し、ユーザーが成果を分析し、改善の機会を特定し、データに基づいた意思決定を支援できるようにします。"
+    },
+    "ami": {
+      "judul": "内部品質監査",
+      "deskripsi": "AMI（内部品質監査）モジュールは、品質基準への適合性を評価し、改善領域を特定し、継続的な品質向上の文化を強化するために、体系的かつ文書化された内部監査の実施を支援します。"
+    },
+    "manajemenModul": {
+      "judul": "モジュール管理",
+      "deskripsi": "モジュール管理モジュールは、システムモジュールの追加・更新・設定を含む構造的な管理を可能にし、システム全体の統合と運用を最適化します。"
+    },
+    "manajemenPeriode": {
+      "judul": "期間管理",
+      "deskripsi": "期間管理モジュールは、学術期間の計画的な管理を支援し、スケジュールの設定や期間の調整を通じて、学術活動が秩序正しく調整された形で実施されるようにします。"
+    },
+    "manajemenPengguna": {
+      "judul": "ユーザー管理",
+      "deskripsi": "ユーザー管理モジュールは、ユーザーアカウント、役割、およびアクセス権を一元的に管理する手段を提供し、管理者がシステムの安全性、秩序、および効率性を維持できるようにします。"
+    }
+  },
+  "manajemenUser": {
+    "judul": "ユーザー管理",
+    "deskripsi": "ユーザー管理モジュールは、ユーザーアカウント、役割（ロール）、およびアクセス権限を一元的に管理する手段を提供し、管理者がシステムのセキュリティ、秩序、および管理効率を維持するのを支援します。",
+    "daftarUser": "ユーザー一覧",
+    "card": {
+      "totalUser": "総ユーザー数",
+      "totalUserAktif": "アクティブユーザー数",
+      "totalRole": "総役割数",
+      "totalRoleTerbanyak": "最多の役割"
+    },
+    "placeholder": {
+      "cari": "名前、メールアドレス、または役割でユーザーを検索...",
+      "nama": "ユーザー名を入力",
+      "email": "ユーザーメールを入力",
+      "role": "ユーザーの役割を選択",
+      "nidn": "ユーザーのNIDNを入力",
+      "nim": "ユーザーのNIMを入力"
+    },
+    "filter": {
+      "semuaRole": "すべての役割"
+    },
+    "nonaktif": {
+      "judul": "ユーザーの非アクティブ化",
+      "deskripsi": "ユーザーを非アクティブ化すると、そのユーザーのシステムへのアクセスが制限され、アクションを実行できなくなります。この操作は、ユーザーが組織を離れた場合や、もはやアクセスが必要でない場合に通常行われます。",
+      "tombol": "ユーザーを非アクティブ化"
+    },
+    "create": {
+      "judul": "新規ユーザー作成",
+      "deskripsi": "名前、メールアドレス、役割など、必要な情報を入力して新規ユーザーを作成するフォームです。",
+      "judulForm": "新規ユーザー作成フォーム",
+      "tombol": "ユーザーを作成",
+      "validasi": {
+        "berhasil": "ユーザーが正常に作成されました",
+        "nidn": {
+          "required": "NIDNは必須項目です",
+          "max": "NIDNは最大20文字までです"
+        },
+        "nim": {
+          "required": "NIMは必須項目です",
+          "max": "NIMは最大20文字までです"
+        },
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大30文字までです"
+        },
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "roleIds": {
+          "min": "少なくとも1つの役割を選択してください",
+          "max": "役割は最大10個までです",
+          "invalid": "無効な役割IDです"
+        }
+      }
+    },
+    "update": {
+      "judul": "ユーザー編集",
+      "deskripsi": "名前、メールアドレス、役割など、既存のユーザー情報を編集するフォームです。",
+      "judulForm": "ユーザー編集フォーム",
+      "tombol": "ユーザーを更新",
+      "validasi": {
+        "berhasil": "ユーザー情報が正常に更新されました",
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "roleIds": {
+          "min": "少なくとも1つの役割を選択してください",
+          "max": "役割は最大10個までです",
+          "invalid": "無効な役割IDです"
+        }
+      }
+    },
+    "updateProfile": {
+      "judul": "プロフィール編集",
+      "deskripsi": "名前、メールアドレス、その他の連絡先情報など、ユーザーのプロフィールを編集するフォームです。",
+      "judulForm": "プロフィール編集フォーム",
+      "tombol": "プロフィールを更新",
+      "validasi": {
+        "berhasil": "プロフィールが正常に更新されました",
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大255文字までです"
+        },
+        "email": {
+          "required": "メールアドレスは必須項目です",
+          "max": "メールアドレスは最大255文字までです",
+          "invalid": "無効なメールアドレス形式です"
+        },
+        "instagram": {
+          "required": "Instagramは必須項目です",
+          "max": "Instagramは最大255文字までです"
+        },
+        "linkedin": {
+          "required": "LinkedInは必須項目です",
+          "max": "LinkedInは最大255文字までです"
+        }
+      }
+    },
+    "updateProfileImage": {
+      "judul": "プロフィール写真変更",
+      "deskripsi": "ユーザーのプロフィール写真を変更するフォームです。",
+      "judulForm": "プロフィール写真変更フォーム",
+      "tombol": "プロフィール写真を更新",
+      "validasi": {
+        "berhasil": "プロフィール写真が正常に更新されました",
+        "picture": {
+          "required": "画像ファイルをアップロードしてください",
+          "maxSize": "画像の最大サイズは5MBです",
+          "invalidType": "ファイルは画像形式である必要があります"
+        }
+      }
+    },
+    "updatePassword": {
+      "judul": "パスワード変更",
+      "deskripsi": "ユーザーのパスワードを変更するフォームです。",
+      "judulForm": "パスワード変更フォーム",
+      "tombol": "パスワードを更新",
+      "validasi": {
+        "berhasil": "パスワードが正常に更新されました",
+        "password": {
+          "required": "パスワードは必須項目です",
+          "min": "パスワードは8文字以上である必要があります",
+          "max": "パスワードは最大128文字までです"
+        }
+      }
+    },
+    "model": {
+      "role": "役割",
+      "no": "番号",
+      "nama": "名前",
+      "email": "メールアドレス",
+      "status": "ステータス",
+      "tanggalBergabung": "参加日"
+    }
+  },
+  "manajemenRole": {
+    "judul": "ロール管理",
+    "deskripsi": "ロール管理モジュールでは、ロールの作成、更新、およびアクセス権限の設定を行い、組織のニーズに適した効果的なロール構造を維持できます。",
+    "list": "ロール一覧",
+    "card": {
+      "totalUser": "総ユーザー数",
+      "totalUserAktif": "アクティブユーザー数",
+      "totalRole": "総ロール数",
+      "totalRoleTerbanyak": "最も利用されているロール"
+    },
+    "placeholder": {
+      "cari": "名前または説明でロールを検索...",
+      "nama": "ロール名を入力",
+      "deskripsi": "ロールの説明を入力"
+    },
+    "create": {
+      "judul": "新しいロールを作成",
+      "deskripsi": "ロール名や説明など、必要な情報を入力して新しいロールを作成します。",
+      "judulForm": "新規ロール作成フォーム",
+      "tombol": "ロールを作成",
+      "validasi": {
+        "berhasil": "ロールが正常に作成されました",
+        "nama": {
+          "required": "名前は必須です",
+          "max": "名前は30文字以内で入力してください"
+        },
+        "deskripsi": {
+          "required": "説明は必須です",
+          "max": "説明は255文字以内で入力してください"
+        }
+      }
+    },
+    "update": {
+      "judul": "ロール編集",
+      "deskripsi": "既存のロール情報（名前や説明など）を編集するためのフォームです。",
+      "judulForm": "ロール編集フォーム",
+      "tombol": "ロールを更新",
+      "validasi": {
+        "berhasil": "ロールが正常に更新されました",
+        "nama": {
+          "required": "名前は必須です",
+          "max": "名前は30文字以内で入力してください"
+        },
+        "deskripsi": {
+          "required": "説明は必須です",
+          "max": "説明は255文字以内で入力してください"
+        }
+      }
+    },
+    "nonaktif": {
+      "judul": "ロールを無効化",
+      "deskripsi": "このロールを無効化してもよろしいですか？無効化されたロールはユーザーへの権限付与に使用できなくなりますが、ロール情報は将来の参照のため保持されます。",
+      "tombol": "ロールを無効化"
+    },
+    "model": {
+      "no": "番号",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "jumlahUser": "ユーザー数",
+      "tanggalDibuat": "作成日"
+    }
+  },
+  "manajemenPeriode": {
+    "judul": "期間管理",
+    "breadcrumb": {
+      "home": "ホーム"
+    },
+    "create": {
+      "judul": "新規期間作成",
+      "tombol": "作成",
+      "form": {
+        "periode": "期間",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "semester": "学期"
+      },
+      "placeholder": {
+        "periode": "例: 2023/2024"
+      }
+    },
+    "update": {
+      "judul": "現在の期間",
+      "tombolUpdate": "更新",
+      "tombolNonaktif": "無効化",
+      "form": {
+        "periode": "期間",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "semester": "学期"
+      },
+      "placeholder": {
+        "periode": "例: 2023/2024"
+      }
+    },
+    "upload": {
+      "judul": "カレンダーPDFのアップロード",
+      "hintDragDrop": "ここにPDFをドラッグ＆ドロップするか、クリックして選択してください",
+      "hintMaksimal": "最大5MBまでのPDFファイルをサポートしています",
+      "tombolBrowse": "ファイルを参照"
+    },
+    "list": {
+      "judul": "期間一覧",
+      "searchPlaceholder": "年度を検索...",
+      "sorting": {
+        "terbaru": "最新",
+        "terlama": "最古"
+      },
+      "tabel": {
+        "no": "番号",
+        "tahun": "年度",
+        "semester": "学期",
+        "tanggalMulai": "開始日",
+        "tanggalSelesai": "終了日",
+        "status": "ステータス",
+        "statusAktif": "アクティブ",
+        "statusSelesai": "完了",
+        "kalender": "カレンダー",
+        "tombolDownload": "ダウンロード",
+        "kosong": "期間データがありません。"
+      },
+      "pagination": {
+        "info": "{totalItems} 件中 {shownFrom} から {shownTo} まで表示",
+        "tombolSebelumnya": "前へ",
+        "tombolSelanjutnya": "次へ"
+      }
+    }
+  },
+  "manajemenModul": {
+    "judul": "モジュール管理",
+    "deskripsi": "モジュールとは、一定期間内における評価の観点、評価対象、ならびに評価の範囲および指標を規定するモニタリング・評価（M&E）の枠組みです。評価プロセスが構造化され、測定可能かつ一貫性のある形で進行するよう、M&E実施の基盤となります。",
+    "list": "モジュール一覧",
+    "card": {
+      "totalModul": "総モジュール数",
+      "totalModulAktif": "有効な総モジュール数",
+      "ModulTerbanyakDibuka": "最も多く開かれたモジュール",
+      "ModulTerakhirDibuka": "最後に開いたモジュール"
+    },
+    "placeholder": {
+      "cari": "名前または説明でモジュールを検索...",
+      "nama": "モジュール名を入力してください",
+      "deskripsi": "モジュールの説明を入力してください"
+    },
+    "create": {
+      "judul": "新規モジュール作成",
+      "deskripsi": "名前、評価範囲、説明などの必要な情報を入力して、新しいモジュールを作成するためのフォームです。",
+      "judulForm": "新規モジュール作成フォーム",
+      "tombol": "モジュールを作成",
+      "pilihLingkup": "評価範囲を選択",
+      "validasi": {
+        "berhasil": "モジュールが正常に作成されました",
+        "nama": {
+          "required": "名前は必須項目です",
+          "max": "名前は最大30文字までです"
+        },
+        "deskripsi": {
+          "required": "説明は必須項目です",
+          "max": "説明は最大255文字までです"
+        },
+        "lingkupId": {
+          "required": "評価範囲を選択してください",
+          "invalid": "無効な評価範囲IDです"
+        }
+      }
+    },
+    "update": {
+      "judul": "モジュール編集",
+      "deskripsi": "既存のモジュール情報を編集するためのフォームです。",
+      "judulForm": "モジュール編集フォーム",
+      "tombol": "モジュールを更新",
+      "validasi": {
+        "berhasil": "モジュールが正常に更新されました",
+        "deskripsi": {
+          "required": "説明は必須項目です",
+          "max": "説明は最大255文字までです"
+        }
+      }
+    },
+    "model": {
+      "no": "No.",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "lingkup": "評価範囲",
+      "totalAspek": "総観点数",
+      "status": "ステータス",
+      "tanggalDibuat": "作成日時"
+    },
+    "detail": {
+      "judul": "評価モジュールの詳細",
+      "deskripsiDetail": "このページを使用して、評価モジュールの詳細とその評価指標を表示します。表示される情報には、名前、説明、評価対象が含まれます。",
+      "informasiModul": "モジュール情報",
+      "nama": "名前",
+      "deskripsi": "説明",
+      "tipeModul": "モジュールタイプ",
+      "editModul": "モジュールを編集",
+      "no": "番号",
+      "cariAspek": "側面を検索...",
+      "urutkan": {
+        "az": "A - Z",
+        "za": "Z - A"
+      },
+      "belumAdaData": "側面のデータはまだありません。"
+    }
+  },
+  "manajemenLingkup": {
+    "judul": "評価範囲",
+    "deskripsi": "この機能を使用して、オブジェクトマッピング、データ取得、およびレポート作成時にモジュールで使用される評価オブジェクト（例：学習プログラム/学部/ユニット）の範囲を定義します。統合ステータスはデータソースとオブジェクトの可用性に影響します。",
+    "buatLingkup": "範囲を作成",
+    "card": {
+      "totalLingkup": "総評価範囲",
+      "lingkupAktif": "アクティブな評価範囲",
+      "lingkupTerbanyak": "最も使用された範囲",
+      "lingkupTerakhir": "最後に作成された範囲"
+    },
+    "daftarLingkup": "評価範囲リスト",
+    "placeholder": {
+      "cari": "検索..."
+    },
+    "urutkan": {
+      "az": "A - Z",
+      "za": "Z - A"
+    },
+    "filter": {
+      "semua": "すべて",
+      "aktif": "アクティブ",
+      "tidakAktif": "非アクティブ"
+    },
+    "tabel": {
+      "no": "番号",
+      "nama": "名前",
+      "status": "ステータス",
+      "lingkupEvaluasi": "評価範囲",
+      "dibuatPada": "作成日",
+      "deskripsi": "説明",
+      "penanggungJawab": "責任者",
+      "evaluator": "評価者",
+      "integrasiSistem": "システム統合"
+    },
+    "create": {
+      "breadcrumb": "範囲を作成",
+      "judul": "新しい評価範囲を作成",
+      "deskripsi": "この機能を使用して、評価対象の境界として新しい評価範囲を作成します。この範囲は、監視プロセスを一貫して構成および追跡するために使用されます。",
+      "formJudul": "評価範囲フォーム",
+      "nama": "名前",
+      "namaPlaceholder": "ここに名前を入力してください",
+      "namaHint": "最大100文字。一貫した形式を使用してください。",
+      "deskripsiLabel": "説明",
+      "deskripsiPlaceholder": "ここに説明を入力してください",
+      "deskripsiHint": "最大100文字。一貫した形式を使用してください。",
+      "rolePj": "責任者の役割を選択",
+      "roleEvaluator": "評価者の役割を選択",
+      "pilih": "選択",
+      "batal": "キャンセル",
+      "simpan": "保存"
+    },
+    "detail": {
+      "judul": "評価範囲を表示",
+      "deskripsi": "このページを使用して、接続されたユニットおよびオブジェクトとともに評価範囲の詳細を表示します。範囲情報、ユニットリスト、および評価オブジェクトリストを展開して、データ管理を容易にすることができます。",
+      "informasi": "評価範囲情報",
+      "namaLingkup": "範囲名",
+      "deskripsiLabel": "説明",
+      "penanggungJawab": "責任者",
+      "evaluator": "評価者",
+      "totalUnit": "合計ユニット",
+      "integrasiSistem": "システム統合",
+      "tanggalDiperbarui": "最終更新日",
+      "edit": "編集",
+      "hapus": "削除",
+      "tambahUnit": "ユニットを追加",
+      "tambahLingkup": "範囲を追加",
+      "tambahObjek": "評価対象を追加",
+      "daftarUnit": "ユニットリスト",
+      "daftarObjek": "評価オブジェクトリスト",
+      "belumAdaData": "利用可能なデータがありません。"
+    }
+  },
+  "manajemenAspek": {
+    "judul": "側面の詳細",
+    "deskripsiDetail": "このページを使用して評価の側面の詳細を表示します。",
+    "informasiAspek": "側面情報",
+    "namaAspek": "側面名",
+    "deskripsi": "説明",
+    "editAspek": "側面を編集",
+    "hapus": "削除",
+    "buatAspek": "側面を作成",
+    "formAspek": "側面フォーム",
+    "deskripsiBuat": "新しい側面を作成するためのフォーム。",
+    "editAspekJudul": "側面を編集",
+    "deskripsiEdit": "このページを使用して評価の側面を更新します。",
+    "batal": "キャンセル",
+    "simpan": "保存",
+    "daftarAspek": "側面リスト"
+  },
+  "monev": {
+    "judul": "モニタリング・評価",
+    "lihatEvaluasiTerbaru": "最新の評価を見る",
+    "placeholder": {
+      "cari": "名前または説明で評価を検索..."
+    },
+    "kosong": {
+      "judul": "モジュールが見つかりません",
+      "deskripsi": "現在、利用可能なモニタリングおよび評価モジュールがないか、検索条件に一致するモジュールがありません。"
+    }
+  },
+  "ami": {
+    "judul": "内部品質監査",
+    "lihatAuditTerbaru": "最新の監査を見る",
+    "placeholder": {
+      "cari": "名前または説明で監査を検索..."
+    },
+    "kosong": {
+      "judul": "モジュールが見つかりません",
+      "deskripsi": "現在、利用可能な内部品質監査モジュールがないか、検索条件に一致するモジュールがありません。"
+    }
+  },
+  "fm": {
+    "monitoring": {
+      "judul": "モニタリング"
+    },
+    "hasilEvaluasi": {
+      "judul": "評価結果"
+    },
+    "temuan": {
+      "judul": "所見"
+    },
+    "rtl": {
+      "judul": "是正措置計画"
+    },
+    "beritaAcara": {
+      "judul": "議事録"
+    },
+    "survei": {
+      "judul": "アンケート"
+    },
+    "laporan": {
+      "judul": "レポート"
+    }
+  },
+  "periodeModul": {
+    "waktuDimulai": "開始日時",
+    "waktuBerakhir": "終了日時",
+    "status": "ステータス",
+    "semuaStatus": "すべてのステータス",
+    "sudahDievaluasi": "評価済み",
+    "belumDievaluasi": "未評価",
+    "pilihAspek": "評価観点を選択",
+    "evaluasi": "評価",
+    "lihatHasilEvaluasi": "評価結果を見る",
+    "detailAspek": "評価観点の詳細",
+    "objekEvaluasi": "評価対象",
+    "indikatoEvaluasi": "評価指標",
+    "pastikanIndikatorDinilai": "終了日時前にすべての評価指標が評価されていることを確認してください。",
+    "lingkupEvaluasi": "評価範囲",
+    "unitLingkupEvaluasi": "評価範囲の単位",
+    "pihakTerkait": "関連当事者",
+    "daftarObjekEvaluasi": "評価対象の一覧",
+    "unitObjekEvaluasi": {
+      "tambah": "評価対象の単位を追加",
+      "deskripsi": "評価対象の単位は、評価対象を構成する要素や部分を定義するためのものです。例えば、学生の評価対象が「授業参加」であれば、その単位は「出席率」や「発言回数」などになります。これにより、評価がより具体的で測定可能なものになります。"
+    },
+    "belumAdaRiwayatPelaksanaan": {
+      "judul": "評価履歴がありません",
+      "deskripsi": "このモジュールの実施データはまだ利用できません。後ほど再度ご確認ください。または、詳細について管理者にお問い合わせください。"
+    },
+    "belumAdaAspek": {
+      "judul": "評価観点がありません",
+      "deskripsi": "このモジュールにはまだ評価観点が設定されていません。管理者が評価観点を追加するまで、評価プロセスを開始できません。詳細については管理者にお問い合わせください。"
+    },
+    "berkasBuktiBelumTersedia": {
+      "judul": "証拠書類が利用できません",
+      "deskripsi": "この評価の証拠書類はまだ利用できません。管理者が書類をアップロードするまで、評価の詳細を確認できません。詳細については管理者にお問い合わせください。"
+    },
+    "roles": {
+      "auditee": "被監査者",
+      "evaluator": "評価者",
+      "reviewer": "レビュアー"
+    },
+    "statusPelaksanaan": {
+      "BELUM_DIMULAI": "未開始",
+      "SEDANG_BERLANGSUNG": "進行中",
+      "SELESAI": "完了",
+      "DIBATALKAN": "キャンセル済み"
+    }
+  },
+  "fmMonitoring": {
+    "placeholder": {
+      "berikanJustifikasi": "評価の理由を入力してください...",
+      "cariObjekEvaluasi": "名前や説明で評価対象を検索..."
+    },
+    "evaluasi": {
+      "tipeBiner": "バイナリ評価 (はい/いいえ)",
+      "tipeSkala": "スケール評価",
+      "tipeCek": "チェックリスト評価",
+      "catatanLabel": "メモ",
+      "menyimpan": "保存中...",
+      "simpan": "保存",
+      "toast": {
+        "berhasilMenyimpan": "指標の回答が正常に保存されました。",
+        "gagalMenyimpan": "回答の保存に失敗しました。もう一度お試しください。",
+        "validasiGagal": "フォームの入力内容をもう一度ご確認ください。",
+        "gagalJudul": "失敗"
+      },
+      "validasi": {
+        "binerRequired": "評価オプション (はい/いいえ) のいずれかを選択してください",
+        "skalaRequired": "評価スケールを選択してください",
+        "cekRequired": "チェックリストのオプションを少なくとも1つ選択してください"
+      }
+    },
+    "objekEvaluasi": {
+      "judul": "評価対象",
+      "deskripsi": "評価対象は、モニタリング・評価プロセスの中心的な要素であり、評価される特定の項目や活動を指します。これには、プロジェクト、プログラム、プロセス、または特定の成果物が含まれることがあります。評価対象は、評価の焦点を定め、評価基準や指標に基づいてそのパフォーマンスや成果を測定するための基盤となります。",
+      "model": {
+        "nama": "名前",
+        "deskripsi": "説明"
+      }
+    },
+    "buktiInstrumen": {
+      "judulInput": "証拠書類の入力",
+      "deskripsiInput": "証拠書類は、評価の根拠となる資料やデータを指します。これには、レポート、写真、ビデオ、アンケート結果、インタビュー記録などが含まれることがあります。証拠書類は、評価の信頼性と透明性を高めるために重要であり、評価者が評価対象のパフォーマンスや成果を客観的に判断するための基盤となります。",
+      "mulaiInput": "証拠書類の入力を開始",
+      "validasi": {
+        "link": {
+          "required": "ドキュメントリンクは必須です",
+          "invalid": "無効なドキュメントリンク形式です",
+          "max": "ドキュメントリンクは最大255文字です"
+        },
+        "catatan": {
+          "min": "メモは必須です",
+          "max": "メモは最大2000文字です"
+        }
+      },
+      "dokumenBukti": "証拠書類",
+      "buktiPendukung": "裏付けとなる証拠",
+      "cantumkanLink": "サポートドキュメントへのリンクを含め、簡単な詳細を提供してください",
+      "linkGoogleDrive": "Google Drive ドキュメントリンク",
+      "lihatFormatBukti": "証拠の形式はこちらをご覧ください",
+      "catatanPanduan": "ガイドノート:",
+      "catatanTambahan": "追加の注意事項",
+      "berikanDeskripsi": "簡単な説明または追加の詳細を提供してください",
+      "maksimal2000Karakter": "最大2000文字",
+      "simpanBukti": "証拠を保存",
+      "menyimpan": "保存中...",
+      "dokumenLainnya": "その他のドキュメント",
+      "formPengisian": "入力フォーム",
+      "dari": "の",
+      "data": "データ",
+      "berhasilMenyimpan": "証拠書類が正常に保存されました。",
+      "gagalMenyimpan": "証拠書類の保存に失敗しました。もう一度お試しください。"
+    }
+  },
+  "validation": {
+    "login": {
+      "email": {
+        "required": "メールアドレスは必須です",
+        "invalid": "無効なメールアドレス形式です",
+        "min": "メールアドレスは5文字以上である必要があります",
+        "max": "メールアドレスは最大255文字までです"
+      },
+      "password": {
+        "required": "パスワードは必須です",
+        "min": "パスワードは8文字以上である必要があります",
+        "max": "パスワードは最大255文字までです"
+      }
+    }
+  },
+  "fm2": {
+    "title": "監視フォーム 02",
+    "description": "大学での準備状況評価指標の達成状況を監視するダッシュボード。各ユニットの進捗状況と達成状況の最新の概要を提供するために、データは定期的に更新されます。",
+    "startTime": "開始時間",
+    "endTime": "終了時間",
+    "status": "ステータス",
+    "active": "アクティブ",
+    "inactive": "非アクティブ",
+    "aspectVeryGood": "非常に良い側面",
+    "aspectGood": "良い側面",
+    "aspectFair": "まあまあの側面",
+    "aspectPoor": "悪い側面",
+    "chartTitle": "達成チャート",
+    "totalReadinessScore": "総準備スコア",
+    "readinessPercentage": "準備完了率",
+    "category": "カテゴリー",
+    "reviewerProfile": "レビュアープロフィール",
+    "assessmentIndicators": "評価指標",
+    "aspectEvaluationResult": "側面評価結果",
+    "table": {
+      "no": "番号",
+      "aspect": "側面",
+      "achievement": "達成",
+      "action": "アクション",
+      "calculateScore": "スコアを計算する",
+      "calculateAllScore": "監視スコアを計算する",
+      "empty": "選択したフィルターに一致する側面データが見つかりません。"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "toast": {
+      "calculateSuccess": "スコアが正常に計算されました",
+      "calculateError": "スコアの計算に失敗しました",
+      "calculateAllSuccess": "監視スコアが正常に計算されました",
+      "calculateAllError": "監視スコアの計算に失敗しました"
+    }
+  },
+  "amiDokumen": {
+    "unggahDokumen": "ドキュメントをアップロード",
+    "uploadDeskripsi": "{modul}ドキュメントをアップロード",
+    "seretFile": "ここにPDFをドラッグ＆ドロップするか、クリックして参照してください",
+    "maksimalFile": "最大5 MB（PDF）",
+    "pilihFile": "ファイルを選択",
+    "unggah": "アップロード",
+    "daftarDokumen": "ドキュメントリスト",
+    "tabelDeskripsi": "{modul}ファイルテーブル",
+    "cari": "ドキュメントを検索...",
+    "tabel": {
+      "no": "番号",
+      "namaDokumen": "ドキュメント名",
+      "tanggalUpload": "アップロード日",
+      "aksi": "アクション",
+      "download": "ダウンロード",
+      "hapus": "削除",
+      "kosong": "まだドキュメントがアップロードされていません。"
+    },
+    "hapusKonfirmasi": {
+      "judul": "ドキュメントの削除",
+      "deskripsi": "このドキュメントを削除してもよろしいですか？",
+      "tombol": "削除"
+    },
+    "validasi": {
+      "fileRequired": "最初にファイルを選択してください",
+      "fileSize": "ファイルサイズが5MBを超えています",
+      "fileType": "PDFファイルのみ許可されています"
+    },
+    "toast": {
+      "unggahBerhasil": "ドキュメントが正常にアップロードされました",
+      "hapusBerhasil": "ドキュメントが正常に削除されました"
+    }
+  },
+  "amiMenus": {
+    "sop": "標準作業手順書",
+    "monev": "モニタリングと評価",
+    "tindakLanjut": "フォローアップ"
+  },
+  "profil": {
+    "header": {
+      "title": "役割プロフィールの詳細",
+      "description": "このページには、統合モニタリングおよび評価情報システム (SI-IMOET) で使用されるユーザーID情報、アクティブな役割、およびアカウントステータスが表示されます。提供された情報は、ユーザーがシステム内の役割と権限が一致していることを確認するのに役立ちます。"
+    },
+    "card": {
+      "title": "プロフィール",
+      "email": "メールアドレス",
+      "peranUtama": "主な役割",
+      "peranSaatIni": "現在の役割",
+      "bergabungSejak": "参加日",
+      "statusAktif": "アクティブステータス"
+    },
+    "edit": {
+      "title": "プロフィールを編集",
+      "description": "プロフィール情報を更新します",
+      "fotoClick": "写真をクリックしてポートフォリオ/写真を変更します。",
+      "fotoMaxSize": "（最大サイズ 2MB）",
+      "namaLengkap": "氏名",
+      "email": "メールアドレス",
+      "instagram": "Instagramユーザー名",
+      "linkedin": "LinkedIn URL",
+      "simpan": "変更を保存",
+      "berhasil": "プロフィールが正常に更新されました",
+      "gagal": "プロフィールの更新中にエラーが発生しました"
+    }
+  }
+}

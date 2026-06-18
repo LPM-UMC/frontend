@@ -1,0 +1,97 @@
+// nuxt.config.ts
+import { fileURLToPath } from 'node:url'
+
+export default defineNuxtConfig({
+  ssr: false,
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+
+  app: {
+    // Ganti 'nama-repo' dengan nama repositori Anda di GitHub
+    // baseURL: '/frontend/' 
+  },
+  nitro: {
+    // preset: 'github-pages'
+  },
+
+  fonts: {
+    families: [
+      {
+        name: 'Noto Naskh Arabic',
+        provider: 'google',
+      },
+      {
+        name: 'Cairo',
+        provider: 'google',
+      },
+    ],
+  },
+
+  alias: {
+    // alias final yang ingin dipakai
+    '#features': fileURLToPath(new URL('./features', import.meta.url)),
+    '#i18n': fileURLToPath(new URL('./i18n', import.meta.url)),
+    '#config': fileURLToPath(new URL('./config', import.meta.url)),
+    '#stores': fileURLToPath(new URL('./app/stores', import.meta.url)),
+    '#types': fileURLToPath(new URL('./types', import.meta.url)),
+    '#composables': fileURLToPath(new URL('./composables', import.meta.url)),
+    '#utils': fileURLToPath(new URL('./utils', import.meta.url)),
+    '#validations': fileURLToPath(new URL('./validations', import.meta.url)),
+  },
+
+  css: [
+    '~/assets/css/main.css',
+    '@vuepic/vue-datepicker/dist/main.css',
+  ],
+
+  image: {
+    domains: ['lh3.googleusercontent.com'],
+  },
+
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/hints',
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/i18n',
+  ],
+
+  i18n: {
+    defaultLocale: 'id',
+    strategy: 'prefix_and_default',
+    locales: [
+      { code: 'id', name: 'Bahasa Indonesia', file: 'id_ID.json' },
+      { code: 'en', name: 'English', file: 'en_US.json' },
+      { code: 'ar', name: 'العربية', file: 'ar_SA.json' },
+      { code: 'ja', name: '日本語', file: 'ja_JP.json' },
+    ],
+  },
+
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+    {
+      path: '#features/shared/dashboard/components',
+      pathPrefix: false,
+    },
+  ],
+
+  runtimeConfig: {
+    adminAiToken: process.env.ADMIN_AI_TOKEN || '',
+    ollamaBase: process.env.OLLAMA_BASE || 'http://127.0.0.1:11434',
+    ollamaModel: process.env.OLLAMA_MODEL || 'qwen2.5:3b-instruct',
+
+    public: {
+      academicCalendarFileId: process.env.NUXT_ACADEMIC_CALENDAR_FILE_ID || '',
+      apiBaseUrl: process.env.API_BASE || 'http://localhost:3001',
+    },
+  },
+
+  typescript: {
+    typeCheck: false,
+  },
+})
