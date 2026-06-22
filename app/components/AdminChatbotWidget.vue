@@ -3,7 +3,7 @@
     <Transition name="chat-panel">
       <section
         v-if="isOpen"
-        class="fixed inset-x-4 bottom-[92px] z-50 flex max-h-[calc(100vh-120px)] flex-col overflow-hidden rounded-[18px] border border-gray-200 bg-white text-gray-900 shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]"
+        class="fixed inset-x-4 bottom-[92px] z-50 flex h-[600px] max-h-[calc(100vh-120px)] flex-col overflow-hidden rounded-[18px] border border-gray-200 bg-white text-gray-900 shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]"
         aria-label="Popup chat AI"
       >
         <header class="flex items-start justify-between gap-3 border-b border-gray-100 px-4 py-3">
@@ -58,7 +58,7 @@
 
         <div
           ref="box"
-          class="min-h-[280px] flex-1 space-y-3 overflow-y-auto bg-gray-50 px-4 py-4 sm:min-h-[360px]"
+          class="flex-1 min-h-0 space-y-3 overflow-y-auto bg-gray-50 px-4 py-4"
         >
           <div
             v-for="(message, index) in messages"
