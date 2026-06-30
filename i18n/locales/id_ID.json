@@ -117,6 +117,10 @@
     "manajemenPengguna": {
       "judul": "Manajemen Pengguna",
       "deskripsi": "Modul Manajemen Pengguna menyediakan sarana untuk mengelola akun pengguna, peran, dan hak akses secara terpusat, membantu administrator menjaga keamanan, keteraturan, dan efisiensi pengelolaan sistem."
+    },
+    "survei": {
+      "judul": "Isi Survei",
+      "deskripsi": "Daftar survei yang tersedia untuk diisi."
     }
   },
   "manajemenUser": {
@@ -825,6 +829,112 @@
       "simpan": "Simpan Perubahan",
       "berhasil": "Profil berhasil diperbarui",
       "gagal": "Terjadi kesalahan saat memperbarui profil"
+    }
+  },
+  "fm5": {
+    "title": "Form 05 Berita Acara",
+    "description": "Berita Acara Monitoring dan Evaluasi Awal Pembelajaran digunakan sebagai bukti pelaksanaan monev dan pengesahan hasil evaluasi.",
+    "createButton": "Buat Berita Baru",
+    "listTitle": "Daftar Berita Acara",
+    "searchPlaceholder": "Cari berita acara...",
+    "table": {
+      "no": "No",
+      "studyProgram": "Program Studi",
+      "documentNumber": "Nomor Berita Acara",
+      "startDate": "Tanggal Mulai",
+      "status": "Status",
+      "action": "Aksi",
+      "viewDetail": "Lihat Detail",
+      "empty": "Data berita acara tidak ditemukan."
+    },
+    "pagination": {
+      "showing": "Menampilkan",
+      "from": "dari",
+      "data": "data",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "title": "Berita Acara Monitoring dan Evaluasi Awal Pembelajaran",
+      "description": "Dokumen ini merepresentasikan berita acara untuk pelaksanaan evaluasi di program studi {programStudi}.",
+      "sign": "Tanda Tangani",
+      "processing": "Memproses...",
+      "reject": "Sanggah",
+      "pullReject": "Tarik Sanggahan",
+      "rejectMessage": "Masukkan Pesan Sanggahan",
+      "rejectPlaceholder": "Tuliskan alasan penolakan dokumen ini...",
+      "sending": "Mengirim...",
+      "sendReject": "Kirim Sanggahan"
+    }
+  },
+  "fm6": {
+    "title": "Form 06 Survei",
+    "description": "Mengelola survei untuk responden mahasiswa, dosen, atau tenaga kependidikan.",
+    "createButton": "Buat Survei Baru",
+    "listTitle": "Daftar Survei",
+    "searchPlaceholder": "Cari survei...",
+    "table": {
+      "no": "No",
+      "surveyTitle": "Judul Survei",
+      "totalQuestions": "Total Pertanyaan",
+      "respondents": "Responden",
+      "target": "Target",
+      "status": "Status",
+      "action": "Aksi",
+      "viewDetail": "Lihat Detail",
+      "empty": "Data survei tidak ditemukan."
+    },
+    "detail": {
+      "title": "Detail Survei",
+      "status": "Status",
+      "period": "Periode Pengisian",
+      "description": "Deskripsi",
+      "questions": "Daftar Pertanyaan",
+      "noQuestions": "Belum ada pertanyaan.",
+      "respondents": "Daftar Responden",
+      "studentName": "Nama Mahasiswa",
+      "nim": "NIM",
+      "studyProgram": "Program Studi",
+      "time": "Waktu Pengisian",
+      "action": "Aksi",
+      "viewAnswer": "Lihat Jawaban",
+      "noRespondents": "Belum ada responden yang mengisi survei ini.",
+      "answerDetail": "Detail Jawaban Mahasiswa"
+    },
+    "create": {
+      "title": "Buat Survei Baru",
+      "basicInfo": "Informasi Dasar",
+      "surveyTitle": "Judul Survei",
+      "surveyTitlePlaceholder": "Contoh: Survei Kepuasan Mahasiswa",
+      "description": "Deskripsi",
+      "descriptionPlaceholder": "Masukkan deskripsi singkat tentang survei ini...",
+      "questions": "Pertanyaan Survei",
+      "addQuestion": "Tambah Pertanyaan",
+      "questionText": "Teks Pertanyaan",
+      "questionPlaceholder": "Masukkan pertanyaan di sini...",
+      "questionType": "Tipe Pertanyaan",
+      "typeEssay": "Esai",
+      "typeMultipleChoice": "Pilihan Ganda",
+      "typeRating": "Penilaian (Rating)",
+      "options": "Opsi Jawaban",
+      "addOption": "Tambah Opsi",
+      "deleteQuestion": "Hapus Pertanyaan",
+      "save": "Simpan Survei",
+      "success": "Survei berhasil dibuat!",
+      "error": "Gagal menyimpan survei."
+    },
+    "edit": {
+      "title": "Edit Survei",
+      "save": "Simpan Perubahan",
+      "success": "Survei berhasil diperbarui!",
+      "error": "Gagal memperbarui survei."
+    },
+    "answer": {
+      "title": "Jawab Survei",
+      "submit": "Kirim Jawaban",
+      "success": "Jawaban berhasil dikirim!",
+      "error": "Gagal mengirim jawaban.",
+      "alreadyAnswered": "Survei ini sudah Anda jawab sebelumnya."
     }
   }
 }

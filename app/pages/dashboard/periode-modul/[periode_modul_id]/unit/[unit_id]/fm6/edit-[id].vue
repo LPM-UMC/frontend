@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Fm6DetailPage from '#features/periode-modul/pages/fm6/Fm6DetailPage.vue'
+import Fm6EditPage from '#features/periode-modul/pages/fm6/Fm6EditPage.vue'
 
 definePageMeta({
   layout: 'periode-modul',
@@ -7,5 +7,5 @@ definePageMeta({
 </script>
 
 <template>
-  <Fm6DetailPage />
+  <Fm6EditPage />
 </template>

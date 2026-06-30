@@ -1,6 +1,7 @@
 <template>
   <ClientOnly>
-    <Transition name="chat-panel">
+    <div v-if="!isMahasiswa">
+      <Transition name="chat-panel">
       <section
         v-if="isOpen"
         class="fixed inset-x-4 bottom-[92px] z-50 flex h-[600px] max-h-[calc(100vh-120px)] flex-col overflow-hidden rounded-[18px] border border-gray-200 bg-white text-gray-900 shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]"
@@ -146,11 +147,13 @@
       <Icon v-if="isOpen" name="lucide:x" size="24" aria-hidden="true" />
       <Icon v-else name="lucide:message-circle" size="25" aria-hidden="true" />
     </button>
+    </div>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch, computed } from 'vue'
+import { useAuthStore } from '#stores/auth'
 
 type Mode = 'chat' | 'summarize' | 'draft'
 type Msg = { role: 'user' | 'ai'; text: string }
@@ -164,6 +167,11 @@ const error = ref<string | null>(null)
 const copiedIndex = ref<number | null>(null)
 const isOpen = ref(false)
 const abortController = ref<AbortController | null>(null)
+
+const authStore = useAuthStore()
+const isMahasiswa = computed(() => {
+  return authStore.activeRole?.nama?.toLowerCase() === 'mahasiswa' || authStore.activeRole?.kode?.toLowerCase() === 'mahasiswa'
+})
 
 const messages = ref<Msg[]>([
   { role: 'ai', text: 'Halo! Saya AI admin. Silakan tanya seputar dokumen dan kebutuhan LPM.' },

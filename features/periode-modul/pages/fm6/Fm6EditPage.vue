@@ -6,7 +6,7 @@ import { useToast, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
 import { useFm6Repository, type Fm6Context } from '../../composables/useFm6Repository'
 import { useFm6Store } from '#stores/fm6'
-import type { Fm6CreateDataResponse, Fm6CreatePayload, Fm6PertanyaanPayload, TipePertanyaan } from '../../services/fm6.api'
+import type { Fm6CreateDataResponse, Fm6CreatePayload, Fm6PertanyaanPayload, TipePertanyaan, Fm6PertanyaanResponse, Fm6OpsiJawabanResponse } from '../../services/fm6.api'
 
 
 interface QuestionBlock {
@@ -40,6 +40,7 @@ const questions = ref<QuestionBlock[]>([])
 
 const periodeModulId = computed(() => route.params.periode_modul_id as string)
 const unitId = computed(() => route.params.unit_id as string)
+const surveyId = computed(() => route.params.survey_id as string)
 
 const context = computed<Fm6Context>(() => ({
   periodeModulId: periodeModulId.value,
@@ -166,22 +167,17 @@ async function handleSubmit() {
       })),
     }
 
-    const result = await repository.createSurvey(context.value, payload)
-    if (result?.id) {
+    const result = await repository.updateSurvey(surveyId.value, payload)
+    if (result) {
       toast.add({
         title: 'Berhasil',
-        description: 'Survei berhasil dibuat.',
+        description: 'Perubahan survei berhasil disimpan.',
         color: 'success',
       })
-      await router.push(localePath(buildDetailRoute(result.id) as any))
+      await router.push(localePath(buildDetailRoute(surveyId.value) as any))
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Gagal membuat survei:', error)
-    toast.add({
-      title: 'Gagal',
-      description: error?.data?.message || 'Terjadi kesalahan saat menyimpan survei.',
-      color: 'error',
-    })
   } finally {
     submitting.value = false
   }
@@ -190,9 +186,36 @@ async function handleSubmit() {
 async function fetchCreateData() {
   loading.value = true
   try {
-    const res = await repository.getCreatePageData(context.value)
-    if (res) {
-      createData.value = res
+    const [resCreate, resDetail] = await Promise.all([
+      repository.getCreatePageData(context.value),
+      repository.getDetailData(surveyId.value)
+    ])
+    
+    if (resCreate) {
+      createData.value = resCreate
+    }
+    
+    if (resDetail) {
+      if (resDetail.status !== 'DRAFT') {
+        router.replace(localePath(buildDetailRoute(surveyId.value) as any))
+        return
+      }
+
+      form.judul = resDetail.judul
+      form.deskripsi = resDetail.deskripsi
+      
+      questions.value = resDetail.pertanyaans.map((q: Fm6PertanyaanResponse) => ({
+        localId: generateId('q'),
+        urutan: q.urutan,
+        pertanyaan: q.pertanyaan,
+        tipe: q.tipe,
+        placeholder: q.placeholder || '',
+        opsiJawabans: q.opsiJawabans.map((o: Fm6OpsiJawabanResponse) => ({
+          localId: generateId('opt'),
+          label: o.label,
+          bobot: o.bobot
+        }))
+      }))
     }
     if (questions.value.length === 0) {
       addQuestion()
@@ -229,7 +252,7 @@ const breadcrumbItems = computed(() => {
       to: buildDashboardRoute(),
     },
     {
-      label: 'Buat Survei Baru',
+      label: 'Edit Survei',
       active: true,
     },
   ]
@@ -274,7 +297,7 @@ const breadcrumbItems = computed(() => {
       <!-- Intro Card -->
       <section v-if="createData" class="rounded-[16px] border border-[#d8dce2] bg-[#efefef] px-5 py-5 shadow-[0_2px_6px_rgba(15,23,42,0.1)] md:px-6 md:py-6">
         <h1 class="text-[clamp(1.5rem,1.9vw,2.2rem)] font-semibold leading-tight text-[#10131b]">
-          {{ t('fm6.create.title', 'Buat Survei Baru') }}
+          {{ t('fm6.edit.title', 'Edit Survei') }}
         </h1>
         <p class="mt-3 max-w-[1400px] text-[clamp(0.92rem,0.98vw,1.08rem)] leading-relaxed text-[#5b6679]">
           Buat template survei untuk program studi <strong class="text-[#d50000]">{{ createData.unit.nama }}</strong> pada periode <strong>{{ createData.periode.tahun_ajaran }} — {{ createData.periode.semester }}</strong>.
@@ -299,7 +322,7 @@ const breadcrumbItems = computed(() => {
                   v-model="form.judul"
                   type="text"
                   maxlength="255"
-                  :placeholder="t('fm6.create.surveyTitlePlaceholder', 'Masukkan judul survei...')"
+                  placeholder="Masukkan judul survei..."
                   class="mt-2 h-[52px] w-full rounded-[18px] border border-[#cfd5de] bg-[#f3f4f6] px-4 text-[clamp(0.92rem,0.95vw,1.05rem)] text-[#1d2430] outline-none placeholder:text-[#98a2b3]"
                 >
                 <div class="mt-2 flex items-center justify-between text-[0.95rem] text-[#8b95a7]">
@@ -330,7 +353,7 @@ const breadcrumbItems = computed(() => {
                   v-model="form.deskripsi"
                   rows="4"
                   maxlength="2000"
-                  :placeholder="t('fm6.create.descriptionPlaceholder', 'Jelaskan tujuan dan cakupan survei ini...')"
+                  placeholder="Jelaskan tujuan dan cakupan survei ini..."
                   class="mt-2 w-full rounded-[18px] border border-[#cfd5de] bg-[#f3f4f6] px-4 py-3 text-[clamp(0.92rem,0.95vw,1.05rem)] text-[#1d2430] outline-none placeholder:text-[#98a2b3]"
                 />
                 <div class="mt-2 flex items-center justify-between text-[0.95rem] text-[#8b95a7]">
@@ -486,13 +509,13 @@ const breadcrumbItems = computed(() => {
             class="inline-flex h-[52px] min-w-[210px] items-center justify-center rounded-[18px] bg-[linear-gradient(180deg,#ef0000_0%,#d30000_100%)] px-6 text-[clamp(1.05rem,1.12vw,1.25rem)] font-bold text-white shadow-[0_5px_15px_rgba(227,0,0,0.35)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             @click="handleSubmit"
           >
-            {{ submitting ? t('fm6.create.saving', 'Menyimpan...') : t('fm6.create.save', 'Simpan Template') }}
+            {{ submitting ? t('fm6.create.saving', 'Menyimpan...') : t('fm6.edit.save', 'Simpan Perubahan') }}
           </button>
         </section>
       </section>
 
       <section v-if="loading" class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-5 text-[#3e4a5e]">
-        {{ t('fm6.create.loading', 'Memuat form survei...') }}
+        Memuat form survei...
       </section>
     </section>
   </div>

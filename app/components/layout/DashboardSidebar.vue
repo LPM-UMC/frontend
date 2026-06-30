@@ -3,7 +3,7 @@
   <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
-    <div v-if="isMobileOpen" class="fixed inset-0 z-50 bg-black/40 lg:hidden" @click.self="emit('close-mobile')">
+    <div v-if="isMobileOpen" class="fixed inset-0 z-50 bg-black/40 lg:hidden print:!hidden" @click.self="emit('close-mobile')">
       <aside class="flex h-full w-72 max-w-[82vw] flex-col border-r border-[#d4d4d6] bg-[#ececec]">
         <!-- Header Mobile -->
         <div class="flex h-14 items-center justify-between border-b border-[#d7d7d9] bg-[#f0f1f3] px-3">
@@ -86,7 +86,7 @@
 
   <!-- DESKTOP SIDEBAR -->
   <aside
-    class="fixed inset-y-0 left-0 top-16.5 z-20 hidden h-[calc(100vh-66px)] flex-col border-r border-[#d6d6d8] bg-[#ececec] transition-all duration-300 lg:flex"
+    class="fixed inset-y-0 left-0 top-16.5 z-20 hidden h-[calc(100vh-66px)] flex-col border-r border-[#d6d6d8] bg-[#ececec] transition-all duration-300 lg:flex print:!hidden"
     :class="isCollapsed ? 'w-20' : 'w-72'">
     <div class="flex-1 overflow-y-auto py-6" :class="isCollapsed ? 'px-2' : 'px-4'">
       <p v-if="!isCollapsed"

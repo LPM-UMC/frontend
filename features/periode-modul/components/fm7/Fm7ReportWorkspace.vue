@@ -13,7 +13,7 @@ import {
   type Fm7ReportDetailDummyData,
   type Fm7SignatureRoleRow,
   type Fm7SubmitPayload,
-} from '#features/periode-modul/data/fm7GkmfDummy'
+} from '#features/periode-modul/data/fm7Model'
 
 const props = withDefaults(defineProps<{ mode?: 'view' | 'edit' }>(), {
   mode: 'view',

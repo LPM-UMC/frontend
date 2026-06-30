@@ -2,7 +2,7 @@
   <!-- Paksa seluruh layout dashboard tetap LTR -->
   <div dir="ltr" class="min-h-screen bg-[#e4e4e6] text-slate-900">
     <!-- HEADER -->
-    <header dir="ltr" class="fixed inset-x-0 top-0 z-30 border-b border-[#d9d9d9] bg-[#f4f4f4]">
+    <header dir="ltr" class="fixed inset-x-0 top-0 z-30 border-b border-[#d9d9d9] bg-[#f4f4f4] print:hidden">
       <div
 dir="ltr"
         class="mx-auto flex h-16.5 w-full max-w-550 items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
@@ -62,7 +62,7 @@ xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 transition-transform" :cla
         <div dir="ltr" class="hidden items-center gap-2 lg:flex">
 
           <!-- Periode Modul -->
-          <div class="w-44">
+          <div class="w-44" v-if="!isFm7CreatePage">
             <select
 v-model="selectedPeriodeModul"
               class="h-9 w-full rounded-lg border border-[#d8dde4] bg-white px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition focus:border-red-500 cursor-pointer">
@@ -73,7 +73,7 @@ v-model="selectedPeriodeModul"
           </div>
 
           <!-- Unit Lingkup -->
-          <div class="w-44">
+          <div class="w-44" v-if="!isFm7CreatePage">
             <select
 v-model="selectedUnitLingkup"
               class="h-9 w-full rounded-lg border border-[#d8dde4] bg-white px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition focus:border-red-500 cursor-pointer">
@@ -98,6 +98,7 @@ v-model="selectedUnitLingkup"
 
     <!-- SIDEBAR -->
     <DashboardSidebar
+      class="print:hidden"
       :menus="modulMenus"
       :active-menu-id="activeMenuId"
       :is-collapsed="isSidebarCollapsed"
@@ -108,7 +109,7 @@ v-model="selectedUnitLingkup"
     >
       <template #mobile-actions>
         <!-- Periode Modul -->
-        <div>
+        <div v-if="!isFm7CreatePage">
           <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
             Periode Modul
           </label>
@@ -122,7 +123,7 @@ v-model="selectedUnitLingkup"
         </div>
 
         <!-- Unit Lingkup -->
-        <div>
+        <div v-if="!isFm7CreatePage">
           <label class="mb-1 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#71767f]">
             Unit Lingkup
           </label>
@@ -139,9 +140,9 @@ v-model="selectedUnitLingkup"
 
     <!-- MAIN -->
     <main
-dir="ltr" class="flex-1 bg-[#f4f4f4] pb-6 pt-16.5 transition-[padding-left] duration-300" :class="isSidebarCollapsed
-      ? 'lg:pl-21'
-      : 'lg:pl-72.5'
+dir="ltr" class="flex-1 bg-[#f4f4f4] pb-6 pt-16.5 transition-[padding-left] duration-300 print:!p-0 print:!m-0 print:!bg-white print:!w-full print:!block" :class="isSidebarCollapsed
+      ? 'lg:pl-21 print:!pl-0'
+      : 'lg:pl-72.5 print:!pl-0'
       ">
       <slot />
     </main>
@@ -166,12 +167,15 @@ const locales = [
 ]
 
 const route = useRoute()
+const isFm7CreatePage = computed(() => {
+  return route.path.includes('/fm7/create')
+})
 
 const pId = route.params.periode_modul_id as string
 const uId = route.params.unit_id as string
 const aId = route.params.aspek_id as string
 
-if (!pId || !uId || !aId) {
+if (!pId || !uId) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Halaman Tidak Ditemukan',
@@ -182,14 +186,26 @@ if (!pId || !uId || !aId) {
 const selectedPeriodeModul = ref(pId)
 const selectedUnitLingkup = ref(uId)
 
+watch(() => route.params.periode_modul_id, (newVal) => {
+  if (newVal && newVal !== selectedPeriodeModul.value) {
+    selectedPeriodeModul.value = newVal as string
+  }
+})
+
+watch(() => route.params.unit_id, (newVal) => {
+  if (newVal && newVal !== selectedUnitLingkup.value) {
+    selectedUnitLingkup.value = newVal as string
+  }
+})
+
 watch(selectedPeriodeModul, (newVal) => {
-  if (newVal && newVal !== pId) {
+  if (newVal && newVal !== route.params.periode_modul_id) {
     navigateTo({ name: route.name as string, params: { ...route.params, periode_modul_id: newVal } })
   }
 })
 
 watch(selectedUnitLingkup, (newVal) => {
-  if (newVal && newVal !== uId) {
+  if (newVal && newVal !== route.params.unit_id) {
     navigateTo({ name: route.name as string, params: { ...route.params, unit_id: newVal } })
   }
 })
@@ -230,6 +246,24 @@ const { data: layoutOptions } = await useAsyncData(`layout-options-${pId}`, asyn
 
 const periodeModulOptions = computed(() => layoutOptions.value?.pmOptions || [])
 const unitLingkupOptions = computed(() => layoutOptions.value?.ulOptions || [])
+
+watch(unitLingkupOptions, (options) => {
+  if (options.length > 0 && options[0]) {
+    const exists = options.some(opt => opt.value === selectedUnitLingkup.value)
+    if (!exists) {
+      selectedUnitLingkup.value = options[0].value
+    }
+  }
+}, { immediate: true })
+
+watch(periodeModulOptions, (options) => {
+  if (options.length > 0 && options[0]) {
+    const exists = options.some(opt => opt.value === selectedPeriodeModul.value)
+    if (!exists) {
+      selectedPeriodeModul.value = options[0].value
+    }
+  }
+}, { immediate: true })
 
 type MenuItem = {
   id: string

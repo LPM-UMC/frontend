@@ -2,7 +2,7 @@
 import Fm7CreatePage from '#features/periode-modul/pages/fm7/Fm7CreatePage.vue'
 
 definePageMeta({
-  layout: 'monev',
+  layout: 'periode-modul',
 })
 </script>
 

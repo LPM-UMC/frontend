@@ -117,6 +117,10 @@
     "manajemenPengguna": {
       "judul": "ユーザー管理",
       "deskripsi": "ユーザー管理モジュールは、ユーザーアカウント、役割、およびアクセス権を一元的に管理する手段を提供し、管理者がシステムの安全性、秩序、および効率性を維持できるようにします。"
+    },
+    "survei": {
+      "judul": "アンケートに記入する",
+      "deskripsi": "記入可能なアンケートのリスト。"
     }
   },
   "manajemenUser": {
@@ -825,6 +829,112 @@
       "simpan": "変更を保存",
       "berhasil": "プロフィールが正常に更新されました",
       "gagal": "プロフィールの更新中にエラーが発生しました"
+    }
+  },
+  "fm5": {
+    "title": "フォーム 05 公式レポート",
+    "description": "モニタリングおよび評価の公式レポートは、実装の証拠および評価結果の検証として使用されます。",
+    "createButton": "新しいレポートを作成",
+    "listTitle": "公式レポート一覧",
+    "searchPlaceholder": "公式レポートを検索...",
+    "table": {
+      "no": "番号",
+      "studyProgram": "学習プログラム",
+      "documentNumber": "レポート番号",
+      "startDate": "開始日",
+      "status": "ステータス",
+      "action": "アクション",
+      "viewDetail": "詳細を見る",
+      "empty": "公式レポートは見つかりませんでした。"
+    },
+    "pagination": {
+      "showing": "表示中",
+      "from": "から",
+      "data": "データ",
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "detail": {
+      "title": "初期学習の監視と評価レポート",
+      "description": "この文書は、{programStudi}学習プログラムでの評価実施のレポートを表します。",
+      "sign": "署名",
+      "processing": "処理中...",
+      "reject": "拒否する",
+      "pullReject": "拒否を撤回",
+      "rejectMessage": "拒否メッセージを入力",
+      "rejectPlaceholder": "この文書を拒否する理由を書いてください...",
+      "sending": "送信中...",
+      "sendReject": "拒否を送信"
+    }
+  },
+  "fm6": {
+    "title": "フォーム 06 アンケート",
+    "description": "学生、講師、または教職員向けのアンケートを管理します。",
+    "createButton": "新しいアンケートを作成",
+    "listTitle": "アンケート一覧",
+    "searchPlaceholder": "アンケートを検索...",
+    "table": {
+      "no": "番号",
+      "surveyTitle": "アンケートのタイトル",
+      "totalQuestions": "総質問数",
+      "respondents": "回答者",
+      "target": "ターゲット",
+      "status": "ステータス",
+      "action": "アクション",
+      "viewDetail": "詳細を見る",
+      "empty": "アンケートが見つかりません。"
+    },
+    "detail": {
+      "title": "アンケートの詳細",
+      "status": "ステータス",
+      "period": "回答期間",
+      "description": "説明",
+      "questions": "質問リスト",
+      "noQuestions": "まだ質問はありません。",
+      "respondents": "回答者リスト",
+      "studentName": "学生名",
+      "nim": "学生ID",
+      "studyProgram": "学習プログラム",
+      "time": "回答時間",
+      "action": "アクション",
+      "viewAnswer": "回答を見る",
+      "noRespondents": "まだこのアンケートに回答した人はいません。",
+      "answerDetail": "学生の回答の詳細"
+    },
+    "create": {
+      "title": "新しいアンケートを作成",
+      "basicInfo": "基本情報",
+      "surveyTitle": "アンケートのタイトル",
+      "surveyTitlePlaceholder": "例：学生満足度調査",
+      "description": "説明",
+      "descriptionPlaceholder": "簡単な説明を入力してください...",
+      "questions": "アンケートの質問",
+      "addQuestion": "質問を追加",
+      "questionText": "質問のテキスト",
+      "questionPlaceholder": "ここに質問を入力してください...",
+      "questionType": "質問のタイプ",
+      "typeEssay": "エッセイ",
+      "typeMultipleChoice": "多肢選択",
+      "typeRating": "評価",
+      "options": "オプション",
+      "addOption": "オプションを追加",
+      "deleteQuestion": "質問を削除",
+      "save": "アンケートを保存",
+      "success": "アンケートが正常に作成されました！",
+      "error": "アンケートの保存に失敗しました。"
+    },
+    "edit": {
+      "title": "アンケートを編集",
+      "save": "変更を保存",
+      "success": "アンケートが正常に更新されました！",
+      "error": "アンケートの更新に失敗しました。"
+    },
+    "answer": {
+      "title": "アンケートに回答",
+      "submit": "回答を送信",
+      "success": "回答が正常に送信されました！",
+      "error": "回答の送信に失敗しました。",
+      "alreadyAnswered": "すでにこのアンケートに回答しています。"
     }
   }
 }

@@ -2,7 +2,7 @@
 // import Fm5AspekPage from '#features/periode-modul/pages/fm5/Fm5AspekPage.vue'
 
 definePageMeta({
-  layout: 'monev',
+  layout: 'periode-modul',
 })
 </script>
 

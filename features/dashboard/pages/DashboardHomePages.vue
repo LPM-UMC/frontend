@@ -76,6 +76,14 @@ const allMenus = computed(() => [
     image: '/img/gedung-umc.jpg',
     to: localePath('/dashboard/manajemen-user'),
   },
+  {
+    id: 'survei',
+    key: 'survei',
+    title: t('dasborModul.survei.judul', 'Isi Survei'),
+    description: t('dasborModul.survei.deskripsi', 'Daftar survei yang tersedia untuk diisi.'),
+    image: '/img/gedung-umc.jpg',
+    to: localePath('/dashboard/survei'),
+  },
 ])
 
 // ================= RULES =================
@@ -96,16 +104,17 @@ const menus = computed(() => {
     .filter(menu => {
       switch (menu.key) {
         case 'monev':
-          return true
+          return roleCode !== 'mahasiswa'
         case 'audit':
-          return true
+          return roleCode !== 'mahasiswa'
         case 'modul':
           return adminWhitelist.includes(roleCode)
         case 'periode':
           return adminWhitelist.includes(roleCode)
         case 'user':
           return adminWhitelist.includes(roleCode)
-
+        case 'survei':
+          return roleCode === 'mahasiswa'
         default:
           return true
       }

@@ -61,7 +61,6 @@ export interface Fm5DashboardDummyData {
 }
 
 export interface Fm5CreateFormDefaultValues {
-  programStudiId: string
   tanggalPelaksanaan: string
   batasWaktuTandaTangan: string
 }
@@ -303,7 +302,6 @@ const createPageTemplate: Omit<Fm5CreatePageDummyData, 'context'> = {
     { id: 'peternakan', label: 'Peternakan' },
   ],
   defaultValues: {
-    programStudiId: 'dalam-proses',
     tanggalPelaksanaan: '',
     batasWaktuTandaTangan: '',
   },

@@ -21,7 +21,7 @@ export function usePeriodeModulApi() {
 
   return {
     endpoints: PERIODE_MODUL_ENDPOINTS,
-    listPeriodeModul: () => request<PeriodeModulListPayload>(PERIODE_MODUL_ENDPOINTS.list),
+    listPeriodeModul: () => request<PeriodeModulListPayload>(`${PERIODE_MODUL_ENDPOINTS.list}?_t=${Date.now()}`),
     createPeriodeModul: (payload: PeriodeModulFormInput) =>
       request<PeriodeModulRecord>(PERIODE_MODUL_ENDPOINTS.create, {
         method: 'POST',

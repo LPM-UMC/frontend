@@ -2,7 +2,8 @@
 import Fm6MahasiswaJawabDetailPage from '#features/periode-modul/pages/fm6/Fm6MahasiswaJawabDetailPage.vue'
 
 definePageMeta({
-  layout: 'monev',
+  layout: 'dashboard',
+  middleware: ['auth']
 })
 </script>
 

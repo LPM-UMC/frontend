@@ -2,7 +2,7 @@
 // import Fm6BuktiPage from '#features/periode-modul/pages/fm6/Fm6BuktiPage.vue'
 
 definePageMeta({
-  layout: 'monev',
+  layout: 'periode-modul',
 })
 </script>
 

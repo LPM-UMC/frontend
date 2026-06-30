@@ -77,7 +77,7 @@
                     </button>
                   </div>
                   <p v-if="formErrors[item.id]?.biner" class="mt-1 text-xs text-[#e30000] sm:text-sm">
-                    {{ formErrors[item.id].biner }}
+                    {{ formErrors[item.id]?.biner }}
                   </p>
 
                   <!-- SKALA TYPE -->
@@ -96,7 +96,7 @@
                     </button>
                   </div>
                   <p v-if="formErrors[item.id]?.skala_id" class="mt-1 text-xs text-[#e30000] sm:text-sm">
-                    {{ formErrors[item.id].skala_id }}
+                    {{ formErrors[item.id]?.skala_id }}
                   </p>
 
                   <!-- CEK TYPE -->
@@ -118,7 +118,7 @@
                     </button>
                   </div>
                   <p v-if="formErrors[item.id]?.cek_ids" class="mt-1 text-xs text-[#e30000] sm:text-sm">
-                    {{ formErrors[item.id].cek_ids }}
+                    {{ formErrors[item.id]?.cek_ids }}
                   </p>
 
                   <!-- CATATAN -->
@@ -126,13 +126,13 @@
                     <label class="block text-[13px] font-semibold text-[#3e495d] mb-1.5">
                       {{ $t('fmMonitoring.evaluasi.catatanLabel') }} <span class="text-[#e60000]">*</span>
                     </label>
-                    <textarea v-model="localForms[item.id].catatan" rows="3"
+                    <textarea v-model="localForms[item.id]!.catatan" rows="3"
                       class="w-full rounded-[12px] border border-[#c8cfda] bg-[#f9fafb] px-4 py-3 text-[12px] text-[#3f4a5e] outline-none placeholder:text-[#8f98a8] focus:border-[#b8c0cb] sm:text-[13px] disabled:opacity-80 disabled:bg-[#f1f3f5]"
                       :disabled="!fm1Store.isEvaluator"
                       :placeholder="$t('fmMonitoring.placeholder.berikanJustifikasi')"
                       @input="validateFieldSingle(item, 'catatan')" />
                     <p v-if="formErrors[item.id]?.catatan" class="mt-1 text-xs text-[#e30000] sm:text-sm">
-                      {{ formErrors[item.id].catatan }}
+                      {{ formErrors[item.id]?.catatan }}
                     </p>
                   </div>
 
@@ -223,14 +223,14 @@ function closeIndicatorModal() {
 
 function setBiner(item: IndikatorAndAnswerResponse, val: boolean) {
   if (localForms.value[item.id]) {
-    localForms.value[item.id].biner = val
+    localForms.value[item.id]!.biner = val
     validateFieldSingle(item, 'biner')
   }
 }
 
 function setSkala(item: IndikatorAndAnswerResponse, skalaId: string) {
   if (localForms.value[item.id]) {
-    localForms.value[item.id].skala_id = skalaId
+    localForms.value[item.id]!.skala_id = skalaId
     validateFieldSingle(item, 'skala_id')
   }
 }
@@ -241,11 +241,11 @@ function isCekChecked(id: string, cekId: string) {
 
 function toggleCek(item: IndikatorAndAnswerResponse, cekId: string) {
   if (!localForms.value[item.id]) return
-  const current = localForms.value[item.id].cek_ids
+  const current = localForms.value[item.id]!.cek_ids
   if (current.includes(cekId)) {
-    localForms.value[item.id].cek_ids = current.filter(c => c !== cekId)
+    localForms.value[item.id]!.cek_ids = current.filter(c => c !== cekId)
   } else {
-    localForms.value[item.id].cek_ids.push(cekId)
+    localForms.value[item.id]!.cek_ids.push(cekId)
   }
   validateFieldSingle(item, 'cek_ids')
 }
@@ -255,13 +255,13 @@ function validateForm(item: IndikatorAndAnswerResponse) {
     formErrors[item.id] = {}
   }
   
-  Object.keys(formErrors[item.id]).forEach((key) => {
-    formErrors[item.id][key as keyof typeof formErrors[string]] = ''
+  Object.keys(formErrors[item.id]!).forEach((key) => {
+    formErrors[item.id]![key as keyof typeof formErrors[string]] = ''
   })
 
   const form = localForms.value[item.id]
-  const schema = jawabInstrumenValidation(t, item.indikator.tipe_evaluasi)
-  const result = schema.safeParse(form)
+  const schema = jawabInstrumenValidation(t as any, item.indikator.tipe_evaluasi)
+  const result = schema.safeParse(form || {})
 
   if (result.success) {
     return true
@@ -270,7 +270,7 @@ function validateForm(item: IndikatorAndAnswerResponse) {
   result.error.issues.forEach((issue) => {
     const field = issue.path[0]
     if (field && formErrors[item.id]) {
-      formErrors[item.id][field as keyof typeof formErrors[string]] = issue.message
+      formErrors[item.id]![field as keyof typeof formErrors[string]] = issue.message
     }
   })
 
@@ -281,16 +281,16 @@ function validateFieldSingle(item: IndikatorAndAnswerResponse, field: keyof type
   if (!formErrors[item.id]) {
     formErrors[item.id] = {}
   }
-  formErrors[item.id][field] = ''
+  formErrors[item.id]![field] = ''
 
   const form = localForms.value[item.id]
-  const schema = jawabInstrumenValidation(t, item.indikator.tipe_evaluasi)
-  const result = schema.safeParse(form)
+  const schema = jawabInstrumenValidation(t as any, item.indikator.tipe_evaluasi)
+  const result = schema.safeParse(form || {})
 
   if (!result.success) {
     const issue = result.error.issues.find(i => i.path[0] === field)
     if (issue) {
-      formErrors[item.id][field] = issue.message
+      formErrors[item.id]![field] = issue.message
     }
   }
 }
@@ -309,7 +309,7 @@ async function saveIndicator(item: IndikatorAndAnswerResponse) {
   }
 
   isSaving.value[item.id] = true
-  const form = localForms.value[item.id]
+  const form = localForms.value[item.id]!
 
   const payload: JawabInstrumenRequest = {
     catatan: form.catatan,

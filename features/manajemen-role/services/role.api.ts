@@ -37,6 +37,7 @@ export function useRoleApi() {
     if (params?.size) query.set('size', String(params.size))
     if (params?.search) query.set('search', params.search)
     if (params?.order) query.set('order', params.order)
+    query.set('_t', String(Date.now()))
 
     const qs = query.toString()
     const url = qs ? `${ROLE_ENDPOINTS.list}?${qs}` : ROLE_ENDPOINTS.list

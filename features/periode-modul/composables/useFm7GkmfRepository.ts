@@ -4,10 +4,6 @@ import {
   FM7_ACTIVE_DUMMY_ROLE,
   buildFm7DetailFromRecord,
   cloneFm7Narrative,
-  cloneFm7ReportRecord,
-  createFm7InitialReports,
-  getFm7CreatePageDummyData,
-  getFm7DashboardDummyData,
   isFm7RoleActionAllowed,
   resolveFm7NextWorkflowStatus,
   resolveProgramByIds,
@@ -21,118 +17,157 @@ import {
   type Fm7ReportDetailDummyData,
   type Fm7ReportRecord,
   type Fm7SubmitPayload,
-} from '#features/periode-modul/data/fm7GkmfDummy'
+  type Fm7WorkflowStatus,
+  defaultNarrativeTemplate,
+  createPageTemplate,
+  mapWorkflowToRowStatus,
+} from '#features/periode-modul/data/fm7Model'
 
-type Fm7SourceMode = 'auto' | 'api' | 'dummy'
-type Fm7ResolvedSource = 'api' | 'dummy'
-
-const fm7DummyState = ref<Fm7ReportRecord[]>(createFm7InitialReports())
+type Fm7SourceMode = 'auto' | 'api'
+type Fm7ResolvedSource = 'api'
 
 export const FM7_GKMF_ENDPOINTS = {
   dashboard: (context: Fm7DashboardContext) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7`,
+    `/api/fm7/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/dashboard`,
   createPage: (context: Fm7DashboardContext) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7/create`,
+    `/api/fm7/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/dashboard`, // Not specifically a create endpoint, maybe reuse dashboard or create custom later
   detail: (context: Fm7DashboardContext, laporanId: string) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7/laporan/${encodeURIComponent(laporanId)}`,
+    `/api/fm7/${encodeURIComponent(laporanId)}`,
   create: (context: Fm7DashboardContext) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7`,
+    `/api/fm7/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}`,
   updateNarration: (context: Fm7DashboardContext, laporanId: string) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7/laporan/${encodeURIComponent(laporanId)}`,
+    `/api/fm7/${encodeURIComponent(laporanId)}`,
   submit: (context: Fm7DashboardContext, laporanId: string) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7/laporan/${encodeURIComponent(laporanId)}/submit`,
+    `/api/fm7/${encodeURIComponent(laporanId)}/ajukan`,
   exportPdf: (context: Fm7DashboardContext, laporanId: string) =>
-    `/api/v1/dashboard/periode-modul/${encodeURIComponent(context.periodeModulId)}/unit/${encodeURIComponent(context.unitId)}/fm7/laporan/${encodeURIComponent(laporanId)}/export`,
+    `/api/fm7/pdf/${encodeURIComponent(laporanId)}`,
 }
 
-function findReportRecord(reportId: string): Fm7ReportRecord | null {
-  const found = fm7DummyState.value.find((item) => item.id === reportId)
-  return found ? cloneFm7ReportRecord(found) : null
-}
-
-function persistReportRecord(nextRecord: Fm7ReportRecord) {
-  const index = fm7DummyState.value.findIndex((item) => item.id === nextRecord.id)
-  if (index === -1) {
-    fm7DummyState.value = [nextRecord, ...fm7DummyState.value]
-    return
-  }
-
-  const next = [...fm7DummyState.value]
-  next[index] = nextRecord
-  fm7DummyState.value = next
-}
-
-function createFallbackReport(reportId: string): Fm7ReportRecord {
-  const seed = fm7DummyState.value[0] ?? createFm7InitialReports()[0]
-
-  return {
-    ...cloneFm7ReportRecord(seed),
-    id: reportId,
-    kodeLaporan: 'FM07-2025-338',
-    workflowStatus: 'draft',
-  }
-}
-
-function generateReportId(): string {
-  const token = Math.random().toString(36).slice(2, 8).toUpperCase()
-  return `fm07-${Date.now()}-${token}`
-}
-
-function generateReportCode(): string {
-  const baseYear = new Date().getFullYear()
-  const serial = String(Math.floor(Math.random() * 900) + 100)
-  return `FM07-${baseYear}-${serial}`
-}
-
-function resolveTodayIsoDate(): string {
-  return new Date().toISOString().slice(0, 10)
-}
-
-export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'auto') {
+export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'api') {
   const mode = ref<Fm7SourceMode>(initialMode)
-  const resolvedSource = ref<Fm7ResolvedSource>('dummy')
+  const resolvedSource = ref<Fm7ResolvedSource>('api')
   const { request } = useApiRequest()
 
   async function getDashboardData(
     context: Fm7DashboardContext,
     role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE
   ): Promise<Fm7DashboardDummyData> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<Fm7DashboardDummyData>(
+      const apiData = await request<any>(
         FM7_GKMF_ENDPOINTS.dashboard(context)
       )
 
-      if (apiData) {
-        resolvedSource.value = 'api'
-        return apiData
-      }
-    }
+      const dummyBase = {
+        context,
+        role,
+        hero: {
+          title: "Daftar Laporan MONEV",
+          description: "Modul Laporan MONEV merupakan instrumen agregasi capaian indikator dan simpulan evaluasi.",
+          bulletPoints: [
+            "Rekapitulasi otomatis capaian indikator kuantitatif",
+            "Sintesis temuan utama dari tahap evaluasi sebelumnya"
+          ],
+          createButtonLabel: "Buat Laporan Baru"
+        },
+        indicatorTitle: 'Capaian Indikator',
+        indicators: [
+          { id: "total-berita-acara", title: "Total Laporan", value: 0, type: "primary", subtitle: "Laporan yang terdaftar", progressPercent: 100 },
+          { id: "draft", title: "Draft", value: 0, type: "warning", subtitle: "Masih dalam penyusunan", progressPercent: 100 },
+          { id: "proses", title: "Proses (Review/Revisi)", value: 0, type: "info", subtitle: "Sedang diproses", progressPercent: 100 },
+          { id: "final", title: "Final (Selesai)", value: 0, type: "success", subtitle: "Telah disetujui", progressPercent: 100 }
+        ],
+        tableTitle: 'Daftar Laporan MONEV',
+        searchPlaceholder: 'Search',
+        dateFilterOptions: [
+          { value: 'all', label: 'Semua Tanggal' }
+        ],
+        programFilterOptions: [
+          { value: 'all', label: 'Semua Prodi' }
+        ],
+        rows: []
+      };
 
-    resolvedSource.value = 'dummy'
-    return getFm7DashboardDummyData(
-      context,
-      role,
-      fm7DummyState.value.map((item) => cloneFm7ReportRecord(item))
-    )
+      if (apiData?.data) {
+        resolvedSource.value = 'api'
+        
+        // Update indicator values with actual data from API meta
+        if (apiData.meta) {
+          dummyBase.indicators = dummyBase.indicators.map((ind: any) => {
+            if (ind.id === 'total-berita-acara') {
+              return { ...ind, value: apiData.meta.total_count || 0 }
+            }
+            if (ind.id === 'draft') {
+              return { ...ind, value: apiData.meta.draft_count || 0 }
+            }
+            if (ind.id === 'proses') {
+              return { ...ind, value: apiData.meta.proses_count || 0 }
+            }
+            if (ind.id === 'final') {
+              return { ...ind, value: apiData.meta.final_count || 0 }
+            }
+            return ind
+          })
+        }
+
+        return {
+          ...dummyBase,
+          rows: apiData.data.map((item: any) => ({
+            id: item.id,
+            kodeLaporan: item.kode_laporan,
+            fakultasId: item.fakultas,
+            programStudiId: item.program_studi,
+            programStudi: item.program_studi,
+            fakultas: item.fakultas,
+            semester: item.semester,
+            tahunAkademik: item.tahun_akademik,
+            dibuatOleh: item.dibuat_oleh?.nama || '',
+            tanggalMulai: item.tanggal_mulai ? item.tanggal_mulai.substring(0, 10) : '',
+            status: mapWorkflowToRowStatus(item.status.toLowerCase() as any),
+          })),
+        }
+      }
+      
+      console.error('API Dashboard returned empty or failed:', apiData);
+      return {
+        ...dummyBase,
+        rows: []
+      };
   }
 
   async function getCreatePageData(
     context: Fm7DashboardContext,
     role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE
   ): Promise<Fm7CreatePageDummyData> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<Fm7CreatePageDummyData>(
-        FM7_GKMF_ENDPOINTS.createPage(context)
-      )
+      try {
+        const apiData = await request<Fm7CreatePageDummyData>(
+          FM7_GKMF_ENDPOINTS.createPage(context)
+        )
 
-      if (apiData) {
-        resolvedSource.value = 'api'
-        return apiData
+        if (apiData) {
+          resolvedSource.value = 'api'
+          return {
+            ...createPageTemplate,
+            ...apiData,
+            context,
+            role,
+            // Ensure nested arrays from template are maintained if API doesn't provide them
+            fakultasOptions: apiData.fakultasOptions || [],
+            sourceItems: apiData.sourceItems || createPageTemplate.sourceItems,
+            impactLines: apiData.impactLines || createPageTemplate.impactLines,
+          } as Fm7CreatePageDummyData
+        }
+      } catch (err) {
+        console.error('API /createPage failed:', err)
       }
+    
+    console.error('API /createPage failed or returned empty data');
+    return {
+      ...createPageTemplate,
+      context,
+      role,
+      fakultasOptions: [],
+      sourceItems: createPageTemplate.sourceItems.map((item: any) => ({ ...item })),
+      impactLines: [...createPageTemplate.impactLines],
     }
-
-    resolvedSource.value = 'dummy'
-    return getFm7CreatePageDummyData(context, role)
   }
 
   async function getReportData(
@@ -140,87 +175,82 @@ export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'auto') {
     laporanId: string,
     role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE
   ): Promise<Fm7ReportDetailDummyData> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<Fm7ReportDetailDummyData>(
+      const apiData = await request<any>(
         FM7_GKMF_ENDPOINTS.detail(context, laporanId)
       )
 
-      if (apiData) {
+      if (apiData?.data) {
         resolvedSource.value = 'api'
-        return apiData
+        
+        const record: Fm7ReportRecord = {
+          id: apiData.data.id,
+          kodeLaporan: apiData.data.kode_laporan,
+          programStudiId: apiData.data.program_studi,
+          programStudi: apiData.data.program_studi,
+          fakultasId: apiData.data.fakultas,
+          fakultas: apiData.data.fakultas,
+          semester: apiData.data.semester,
+          tahunAkademik: apiData.data.tahun_akademik,
+          dibuatOleh: apiData.data.dibuat_oleh?.nama || '',
+          tanggalMulai: apiData.data.tanggal_mulai ? apiData.data.tanggal_mulai.substring(0,10) : '',
+          workflowStatus: apiData.data.status.toLowerCase() as Fm7WorkflowStatus,
+          narasi: {
+            kataPengantar: apiData.data.kata_pengantar || '',
+            bab1LatarBelakang: apiData.data.bab_1_latar_belakang || '',
+            bab1Tujuan: apiData.data.bab_1_tujuan || '',
+            bab1DasarHukum: apiData.data.bab_1_dasar_hukum || '',
+            bab4Simpulan: apiData.data.bab_4_simpulan || '',
+            bab4Rekomendasi: apiData.data.bab_4_rekomendasi || '',
+          }
+        };
+        return buildFm7DetailFromRecord(context, record, role)
       }
-    }
-
-    resolvedSource.value = 'dummy'
-
-    const existingRecord = findReportRecord(laporanId)
-    if (existingRecord) {
-      return buildFm7DetailFromRecord(context, existingRecord, role)
-    }
-
-    const fallback = createFallbackReport(laporanId)
-    persistReportRecord(fallback)
-    return buildFm7DetailFromRecord(context, fallback, role)
+      
+      throw new Error('Gagal memuat detail laporan dari server');
   }
 
   async function createReport(
     context: Fm7DashboardContext,
     payload: Fm7CreatePayload
   ): Promise<Fm7CreateResult> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<Fm7CreateResult>(
-        FM7_GKMF_ENDPOINTS.create(context),
-        {
-          method: 'POST',
-          body: payload,
+      const selectedProgramData = resolveProgramByIds(payload.fakultasId, payload.programStudiId)
+      
+      let fakultasLabel = selectedProgramData?.fakultas.label ?? 'Fakultas';
+      let programStudiLabel = selectedProgramData?.programStudi.label ?? 'Program Studi';
+      
+      // If resolving failed (e.g., using dynamic fallback header IDs)
+      if (!selectedProgramData) {
+        const { useFm5Store } = await import('#imports');
+        const fm5Store = useFm5Store();
+        if (fm5Store.informasi?.unit_lingkup) {
+           programStudiLabel = fm5Store.informasi.unit_lingkup.nama;
         }
-      )
-
-      if (apiData?.id) {
-        resolvedSource.value = 'api'
-        return apiData
       }
-    }
 
-    resolvedSource.value = 'dummy'
+      const apiPayload = {
+        fakultas: fakultasLabel,
+        program_studi: programStudiLabel,
+        semester: selectedProgramData?.programStudi.semester ?? 'Ganjil',
+        tahun_akademik: selectedProgramData?.programStudi.tahunAkademik ?? '2024/2025',
+        kata_pengantar: defaultNarrativeTemplate.kataPengantar,
+        bab_1_latar_belakang: defaultNarrativeTemplate.bab1LatarBelakang,
+        bab_1_tujuan: defaultNarrativeTemplate.bab1Tujuan,
+        bab_1_dasar_hukum: defaultNarrativeTemplate.bab1DasarHukum,
+        bab_4_simpulan: defaultNarrativeTemplate.bab4Simpulan,
+        bab_4_rekomendasi: defaultNarrativeTemplate.bab4Rekomendasi,
+      }
 
-    const selectedProgramData = resolveProgramByIds(payload.fakultasId, payload.programStudiId)
-    const reportId = generateReportId()
-
-    const nextRecord: Fm7ReportRecord = {
-      id: reportId,
-      kodeLaporan: generateReportCode(),
-      programStudiId: payload.programStudiId,
-      programStudi: selectedProgramData?.programStudi.label ?? 'Program Studi',
-      fakultasId: payload.fakultasId,
-      fakultas: selectedProgramData?.fakultas.label ?? 'Fakultas',
-      semester: `${selectedProgramData?.programStudi.semester ?? 'Ganjil'} ${selectedProgramData?.programStudi.tahunAkademik ?? '2024/2025'}`,
-      tahunAkademik: selectedProgramData?.programStudi.tahunAkademik ?? '2024/2025',
-      dibuatOleh: 'Fulanm M.Kom',
-      tanggalMulai: resolveTodayIsoDate(),
-      workflowStatus: 'draft',
-      narasi: cloneFm7Narrative({
-        kataPengantar:
-          '[Draft] Puji syukur kehadirat Tuhan Yang Maha Esa atas tersusunnya Laporan Monitoring dan Evaluasi pembelajaran semester ganjil tahun akademik 2024/2025 untuk Program Studi Teknik Mesin Fakultas Teknik Universitas Muhammadiyah Cirebon.',
-        bab1LatarBelakang:
-          'Monitoring dan evaluasi pembelajaran merupakan bagian integral dari sistem penjaminan mutu internal perguruan tinggi. Kegiatan ini bertujuan untuk memastikan bahwa proses pembelajaran berjalan sesuai dengan standar yang telah ditetapkan.',
-        bab1Tujuan:
-          '1. Memastikan kesiapan dosen dan mahasiswa dalam proses pembelajaran 2. Mengevaluasi kelengkapan RPS dan bahan ajar 3. Mengidentifikasi potensi masalah 4. Memberikan rekomendasi perbaikan',
-        bab1DasarHukum:
-          '1. UU No. 12 Tahun 2012 tentang Pendidikan Tinggi 2. Permendikbud No. 3 Tahun 2020 tentang SN Dikti 3. Peraturan Rektor tentang SPMI UMC',
-        bab4Simpulan: '[Masih dalam penyusunan - silakan edit setelah data lengkap]',
-        bab4Rekomendasi: '[Masih dalam penyusunan - silakan edit setelah data lengkap]',
-      }),
-    }
-
-    persistReportRecord(nextRecord)
-
-    // Placeholder sementara endpoint backend belum tersedia.
-    console.info('[fm7] create report payload', { context, payload, reportId })
-
-    return {
-      id: reportId,
-    }
+      const apiData = await request<any>(
+        FM7_GKMF_ENDPOINTS.create(context),
+        { method: 'POST', body: apiPayload }
+      )
+      
+      if (apiData?.data?.id) {
+         resolvedSource.value = 'api'
+         return { id: apiData.data.id }
+      }
+      
+      throw new Error('Gagal membuat laporan baru ke server');
   }
 
   async function updateNarrative(
@@ -228,37 +258,26 @@ export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'auto') {
     laporanId: string,
     payload: Fm7NarrativePayload
   ): Promise<boolean> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<{ updated: boolean }>(
+      const apiPayload = {
+        kata_pengantar: payload.kataPengantar,
+        bab_1_latar_belakang: payload.bab1LatarBelakang,
+        bab_1_tujuan: payload.bab1Tujuan,
+        bab_1_dasar_hukum: payload.bab1DasarHukum,
+        bab_4_simpulan: payload.bab4Simpulan,
+        bab_4_rekomendasi: payload.bab4Rekomendasi,
+      }
+
+      const apiData = await request<any>(
         FM7_GKMF_ENDPOINTS.updateNarration(context, laporanId),
-        {
-          method: 'PATCH',
-          body: payload,
-        }
+        { method: 'PUT', body: apiPayload }
       )
 
-      if (apiData?.updated) {
+      if (apiData?.data) {
         resolvedSource.value = 'api'
         return true
       }
-    }
-
-    resolvedSource.value = 'dummy'
-
-    const current = findReportRecord(laporanId)
-    if (!current) return false
-
-    const nextRecord: Fm7ReportRecord = {
-      ...current,
-      narasi: cloneFm7Narrative(payload),
-    }
-
-    persistReportRecord(nextRecord)
-
-    // Placeholder sementara endpoint backend belum tersedia.
-    console.info('[fm7] update narrative payload', { context, laporanId, payload })
-
-    return true
+      
+      throw new Error('Gagal memperbarui narasi laporan ke server');
   }
 
   async function submitReport(
@@ -267,50 +286,35 @@ export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'auto') {
     role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE,
     payload: Fm7SubmitPayload
   ): Promise<boolean> {
-    if (mode.value !== 'dummy') {
-      const apiData = await request<{ submitted: boolean }>(
-        FM7_GKMF_ENDPOINTS.submit(context, laporanId),
-        {
-          method: 'POST',
-          body: payload,
-        }
-      )
+      let apiData = null;
+      if (role === 'gkmf') {
+         apiData = await request<any>(
+           FM7_GKMF_ENDPOINTS.submit(context, laporanId),
+           { method: 'PATCH' }
+         )
+      } else {
+         const roleCode = role;
+         apiData = await request<any>(
+           `/api/fm7/${encodeURIComponent(laporanId)}/sign`,
+           { 
+             method: 'PATCH',
+             headers: { 'X-Role-Code': roleCode.replace('_', '-') } 
+           }
+         )
+      }
 
-      if (apiData?.submitted) {
+      if (apiData?.data) {
         resolvedSource.value = 'api'
         return true
       }
-    }
-
-    resolvedSource.value = 'dummy'
-
-    const current = findReportRecord(laporanId)
-    if (!current) return false
-
-    if (!isFm7RoleActionAllowed(role, current.workflowStatus)) {
-      return false
-    }
-
-    const nextWorkflowStatus = resolveFm7NextWorkflowStatus(role, current.workflowStatus)
-
-    const nextRecord: Fm7ReportRecord = {
-      ...current,
-      workflowStatus: nextWorkflowStatus,
-    }
-
-    persistReportRecord(nextRecord)
-
-    // Placeholder sementara endpoint backend belum tersedia.
-    console.info('[fm7] submit report', { context, laporanId, role, payload, nextWorkflowStatus })
-
-    return true
+      
+      throw new Error('Gagal mensubmit laporan ke server');
   }
 
   async function exportPdf(
     context: Fm7DashboardContext,
     laporanId: string
   ): Promise<boolean> {
-    if (mode.value !== 'dummy') {
       const apiData = await request<{ exported: boolean }>(
         FM7_GKMF_ENDPOINTS.exportPdf(context, laporanId),
         {
@@ -322,12 +326,8 @@ export function useFm7GkmfRepository(initialMode: Fm7SourceMode = 'auto') {
         resolvedSource.value = 'api'
         return true
       }
-    }
-
-    resolvedSource.value = 'dummy'
-    // Placeholder sementara endpoint backend belum tersedia.
-    console.info('[fm7] export pdf', { context, laporanId })
-    return true
+      
+      throw new Error('Gagal melakukan export PDF laporan');
   }
 
   return {

@@ -117,6 +117,10 @@
     "manajemenPengguna": {
       "judul": "User Management",
       "deskripsi": "The User Management module provides centralized tools for managing user accounts, roles, and access permissions, helping administrators maintain system security, organization, and operational efficiency."
+    },
+    "survei": {
+      "judul": "Fill Survey",
+      "deskripsi": "List of surveys available to be filled."
     }
   },
   "manajemenUser": {
@@ -825,6 +829,112 @@
       "simpan": "Save Changes",
       "berhasil": "Profile successfully updated",
       "gagal": "An error occurred while updating the profile"
+    }
+  },
+  "fm5": {
+    "title": "Form 05 Official Report",
+    "description": "The Monitoring and Evaluation Official Report is used as evidence of implementation and validation of evaluation results.",
+    "createButton": "Create New Report",
+    "listTitle": "List of Official Reports",
+    "searchPlaceholder": "Search official reports...",
+    "table": {
+      "no": "No",
+      "studyProgram": "Study Program",
+      "documentNumber": "Report Number",
+      "startDate": "Start Date",
+      "status": "Status",
+      "action": "Action",
+      "viewDetail": "View Detail",
+      "empty": "No official reports found."
+    },
+    "pagination": {
+      "showing": "Showing",
+      "from": "from",
+      "data": "data",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "title": "Initial Learning Monitoring and Evaluation Report",
+      "description": "This document represents the report for the evaluation implementation in the {programStudi} study program.",
+      "sign": "Sign",
+      "processing": "Processing...",
+      "reject": "Reject",
+      "pullReject": "Withdraw Rejection",
+      "rejectMessage": "Enter Rejection Message",
+      "rejectPlaceholder": "Write the reason for rejecting this document...",
+      "sending": "Sending...",
+      "sendReject": "Send Rejection"
+    }
+  },
+  "fm6": {
+    "title": "Form 06 Survey",
+    "description": "Manage surveys for students, lecturers, or educational staff.",
+    "createButton": "Create New Survey",
+    "listTitle": "Survey List",
+    "searchPlaceholder": "Search surveys...",
+    "table": {
+      "no": "No",
+      "surveyTitle": "Survey Title",
+      "totalQuestions": "Total Questions",
+      "respondents": "Respondents",
+      "target": "Target",
+      "status": "Status",
+      "action": "Action",
+      "viewDetail": "View Detail",
+      "empty": "No surveys found."
+    },
+    "detail": {
+      "title": "Survey Detail",
+      "status": "Status",
+      "period": "Response Period",
+      "description": "Description",
+      "questions": "Question List",
+      "noQuestions": "No questions yet.",
+      "respondents": "Respondent List",
+      "studentName": "Student Name",
+      "nim": "Student ID",
+      "studyProgram": "Study Program",
+      "time": "Response Time",
+      "action": "Action",
+      "viewAnswer": "View Answer",
+      "noRespondents": "No respondents have filled this survey yet.",
+      "answerDetail": "Student Answer Detail"
+    },
+    "create": {
+      "title": "Create New Survey",
+      "basicInfo": "Basic Information",
+      "surveyTitle": "Survey Title",
+      "surveyTitlePlaceholder": "e.g., Student Satisfaction Survey",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter a short description...",
+      "questions": "Survey Questions",
+      "addQuestion": "Add Question",
+      "questionText": "Question Text",
+      "questionPlaceholder": "Enter question here...",
+      "questionType": "Question Type",
+      "typeEssay": "Essay",
+      "typeMultipleChoice": "Multiple Choice",
+      "typeRating": "Rating",
+      "options": "Options",
+      "addOption": "Add Option",
+      "deleteQuestion": "Delete Question",
+      "save": "Save Survey",
+      "success": "Survey created successfully!",
+      "error": "Failed to save survey."
+    },
+    "edit": {
+      "title": "Edit Survey",
+      "save": "Save Changes",
+      "success": "Survey updated successfully!",
+      "error": "Failed to update survey."
+    },
+    "answer": {
+      "title": "Answer Survey",
+      "submit": "Submit Answer",
+      "success": "Answer submitted successfully!",
+      "error": "Failed to submit answer.",
+      "alreadyAnswered": "You have already answered this survey."
     }
   }
 }

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { navigateTo, useRoute } from '#imports'
+import { navigateTo, useRoute, useLocalePath } from '#imports'
 import { useFm7GkmfRepository } from '#features/periode-modul/composables/useFm7GkmfRepository'
+import { useI18n } from 'vue-i18n'
+import { useFm5Store } from '#stores/fm5'
 import {
   FM7_ACTIVE_DUMMY_ROLE,
   type Fm7CreatePageDummyData,
@@ -9,7 +11,7 @@ import {
   type Fm7DummyRole,
   type Fm7FakultasOption,
   type Fm7ProgramStudiOption,
-} from '#features/periode-modul/data/fm7GkmfDummy'
+} from '#features/periode-modul/data/fm7Model'
 
 type CreateStep = 1 | 2
 
@@ -20,6 +22,10 @@ interface Fm7CreateFormState {
 
 const route = useRoute()
 const repository = useFm7GkmfRepository('auto')
+const { t } = useI18n()
+const localePath = useLocalePath()
+const fm5Store = useFm5Store()
+const toast = useToast()
 
 const activeDummyRole = ref<Fm7DummyRole>(FM7_ACTIVE_DUMMY_ROLE)
 const pageData = ref<Fm7CreatePageDummyData | null>(null)
@@ -41,14 +47,14 @@ function normalizeRouteParam(value: string | string[] | undefined, fallbackValue
 const periodeModulId = computed(() =>
   normalizeRouteParam(
     route.params.periode_modul_id as string | string[] | undefined,
-    'pm-2026-genap'
+    ''
   )
 )
 
 const unitId = computed(() =>
   normalizeRouteParam(
     route.params.unit_id as string | string[] | undefined,
-    'unit-tif'
+    ''
   )
 )
 
@@ -59,7 +65,7 @@ const context = computed<Fm7DashboardContext>(() => ({
 
 const selectedFakultas = computed<Fm7FakultasOption | null>(() => {
   if (!pageData.value) return null
-  return pageData.value.fakultasOptions.find((item) => item.id === form.fakultasId) ?? null
+  return pageData.value.fakultasOptions.find((item: any) => item.id === form.fakultasId) ?? null
 })
 
 const availablePrograms = computed<Fm7ProgramStudiOption[]>(() => {
@@ -67,7 +73,7 @@ const availablePrograms = computed<Fm7ProgramStudiOption[]>(() => {
 })
 
 const selectedProgram = computed<Fm7ProgramStudiOption | null>(() => {
-  return availablePrograms.value.find((item) => item.id === form.programStudiId) ?? null
+  return availablePrograms.value.find((item: any) => item.id === form.programStudiId) ?? null
 })
 
 const canProceedToStepTwo = computed(() => {
@@ -101,13 +107,23 @@ async function handleGenerate() {
 
   creating.value = true
 
-  const result = await repository.createReport(context.value, {
-    fakultasId: form.fakultasId,
-    programStudiId: form.programStudiId,
-  })
+  try {
+    const result = await repository.createReport(context.value, {
+      fakultasId: form.fakultasId,
+      programStudiId: form.programStudiId,
+    })
 
-  creating.value = false
-  await navigateTo(buildDetailRoute(result.id))
+    await navigateTo(buildDetailRoute(result.id))
+  } catch (err: any) {
+    console.error('Failed to generate report:', err)
+    toast.add({
+      title: 'Gagal Membuat Laporan',
+      description: err?.data?.errors || err?.message || 'Terjadi kesalahan saat memproses data ke server.',
+      color: 'error'
+    })
+  } finally {
+    creating.value = false
+  }
 }
 
 watch(
@@ -118,7 +134,7 @@ watch(
       return
     }
 
-    const exists = selectedFakultas.value.programStudiOptions.some((item) => item.id === form.programStudiId)
+    const exists = selectedFakultas.value.programStudiOptions.some((item: any) => item.id === form.programStudiId)
     if (!exists) {
       form.programStudiId = ''
     }
@@ -128,20 +144,154 @@ watch(
 watch(
   [context, activeDummyRole],
   async ([nextContext, nextRole]) => {
+    if (!nextContext.periodeModulId || !nextContext.unitId) {
+      console.warn('Fm7CreatePage: Missing route params, returning early.', nextContext);
+      return;
+    }
+    
     loading.value = true
-    pageData.value = await repository.getCreatePageData(nextContext, nextRole)
+    try {
+      console.log('Fm7CreatePage: Fetching create page data...');
+      // Add a 5-second timeout in case the request hangs forever
+      const fetchPromise = repository.getCreatePageData(nextContext, nextRole);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timed out after 5s')), 5000)
+      );
+      
+      pageData.value = await Promise.race([fetchPromise, timeoutPromise]) as any;
+      console.log('Fm7CreatePage: Data received', pageData.value);
+      
+      let fakultasOpts = pageData.value?.fakultasOptions || [];
+      
+      // Fallback to header Unit Lingkup if API returns empty
+      if (fakultasOpts.length === 0 && fm5Store.informasi?.unit_lingkup) {
+        fakultasOpts = [{
+          id: 'fak-header',
+          label: 'Fakultas',
+          programStudiOptions: [{
+            id: fm5Store.informasi.unit_lingkup.id,
+            label: fm5Store.informasi.unit_lingkup.nama,
+            semester: 'Ganjil',
+            tahunAkademik: '2024/2025'
+          }]
+        }];
+        if (pageData.value) {
+          pageData.value.fakultasOptions = fakultasOpts;
+        }
+      }
 
-    form.fakultasId = ''
-    form.programStudiId = ''
+      if (fakultasOpts.length === 0) {
+        toast.add({
+          title: 'Data Tidak Ditemukan',
+          description: 'Gagal mengambil data Fakultas dan Program Studi dari Unit Lingkup ini.',
+          color: 'error'
+        });
+      } else {
+        const firstFakultas = fakultasOpts[0];
+        if (firstFakultas?.id) {
+          form.fakultasId = firstFakultas.id;
+          const firstProdi = firstFakultas.programStudiOptions?.[0];
+          if (firstProdi?.id) {
+            form.programStudiId = firstProdi.id;
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load create page data:', err)
+      pageData.value = null
+      toast.add({
+        title: 'Error',
+        description: 'Terjadi kesalahan saat memuat form FM7.',
+        color: 'error'
+      });
+    } finally {
+      loading.value = false
+      console.log('Fm7CreatePage: Loading set to false');
+    }
+    
     currentStep.value = 1
-    loading.value = false
   },
   { immediate: true }
 )
+
+const steps = computed(() => {
+  if (!pageData.value) return []
+  return [
+    { number: 1, label: pageData.value.stepOneLabel },
+    { number: 2, label: pageData.value.stepTwoLabel },
+  ].map((item: { number: number; label: string }) => ({
+    ...item,
+    active: item.number === currentStep.value,
+    completed: item.number < currentStep.value,
+  }))
+})
+
+const breadcrumbItems = computed(() => {
+  const isAmi = fm5Store.informasi?.periode_modul?.modul?.tipe_modul?.kode === 'AMI'
+  
+  return [
+    {
+      label: t('navigasi.dasbor', 'Dasbor'),
+      to: '/dashboard',
+    },
+    {
+      label: isAmi ? t('ami.judul', 'AMI') : t('monev.judul', 'Monitoring dan Evaluasi'),
+      to: isAmi ? '/dashboard/ami' : '/dashboard/monev',
+    },
+    {
+      label: 'Laporan MONEV',
+      to: buildDashboardRoute(),
+    },
+    {
+      label: 'Buat Laporan',
+      active: true,
+    }
+  ]
+})
+
+watch(context, () => {
+  if (periodeModulId.value && unitId.value) {
+    fm5Store.fetchInformasi(periodeModulId.value, unitId.value)
+  }
+}, { immediate: true })
+
 </script>
 
 <template>
-  <section class="fm7-page mx-auto w-full max-w-[1600px] space-y-4 px-4 pb-7 pt-4 md:space-y-5 md:px-5 2xl:max-w-[1720px] xl:px-6">
+  <div class="flex h-full flex-col">
+    <!-- Header with Breadcrumb -->
+    <div dir="ltr" class="flex flex-wrap items-center gap-2 mb-5 px-4 md:px-5 xl:px-6 pt-4">
+      <NuxtLink :to="localePath(`/dashboard`)">
+        <button
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer sm:h-9 sm:w-9">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
+          </svg>
+        </button>
+      </NuxtLink>
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
+        <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
+          <NuxtLink v-if="item.to" :to="localePath(item.to)" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
+            {{ item.label }}
+          </NuxtLink>
+
+          <span v-else :class="item.active
+            ? 'font-semibold text-[#e30000] underline'
+            : 'text-[#9aa2b1]'
+            ">
+            {{ item.label }}
+          </span>
+
+          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
+            /
+          </span>
+        </template>
+      </nav>
+    </div>
+
+    <section class="fm7-page mx-auto w-full max-w-[1600px] space-y-4 px-4 pb-7 md:space-y-5 md:px-5 2xl:max-w-[1720px] xl:px-6">
     <section
       v-if="pageData"
       class="rounded-[16px] border border-[#d8dce2] bg-[#efefef] px-5 py-5 shadow-[0_2px_6px_rgba(15,23,42,0.1)] md:px-6 md:py-6"
@@ -210,7 +360,8 @@ watch(
             <label class="relative mt-2 block">
               <select
                 v-model="form.fakultasId"
-                class="h-[56px] w-full appearance-none rounded-[18px] border border-[#cfd5de] bg-[#f3f4f6] px-4 pr-11 text-[clamp(0.92rem,0.95vw,1.2rem)] text-[#3b4557] outline-none"
+                disabled
+                class="h-[56px] w-full appearance-none rounded-[18px] border border-[#cfd5de] bg-[#eef0f3] px-4 text-[clamp(0.92rem,0.95vw,1.2rem)] text-[#6b7280] outline-none cursor-not-allowed"
               >
                 <option value="" disabled>{{ pageData.fakultasPlaceholder }}</option>
                 <option
@@ -221,24 +372,18 @@ watch(
                   {{ option.label }}
                 </option>
               </select>
-              <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-4 top-1/2 h-8 w-8 -translate-y-1/2 text-[#3d4659]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-              </svg>
             </label>
-            <p class="mt-2 text-[clamp(0.86rem,0.95vw,1.03rem)] text-[#98a2b3]">
-              {{ pageData.fakultasHint }}
-            </p>
           </div>
 
-          <div>
+          <div class="pb-2">
             <label class="text-[clamp(1rem,1.05vw,1.2rem)] font-semibold text-[#4d586b]">
               {{ pageData.programStudiLabel }}
             </label>
             <label class="relative mt-2 block">
               <select
                 v-model="form.programStudiId"
-                class="h-[56px] w-full appearance-none rounded-[18px] border border-[#cfd5de] bg-[#f3f4f6] px-4 pr-11 text-[clamp(0.92rem,0.95vw,1.2rem)] text-[#3b4557] outline-none"
-                :disabled="availablePrograms.length === 0"
+                disabled
+                class="h-[56px] w-full appearance-none rounded-[18px] border border-[#cfd5de] bg-[#eef0f3] px-4 text-[clamp(0.92rem,0.95vw,1.2rem)] text-[#6b7280] outline-none cursor-not-allowed"
               >
                 <option value="" disabled>{{ pageData.programStudiPlaceholder }}</option>
                 <option
@@ -249,17 +394,9 @@ watch(
                   {{ option.label }}
                 </option>
               </select>
-              <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none absolute right-4 top-1/2 h-8 w-8 -translate-y-1/2 text-[#3d4659]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
-              </svg>
             </label>
-            <p class="mt-2 text-[clamp(0.86rem,0.95vw,1.03rem)] text-[#98a2b3]">
-              {{ pageData.programStudiHint }}
-            </p>
           </div>
-        </div>
-
-        <article class="mt-6 rounded-[14px] border border-[#f0a4a4] bg-[#fbefef] px-4 py-3 text-[#c91f1f]">
+          <article class="rounded-[14px] border border-[#f0a4a4] bg-[#fbefef] px-4 py-3 text-[#c91f1f]">
           <p class="flex items-center gap-2 text-[clamp(0.95rem,1vw,1.05rem)]">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="9" />
@@ -269,6 +406,7 @@ watch(
             <span>{{ pageData.warningMessage }}</span>
           </p>
         </article>
+        </div>
       </template>
 
       <template v-else>
@@ -389,7 +527,13 @@ watch(
 
     <section v-if="loading" class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-5 text-[#3e4a5e]">
       Memuat form FM7...
+      <pre class="mt-4 text-xs text-red-500">{{ {
+        params: route.params,
+        periodeModulId: context.periodeModulId,
+        unitId: context.unitId
+      } }}</pre>
     </section>
-  </section>
+    </section>
+  </div>
 </template>
 

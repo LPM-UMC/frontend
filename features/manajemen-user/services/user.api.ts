@@ -40,6 +40,7 @@ export function useUserApi() {
     if (params?.search) query.set('search', params.search)
     if (params?.order) query.set('order', params.order)
     if (params?.roleId) query.set('roleId', params.roleId)
+    query.set('_t', String(Date.now()))
 
     const qs = query.toString()
     const url = qs ? `${USER_ENDPOINTS.list}?${qs}` : USER_ENDPOINTS.list

@@ -402,59 +402,59 @@ const progressStepsTemplate: Fm7ProgressStep[] = [
 ]
 
 const heroTemplateGkmf: Fm7HeroData = {
-  title: 'Form 07 Berita Acara',
+  title: 'Form 07 Laporan MONEV',
   description:
-    'Lorem ipsum dolor sit amet consectetur. Egestas sit dolor senectus nulla. Non ligula vitae pharetra urna feugiat lacus feugiat. Ut id quis convallis curabitur enim. Neque ullamcorper luctus aenean vitae elit tellus tincidunt.',
+    'Modul Laporan MONEV merupakan dokumen akhir yang memuat simpulan hasil evaluasi mutu, rekomendasi perbaikan, serta agregasi capaian indikator dari seluruh tahapan monev sebelumnya. Laporan ini digunakan sebagai dasar pengambilan keputusan tingkat pimpinan.',
   bulletPoints: [
     'Dapat melihat semua laporan',
-    'Dapat mengedit laporan berstatus Draft',
-    'Dapat mengubah status laporan dari Draft ke Final',
-    'Dapat mengekspor laporan ke PDF',
-    'Setelah status Final, laporan tidak dapat diedit lagi',
+    'Dapat membuat laporan baru dan mengedit laporan berstatus Draft',
+    'Dapat mengajukan laporan (Draft ke Proses)',
+    'Dapat mengekspor laporan ke format PDF',
+    'Setelah laporan diajukan, isi narasi tidak dapat diedit kembali',
   ],
-  createButtonLabel: 'Buat Berita Baru',
+  createButtonLabel: 'Buat Laporan Baru',
 }
 
 const heroTemplateOtherRole: Fm7HeroData = {
-  title: 'Form 07 Berita Acara',
+  title: 'Form 07 Laporan MONEV',
   description:
-    'Lorem ipsum dolor sit amet consectetur. Egestas sit dolor senectus nulla. Non ligula vitae pharetra urna feugiat lacus feugiat. Ut id quis convallis curabitur enim. Neque ullamcorper luctus aenean vitae elit tellus tincidunt.',
+    'Modul Laporan MONEV merupakan dokumen akhir yang memuat simpulan hasil evaluasi mutu, rekomendasi perbaikan, serta agregasi capaian indikator dari seluruh tahapan monev sebelumnya. Laporan ini digunakan sebagai dasar pengambilan keputusan tingkat pimpinan.',
   bulletPoints: [
-    'Dapat melihat semua laporan (View Only)',
-    'Tidak Dapat mengedit atau melakukan endorsement',
-    'Hanya untuk keperluan Informasi dan koordinasi',
+    'Dapat melihat dan memantau semua laporan MONEV (View Only)',
+    'Dapat menandatangani laporan (Endorsement) sesuai wewenang',
+    'Digunakan untuk keperluan persetujuan, informasi, dan koordinasi',
   ],
-  createButtonLabel: 'Buat Berita Baru',
+  createButtonLabel: 'Buat Laporan Baru',
 }
 
 const indicatorCardsTemplate: Fm7IndicatorCard[] = [
   {
     id: 'total-berita-acara',
-    title: 'Total Berita Acara',
-    value: 10,
-    subtitle: 'Skor Aspek',
-    progressPercent: 14,
+    title: 'Total Laporan',
+    value: 0,
+    subtitle: 'Seluruh laporan yang ada',
+    progressPercent: 100,
   },
   {
     id: 'draft',
-    title: 'Draft',
+    title: 'Laporan Draft',
     value: 0,
-    subtitle: 'Skor Aspek',
-    progressPercent: 14,
+    subtitle: 'Masih dalam penyusunan',
+    progressPercent: 100,
   },
   {
     id: 'proses',
-    title: 'Proses',
+    title: 'Laporan Diproses',
     value: 0,
-    subtitle: 'Skor Aspek',
-    progressPercent: 14,
+    subtitle: 'Sedang ditinjau/ditandatangani',
+    progressPercent: 100,
   },
   {
     id: 'final',
-    title: 'Final',
+    title: 'Laporan Final',
     value: 0,
-    subtitle: 'Skor Aspek',
-    progressPercent: 14,
+    subtitle: 'Selesai disahkan pimpinan',
+    progressPercent: 100,
   },
 ]
 
@@ -546,7 +546,7 @@ const sourceItemsTemplate: Fm7SourceDataItem[] = [
   },
   {
     id: 'fm05',
-    label: 'FM.05 Berita Acara',
+    label: 'FM.07 Laporan MONEV',
     babLabel: 'Lampiran',
     statusLabel: 'Tersedia',
     available: true,
@@ -560,7 +560,7 @@ const sourceItemsTemplate: Fm7SourceDataItem[] = [
   },
 ]
 
-const defaultNarrativeTemplate: Fm7NarrativeFields = {
+export const defaultNarrativeTemplate: Fm7NarrativeFields = {
   kataPengantar:
     '[Draft] Puji syukur kehadirat Tuhan Yang Maha Esa atas tersusunnya Laporan Monitoring dan Evaluasi pembelajaran semester ganjil tahun akademik 2024/2025 untuk Program Studi Teknik Mesin Fakultas Teknik Universitas Muhammadiyah Cirebon.',
   bab1LatarBelakang:
@@ -728,7 +728,7 @@ const roleAccessDescriptionMap: Record<Fm7DummyRole, string> = {
     'Anda dapat melihat dan melakukan aksi sesuai kewenangan role Pimpinan.',
 }
 
-const createPageTemplate: Omit<Fm7CreatePageDummyData, 'context' | 'role'> = {
+export const createPageTemplate: Omit<Fm7CreatePageDummyData, 'context' | 'role'> = {
   headerTitle: 'FM. 07 FORM LAPORAN MONEV',
   headerDescription:
     'Sistem akan menghasilkan laporan secara otomatis dari data FM.03 dan FM.04 Data tabel (skor, nilai, persentase) tidak dapat diedit manual Anda dapat mengedit narasi laporan (Kata Pengantar, BAB I, Kesimpulan, Rekomendasi) Status awal laporan adalah Draft',
@@ -742,7 +742,7 @@ const createPageTemplate: Omit<Fm7CreatePageDummyData, 'context' | 'role'> = {
   programStudiPlaceholder: 'Pilih Program Studi',
   programStudiHint: 'Pilih Program Studi Berdasarkan Data Yang Ingin Diinputkan',
   warningTitle: 'Catatan',
-  warningMessage: 'Lorem Ipsun',
+  warningMessage: 'Pastikan Fakultas dan Program Studi di atas sudah sesuai dengan Unit Lingkup yang sedang aktif. Anda tidak dapat mengubahnya di halaman ini.',
   stepTwoSummaryTitle: 'Data Laporan yang Akan Dibuat',
   sourceDataTitle: 'Sumber Data',
   impactTitle: 'Yang Akan Terjadi Setelah Generate',
@@ -962,9 +962,7 @@ export function cloneFm7ReportRecord(record: Fm7ReportRecord): Fm7ReportRecord {
   }
 }
 
-export function createFm7InitialReports(): Fm7ReportRecord[] {
-  return initialReportsTemplate.map((item) => cloneFm7ReportRecord(item))
-}
+
 
 export function resolveFm7StatusMeta(status: Fm7RowStatus): Fm7StatusMeta {
   return statusMetaMap[status]
@@ -985,22 +983,7 @@ export function mapWorkflowToRowStatus(status: Fm7WorkflowStatus): Fm7RowStatus 
   return 'process'
 }
 
-export function getFm7CreatePageDummyData(
-  context: Partial<Fm7DashboardContext> = {},
-  role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE
-): Fm7CreatePageDummyData {
-  return {
-    ...createPageTemplate,
-    context: resolveContext(context),
-    role,
-    fakultasOptions: createPageTemplate.fakultasOptions.map((fakultas) => ({
-      ...fakultas,
-      programStudiOptions: fakultas.programStudiOptions.map((program) => ({ ...program })),
-    })),
-    sourceItems: createPageTemplate.sourceItems.map((item) => ({ ...item })),
-    impactLines: [...createPageTemplate.impactLines],
-  }
-}
+
 
 export function resolveProgramByIds(
   fakultasId: string,
@@ -1020,76 +1003,7 @@ export function resolveProgramByIds(
   }
 }
 
-function buildDashboardRows(records: Fm7ReportRecord[]): Fm7ReportListRow[] {
-  return records.map((record) => ({
-    id: record.id,
-    kodeLaporan: record.kodeLaporan,
-    programStudiId: record.programStudiId,
-    programStudi: record.programStudi,
-    fakultas: record.fakultas,
-    semester: record.semester,
-    status: mapWorkflowToRowStatus(record.workflowStatus),
-    dibuatOleh: record.dibuatOleh,
-    tanggalMulai: record.tanggalMulai,
-  }))
-}
 
-export function getFm7DashboardDummyData(
-  context: Partial<Fm7DashboardContext> = {},
-  role: Fm7DummyRole = FM7_ACTIVE_DUMMY_ROLE,
-  records: Fm7ReportRecord[] = createFm7InitialReports()
-): Fm7DashboardDummyData {
-  const rows = buildDashboardRows(records)
-
-  const total = rows.length
-  const draft = rows.filter((item) => item.status === 'draft').length
-  const process = rows.filter((item) => item.status === 'process').length
-  const final = rows.filter((item) => item.status === 'final').length
-
-  const indicators = indicatorCardsTemplate.map((item) => ({ ...item }))
-  if (role === 'gkmf') {
-    indicators[0].value = total
-    indicators[1].value = draft
-    indicators[2].value = process
-    indicators[3].value = final
-  } else {
-    indicators[0].value = 10
-    indicators[1].value = 1
-    indicators[2].value = 2
-    indicators[3].value = 2
-  }
-
-  const hero = role === 'gkmf' ? heroTemplateGkmf : heroTemplateOtherRole
-
-  return {
-    context: resolveContext(context),
-    role,
-    hero: {
-      ...hero,
-      bulletPoints: [...hero.bulletPoints],
-    },
-    indicatorTitle: 'Capaian Indikator',
-    indicators,
-    tableTitle: 'Daftar Berita Acara',
-    searchPlaceholder: 'Search',
-    dateFilterOptions: [
-      { value: 'all', label: 'Semua Tanggal' },
-      { value: '2025-08-01', label: '2025-08-01' },
-      { value: '2025-08-02', label: '2025-08-02' },
-      { value: '2025-08-03', label: '2025-08-03' },
-    ],
-    programFilterOptions: [
-      { value: 'all', label: 'Semua Prodi' },
-      { value: 'teknik-informatika', label: 'TIF' },
-      { value: 'teknik-sipil', label: 'Sipil' },
-      { value: 'teknik-mesin', label: 'Mesin' },
-      { value: 'manajemen', label: 'Manajemen' },
-      { value: 'akuntansi', label: 'Akuntansi' },
-      { value: 'hukum', label: 'Hukum' },
-    ],
-    rows,
-  }
-}
 
 export function buildFm7DetailFromRecord(
   context: Partial<Fm7DashboardContext>,

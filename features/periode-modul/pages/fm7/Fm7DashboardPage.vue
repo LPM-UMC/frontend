@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { navigateTo, useRoute } from '#imports'
+import { navigateTo, useRoute, useLocalePath } from '#imports'
 import { useFm7GkmfRepository } from '#features/periode-modul/composables/useFm7GkmfRepository'
+import { useAuthStore } from '#stores/auth'
+import { useI18n } from 'vue-i18n'
+import { useFm5Store } from '#stores/fm5'
 import {
   resolveFm7DummyRole,
   resolveFm7StatusMeta,
   type Fm7DashboardContext,
   type Fm7DashboardDummyData,
   type Fm7DummyRole,
-} from '#features/periode-modul/data/fm7GkmfDummy'
+} from '#features/periode-modul/data/fm7Model'
 
 const route = useRoute()
 const repository = useFm7GkmfRepository('auto')
+const auth = useAuthStore()
+const { t } = useI18n()
+const localePath = useLocalePath()
+const fm5Store = useFm5Store()
+
+const canCreate = computed(() => {
+  return auth.activeRole?.kode?.toLowerCase() === 'gkmf'
+})
 
 const dashboardData = ref<Fm7DashboardDummyData | null>(null)
 const loading = ref(true)
@@ -37,14 +48,14 @@ function getFirstQueryValue(value: string | string[] | null | undefined): string
 const periodeModulId = computed(() =>
   normalizeRouteParam(
     route.params.periode_modul_id as string | string[] | undefined,
-    'pm-2026-genap'
+    ''
   )
 )
 
 const unitId = computed(() =>
   normalizeRouteParam(
     route.params.unit_id as string | string[] | undefined,
-    'unit-tif'
+    ''
   )
 )
 
@@ -65,7 +76,7 @@ const filteredRows = computed(() => {
 
   const keyword = searchKeyword.value.trim().toLowerCase()
 
-  return dashboardData.value.rows.filter((row) => {
+  return dashboardData.value.rows.filter((row: any) => {
     const matchesDate = selectedDate.value === 'all' || row.tanggalMulai === selectedDate.value
     const matchesProgram = selectedProgram.value === 'all' || row.programStudiId === selectedProgram.value
     const searchable = `${row.kodeLaporan} ${row.programStudi} ${row.fakultas} ${row.semester} ${row.dibuatOleh}`.toLowerCase()
@@ -79,7 +90,7 @@ const totalPages = computed(() => Math.max(1, Math.ceil(filteredRows.value.lengt
 
 const paginatedRows = computed(() => {
   const start = (currentPage.value - 1) * pageSize
-  return filteredRows.value.slice(start, start + pageSize).map((row, index) => ({
+  return filteredRows.value.slice(start, start + pageSize).map((row: any, index: number) => ({
     ...row,
     rowNumber: start + index + 1,
   }))
@@ -128,16 +139,96 @@ watch(totalPages, (nextTotalPages) => {
 watch(
   [context, activeDummyRole],
   async ([nextContext, nextRole]) => {
+    if (!nextContext.periodeModulId || !nextContext.unitId) {
+      loading.value = false
+      dashboardData.value = null
+      return
+    }
     loading.value = true
-    dashboardData.value = await repository.getDashboardData(nextContext, nextRole)
-    loading.value = false
+    try {
+      const fetchPromise = repository.getDashboardData(nextContext, nextRole)
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timed out after 10s')), 10000)
+      )
+      dashboardData.value = await Promise.race([fetchPromise, timeoutPromise]) as any
+    } catch (err: any) {
+      console.error('Failed to load dashboard data:', err)
+      dashboardData.value = null
+      useNuxtApp().$toast?.add({
+        title: 'Gagal Memuat Dasbor',
+        description: err?.message || 'Terjadi kesalahan saat memuat data laporan.',
+        color: 'error'
+      })
+    } finally {
+      loading.value = false
+    }
   },
   { immediate: true }
 )
+
+const breadcrumbItems = computed(() => {
+  const isAmi = fm5Store.informasi?.periode_modul?.modul?.tipe_modul?.kode === 'AMI'
+  const namaModul = 'Laporan MONEV'
+  
+  return [
+    {
+      label: t('navigasi.dasbor', 'Dasbor'),
+      to: '/dashboard',
+    },
+    {
+      label: isAmi ? t('ami.judul', 'AMI') : t('monev.judul', 'Monitoring dan Evaluasi'),
+      to: isAmi ? '/dashboard/ami' : '/dashboard/monev',
+    },
+    {
+      label: namaModul,
+      active: true,
+    },
+  ]
+})
+
+watch(context, () => {
+  if (periodeModulId.value && unitId.value) {
+    fm5Store.fetchInformasi(periodeModulId.value, unitId.value)
+  }
+}, { immediate: true })
+
 </script>
 
 <template>
-  <section class="fm7-page mx-auto w-full max-w-[1540px] space-y-4 px-4 pb-7 pt-4 md:space-y-5 md:px-5 2xl:max-w-[1680px] xl:px-6">
+  <div class="flex h-full flex-col">
+    <!-- Header with Breadcrumb -->
+    <div dir="ltr" class="flex flex-wrap items-center gap-2 mb-5 px-4 md:px-5 xl:px-6 pt-4">
+      <NuxtLink :to="localePath(`/dashboard`)">
+        <button
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d6dae2] bg-[#efeff1] text-[#596273] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-white cursor-pointer sm:h-9 sm:w-9">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19 8 12l7-7" />
+          </svg>
+        </button>
+      </NuxtLink>
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs sm:text-sm">
+        <template v-for="(item, index) in breadcrumbItems" :key="`${item.label}-${index}`">
+          <NuxtLink v-if="item.to" :to="localePath(item.to)" class="text-[#9aa2b1] transition hover:text-[#6e7788] hover:underline">
+            {{ item.label }}
+          </NuxtLink>
+
+          <span v-else :class="item.active
+            ? 'font-semibold text-[#e30000] underline'
+            : 'text-[#9aa2b1]'
+            ">
+            {{ item.label }}
+          </span>
+
+          <span v-if="index !== breadcrumbItems.length - 1" class="px-1 text-[#c5cad4]">
+            /
+          </span>
+        </template>
+      </nav>
+    </div>
+
+    <section class="fm7-page mx-auto w-full max-w-[1540px] space-y-4 px-4 pb-7 md:space-y-5 md:px-5 2xl:max-w-[1680px] xl:px-6">
     <section
       v-if="dashboardData"
       class="rounded-[16px] bg-[linear-gradient(180deg,#ef0000_0%,#d30000_100%)] px-5 py-5 shadow-[0_5px_14px_rgba(15,23,42,0.18)] md:px-6 md:py-6"
@@ -159,6 +250,7 @@ watch(
         </div>
 
         <button
+          v-if="canCreate"
           type="button"
           class="inline-flex h-[50px] min-w-[190px] items-center justify-center rounded-[18px] bg-white px-5 text-[clamp(1rem,1.08vw,1.25rem)] font-semibold text-[#121620] transition hover:bg-[#f5f5f5]"
           @click="goToCreatePage"
@@ -381,5 +473,6 @@ watch(
     <section v-if="loading" class="rounded-2xl border border-[#d5d8dd] bg-[#efefef] p-5 text-[#3e4a5e]">
       Memuat data FM7...
     </section>
-  </section>
+    </section>
+  </div>
 </template>
