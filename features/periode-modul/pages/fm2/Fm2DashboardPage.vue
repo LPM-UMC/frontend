@@ -293,7 +293,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
 import { useRoute } from '#imports'
-import { resolveFm2Band } from '#features/periode-modul/data/fm2DashboardDummy'
+import { resolveFm2Band } from '../../data/fm2DashboardDummy'
 import { useI18n } from 'vue-i18n'
 import { useFm2Store } from '#stores/fm2'
 import { useToast } from '#imports'

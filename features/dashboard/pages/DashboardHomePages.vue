@@ -76,6 +76,14 @@ const allMenus = computed(() => [
     image: '/img/gedung-umc.jpg',
     to: localePath('/dashboard/manajemen-user'),
   },
+  {
+    id: 'ai',
+    key: 'ai',
+    title: 'Manajemen AI',
+    description: 'Kelola basis pengetahuan (Knowledge Base) untuk Asisten AI SI-IMOET.',
+    image: '/img/gedung-umc.jpg',
+    to: localePath('/dashboard/manajemen-ai'),
+  },
 ])
 
 // ================= RULES =================
@@ -105,6 +113,8 @@ const menus = computed(() => {
           return adminWhitelist.includes(roleCode)
         case 'user':
           return adminWhitelist.includes(roleCode)
+        case 'ai':
+          return roleCode === 'admin-lpm' || roleCode === 'admin-spi'
 
         default:
           return true

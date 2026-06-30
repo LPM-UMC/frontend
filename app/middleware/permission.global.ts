@@ -22,4 +22,13 @@ export default defineNuxtRouteMiddleware((to) => {
       return navigateTo('/dashboard')
     }
   }
+
+  const aiRestrictedPaths = ['/dashboard/manajemen-ai']
+  const isAiRestricted = aiRestrictedPaths.some(path => to.path.startsWith(path))
+
+  if (isAiRestricted) {
+    if (roleCode !== 'admin-lpm' && roleCode !== 'admin-spi') {
+      return navigateTo('/dashboard')
+    }
+  }
 })

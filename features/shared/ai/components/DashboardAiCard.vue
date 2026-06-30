@@ -74,6 +74,7 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+import { useAuthStore } from '#stores/auth'
 
 type Mode = 'chat' | 'summarize' | 'draft'
 type Msg = { role: 'user' | 'ai'; text: string }
@@ -130,9 +131,15 @@ async function send() {
   await scrollBottom()
 
   try {
-    const res = await fetch('/api/ai/chat-stream', {
+    const authStore = useAuthStore()
+    const token = authStore.accessToken ? `Bearer ${authStore.accessToken}` : ''
+
+    const res = await fetch('http://localhost:3001/api/ai/chat-stream', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 
+        'content-type': 'application/json',
+        'Authorization': token
+      },
       body: JSON.stringify({ question: text, mode: mode.value }),
     })
 
