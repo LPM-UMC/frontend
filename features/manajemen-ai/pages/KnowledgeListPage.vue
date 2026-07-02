@@ -336,7 +336,7 @@ async function handleFileUpload(event: Event) {
     })
     
     const uploadedFilename = res.filename || file.name
-    const sourceKey = `ai-knowledge/pdfs/${uploadedFilename}`
+    const sourceKey = `ai-knowledge-bge/pdfs/${uploadedFilename}`
 
     toast.add({ 
       title: 'Tersimpan', 
