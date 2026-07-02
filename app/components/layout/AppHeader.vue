@@ -57,7 +57,7 @@ to="/profile/struktur-organisasi" :class="dropdownItemClass('/profile/struktur-o
 
         <div class="relative">
           <button
-type="button" class="cursor-pointer" :class="dropdownButtonClass(['/gambaran-spi', '/dokumen-spi'])"
+type="button" class="cursor-pointer" :class="dropdownButtonClass(['/gambaran-spi', '/dokumen-spi', '/capaian-ami'])"
             @click="toggleMenu('spi')">
             SPI
             <span
@@ -76,6 +76,11 @@ v-if="openMenu === 'spi'"
             <NuxtLink to="/dokumen-spi" :class="dropdownItemClass('/dokumen-spi')" @click="closeMenu">
               Dokumen SPI
             </NuxtLink>
+            <NuxtLink
+to="/penjaminan-mutu/capaian-ami"
+              :class="dropdownItemClass('/penjaminan-mutu/capaian-ami')" @click="closeMenu">
+              Capaian AMI
+            </NuxtLink>
           </div>
         </div>
 
@@ -87,6 +92,7 @@ type="button" class="cursor-pointer" :class="dropdownButtonClass([
             '/survei-kepuasan',
             '/rtm',
             '/external-benchmarking',
+            '/capaian-monev',
           ])" @click="toggleMenu('penjaminan')">
             LPM
             <span
@@ -119,6 +125,11 @@ to="/penjaminan-mutu/survei-kepuasan"
 to="/penjaminan-mutu/external-benchmarking"
               :class="dropdownItemClass('/penjaminan-mutu/external-benchmarking')" @click="closeMenu">
               External Benchmarking
+            </NuxtLink>
+            <NuxtLink
+to="/penjaminan-mutu/capaian-monev"
+              :class="dropdownItemClass('/penjaminan-mutu/capaian-monev')" @click="closeMenu">
+              Capaian Monev
             </NuxtLink>
           </div>
         </div>
@@ -341,10 +352,11 @@ const mobileMenuGroups = computed<MobileMenuGroup[]>(() => [
   },
   {
     title: 'SPI',
-    paths: ['/gambaran-spi', '/dokumen-spi'],
+    paths: ['/gambaran-spi', '/dokumen-spi', '/penjaminan-mutu/capaian-ami', '/capaian-ami'],
     links: [
       { to: '/gambaran-spi', label: 'Gambaran SPI' },
       { to: '/dokumen-spi', label: 'Dokumen SPI' },
+      { to: '/penjaminan-mutu/capaian-ami', label: 'Capaian AMI' },
     ],
   },
   {
@@ -360,6 +372,8 @@ const mobileMenuGroups = computed<MobileMenuGroup[]>(() => [
       '/penjaminan-mutu/survei-kepuasan',
       '/penjaminan-mutu/rtm',
       '/penjaminan-mutu/external-benchmarking',
+      '/penjaminan-mutu/capaian-monev',
+      '/capaian-monev',
     ],
     links: [
       { to: '/penjaminan-mutu/ami', label: 'Audit Mutu Internal (AMI)' },
@@ -367,6 +381,7 @@ const mobileMenuGroups = computed<MobileMenuGroup[]>(() => [
       { to: '/penjaminan-mutu/survei-kepuasan', label: 'Survei Kepuasan' },
       { to: '/penjaminan-mutu/rtm', label: 'Rapat Tinjauan Manajemen (RTM)' },
       { to: '/penjaminan-mutu/external-benchmarking', label: 'External Benchmarking' },
+      { to: '/penjaminan-mutu/capaian-monev', label: 'Capaian Monev' },
     ],
   },
   {

@@ -14,7 +14,7 @@
             </div>
             <div class="min-w-0">
               <h2 class="truncate text-sm font-semibold text-gray-900">
-                AI Admin LPM & SPI
+                AI SI IMOET
               </h2>
               <p class="mt-0.5 truncate text-xs text-gray-500">
                 Asisten dokumen mutu
@@ -74,17 +74,17 @@
                   ? 'bg-red-600 text-white'
                   : 'border border-gray-200 bg-white text-gray-800 shadow-sm'"
               >
-                <div class="whitespace-pre-wrap break-words">{{ message.text }}</div>
+                <div class="whitespace-pre-wrap break-words">{{ getMessageText(message) }}</div>
               </div>
 
               <div
-                v-if="message.role === 'ai' && message.text"
+                v-if="message.role === 'assistant' && getMessageText(message)"
                 class="mt-1.5 flex items-center gap-2 text-[11px] text-gray-500"
               >
                 <button
                   type="button"
                   class="inline-flex items-center gap-1 hover:text-gray-900"
-                  @click="copyText(message.text, index)"
+                  @click="copyText(getMessageText(message), index)"
                 >
                   <Icon name="lucide:copy" size="13" aria-hidden="true" />
                   Copy
@@ -99,7 +99,7 @@
             AI mengetik...
           </div>
           <div v-if="error" class="rounded-[10px] bg-red-50 px-3 py-2 text-xs text-red-700">
-            {{ error }}
+            {{ error.message || 'Terjadi kesalahan.' }}
           </div>
         </div>
 
@@ -156,45 +156,52 @@ import { nextTick, onMounted, ref, watch, computed } from 'vue'
 import { useAuthStore } from '#stores/auth'
 
 type Mode = 'chat' | 'summarize' | 'draft'
-type Msg = { role: 'user' | 'ai'; text: string }
 
 const STORAGE_KEY = 'admin-ai-chat-v1'
 
 const q = ref('')
 const mode = ref<Mode>('chat')
-const loading = ref(false)
-const error = ref<string | null>(null)
 const copiedIndex = ref<number | null>(null)
 const isOpen = ref(false)
-const abortController = ref<AbortController | null>(null)
 
 const authStore = useAuthStore()
 const isMahasiswa = computed(() => {
   return authStore.activeRole?.nama?.toLowerCase() === 'mahasiswa' || authStore.activeRole?.kode?.toLowerCase() === 'mahasiswa'
 })
-
-const messages = ref<Msg[]>([
-  { role: 'ai', text: 'Halo! Saya AI admin. Silakan tanya seputar dokumen dan kebutuhan LPM.' },
-])
-
 const box = ref<HTMLElement | null>(null)
+const loading = ref(false)
+const error = ref<any>(null)
+
+const authStore = useAuthStore()
+let abortController: AbortController | null = null
+
+const initialHistory: any[] = []
+try {
+  const raw = localStorage.getItem(STORAGE_KEY)
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      const validMessages = parsed.filter(m => m && m.role && (m.content || m.text));
+      // Migrate old { text } to { content }
+      const migrated = validMessages.map(m => ({
+        ...m,
+        content: m.content || m.text || ''
+      }));
+      initialHistory.push(...migrated);
+    }
+  }
+} catch {}
+
+if (initialHistory.length === 0) {
+  initialHistory.push({ id: '1', role: 'assistant', content: 'Halo! Saya AI admin. Silakan tanya seputar dokumen dan kebutuhan LPM.' })
+}
+
+const messages = ref<any[]>(initialHistory)
+const config = useRuntimeConfig()
 
 async function scrollBottom() {
   await nextTick()
   if (box.value) box.value.scrollTop = box.value.scrollHeight
-}
-
-function isNearBottom() {
-  if (!box.value) return true
-  const { scrollTop, scrollHeight, clientHeight } = box.value
-  return scrollHeight - scrollTop - clientHeight < 60
-}
-
-function stopGeneration() {
-  if (abortController.value) {
-    abortController.value.abort()
-    abortController.value = null
-  }
 }
 
 function toggleChat() {
@@ -203,11 +210,17 @@ function toggleChat() {
 }
 
 function clearChat() {
-  messages.value = [{ role: 'ai', text: 'Chat direset. Silakan tanya lagi.' }]
+  messages.value = [{ id: Date.now().toString(), role: 'assistant', content: 'Chat direset. Silakan tanya lagi.' }]
   q.value = ''
   error.value = null
-  copiedIndex.value = null
   scrollBottom()
+}
+
+function stopGeneration() {
+  if (abortController) {
+    abortController.abort()
+    abortController = null
+  }
 }
 
 async function copyText(text: string, index: number) {
@@ -216,34 +229,41 @@ async function copyText(text: string, index: number) {
     copiedIndex.value = index
     setTimeout(() => (copiedIndex.value = null), 900)
   } catch {
-    error.value = 'Gagal copy. Coba manual select/copy.'
+    // Ignore
   }
 }
 
 async function send() {
   const text = q.value.trim()
-  if (!text || loading.value) return
+  if (!text || loading.value) return;
+  
+  q.value = '';
+  error.value = null;
+  loading.value = true;
+  
+  messages.value.push({ id: Date.now().toString(), role: 'user', content: text });
+  messages.value.push({ id: (Date.now() + 1).toString(), role: 'assistant', content: '' });
+  
+  await scrollBottom();
 
-  error.value = null
-  loading.value = true
-
-  messages.value.push({ role: 'user', text })
-  messages.value.push({ role: 'ai', text: '' })
-
-  q.value = ''
-  await scrollBottom()
-
-  abortController.value = new AbortController()
+  abortController = new AbortController()
 
   try {
-    const res = await fetch('/api/ai/chat-stream', {
+    const token = authStore.accessToken ? `Bearer ${authStore.accessToken}` : ''
+    
+    const messagesToSend = messages.value.slice(0, -1).map(m => ({
+      role: m.role,
+      content: m.content
+    }))
+    
+    const res = await fetch(`${config.public.apiBaseUrl}/api/ai/chat-stream`, {
       method: 'POST',
-      signal: abortController.value.signal,
-      headers: { 
+      headers: {
         'content-type': 'application/json',
-        'Authorization': 'Bearer admin-ai-chatbot' // Token sementara untuk testing UI
+        'Authorization': token
       },
-      body: JSON.stringify({ question: text, mode: mode.value }),
+      body: JSON.stringify({ mode: mode.value, messages: messagesToSend }),
+      signal: abortController.signal
     })
 
     if (!res.ok || !res.body) {
@@ -258,37 +278,62 @@ async function send() {
       const { value, done } = await reader.read()
       if (done) break
 
+      const nearBottom = box.value ? box.value.scrollHeight - box.value.scrollTop - box.value.clientHeight < 60 : true;
+
       const chunk = decoder.decode(value, { stream: true })
+      const lines = chunk.split('\n')
+      
       const last = messages.value[messages.value.length - 1]
       
-      const nearBottom = isNearBottom()
-      if (last?.role === 'ai') last.text += chunk
+      for (const line of lines) {
+        const textChunk = line.trim()
+        if (!textChunk || !textChunk.startsWith('data:')) continue
+        
+        const dataStr = textChunk.replace(/^data:\s*/, '')
+        if (dataStr === '[DONE]') break
+        
+        try {
+          const parsed = JSON.parse(dataStr)
+          if (parsed.type === 'text-delta') {
+            if (last && last.role === 'assistant') {
+              last.content += parsed.delta
+            }
+          } else if (parsed.type === 'error') {
+            throw new Error(parsed.error || 'Server error in stream')
+          }
+        } catch (err) {
+           // ignore json parse error for partial lines
+        }
+      }
       
-      if (nearBottom) await scrollBottom()
+      if (nearBottom) {
+        await scrollBottom()
+      }
     }
   } catch (e: any) {
-    if (e.name === 'AbortError') {
+    if (e.name !== 'AbortError') {
+      error.value = { message: e?.message || 'Unknown error' }
       const last = messages.value[messages.value.length - 1]
-      if (last?.role === 'ai') last.text += '\n\n*(Dihentikan oleh pengguna)*'
-      return
+      if (last && last.role === 'assistant' && !last.content) {
+        last.content = 'Maaf, terjadi error saat mengambil respons dari server.'
+      }
     }
-    error.value = e?.message || 'Unknown error'
-    const last = messages.value[messages.value.length - 1]
-    if (last?.role === 'ai' && !last.text) last.text = 'Maaf, terjadi error saat streaming.'
   } finally {
     loading.value = false
-    abortController.value = null
+    abortController = null
     await scrollBottom()
   }
 }
 
-onMounted(() => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) messages.value = JSON.parse(raw)
-  } catch {
-    // Local history is optional.
+function getMessageText(message: any): string {
+  if (message.content) return message.content;
+  if (message.parts && Array.isArray(message.parts)) {
+    return message.parts.filter((p: any) => p.type === 'text').map((p: any) => p.text).join('');
   }
+  return '';
+}
+
+onMounted(() => {
   scrollBottom()
 })
 

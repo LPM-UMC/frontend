@@ -99,9 +99,12 @@ import {
 } from '@nuxt/ui/locale'
 import DashboardSidebar
   from '~/components/layout/DashboardSidebar.vue'
+import { useAuthStore } from '#stores/auth'
 
 const localePath =
   useLocalePath()
+
+const authStore = useAuthStore()
 
 const {
   locale,
@@ -132,41 +135,30 @@ const isSidebarCollapsed =
 const isMobileSidebarOpen =
   ref(false)
 
-const modulMenus =
-  computed<MenuItem[]>(
-    () => [
-      {
-        id: 'home',
-        label: t(
-          'navigasi.dasbor'
-        ),
-        to: localePath(
-          '/dashboard'
-        ),
-        icon: 'i-lucide-home',
-      },
-      {
-        id: 'user',
-        label: t(
-          'manajemenUser.judul'
-        ),
-        to: localePath(
-          '/dashboard/manajemen-user'
-        ),
-        icon: 'i-lucide-user',
-      },
-      {
-        id: 'role',
-        label: t(
-          'manajemenRole.judul'
-        ),
-        to: localePath(
-          '/dashboard/manajemen-role'
-        ),
-        icon: 'i-lucide-shield',
-      },
-    ]
-  )
+const modulMenus = computed<MenuItem[]>(() => {
+  const menus = [
+    {
+      id: 'home',
+      label: t('navigasi.dasbor'),
+      to: localePath('/dashboard'),
+      icon: 'i-lucide-home',
+    },
+    {
+      id: 'user',
+      label: t('manajemenUser.judul'),
+      to: localePath('/dashboard/manajemen-user'),
+      icon: 'i-lucide-user',
+    },
+    {
+      id: 'role',
+      label: t('manajemenRole.judul'),
+      to: localePath('/dashboard/manajemen-role'),
+      icon: 'i-lucide-shield',
+    },
+  ]
+
+  return menus
+})
 
 const activeMenuId =
   computed(() => {
@@ -242,10 +234,6 @@ watch(
         : ''
   }
 )
-
-import { useAuthStore } from '#stores/auth'
-
-const authStore = useAuthStore()
 
 const sidebarProfile =
   computed(() => {

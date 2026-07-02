@@ -76,13 +76,20 @@ const allMenus = computed(() => [
     image: '/img/gedung-umc.jpg',
     to: localePath('/dashboard/manajemen-user'),
   },
-  {
     id: 'survei',
     key: 'survei',
     title: t('dasborModul.survei.judul', 'Isi Survei'),
     description: t('dasborModul.survei.deskripsi', 'Daftar survei yang tersedia untuk diisi.'),
     image: '/img/gedung-umc.jpg',
     to: localePath('/dashboard/survei'),
+  },
+  {
+    id: 'ai',
+    key: 'ai',
+    title: 'Manajemen AI',
+    description: 'Kelola basis pengetahuan (Knowledge Base) untuk Asisten AI SI-IMOET.',
+    image: '/img/gedung-umc.jpg',
+    to: localePath('/dashboard/manajemen-ai'),
   },
 ])
 
@@ -115,6 +122,8 @@ const menus = computed(() => {
           return adminWhitelist.includes(roleCode)
         case 'survei':
           return roleCode === 'mahasiswa'
+        case 'ai':
+          return roleCode === 'admin-lpm' || roleCode === 'admin-spi'
         default:
           return true
       }

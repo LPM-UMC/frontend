@@ -20,13 +20,25 @@ const localeMenuRef = ref<HTMLElement | null>(null)
 const profileRef = ref<HTMLElement | null>(null)
 
 // ✅ FIX TYPE
-const user = ref({
-  id: '',
-  name: '',
-  email: '',
-  roles: [] as RoleResponse[],
-  avatar: '',
-  isOnline: false,
+const user = computed(() => {
+  if (!authStore.user) {
+    return {
+      id: '',
+      name: '',
+      email: '',
+      roles: [] as RoleResponse[],
+      avatar: '',
+      isOnline: false,
+    }
+  }
+  return {
+    id: authStore.user.id,
+    name: authStore.user.nama,
+    email: authStore.user.email ?? '',
+    roles: authStore.roles ?? [],
+    avatar: getAvatar(authStore.user.nama, authStore.user.picture),
+    isOnline: true,
+  }
 })
 
 // ================= ROLE =================
@@ -95,17 +107,6 @@ onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
 
   await authStore.initializeAuth()
-
-  if (!authStore.user) return
-
-  user.value = {
-    id: authStore.user.id,
-    name: authStore.user.nama,
-    email: authStore.user.email ?? '', // ✅ FIX
-    roles: authStore.roles ?? [], // ✅ FIX
-    avatar: getAvatar(authStore.user.nama, authStore.user.picture),
-    isOnline: true,
-  }
 })
 
 onUnmounted(() => {
@@ -114,9 +115,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="fixed inset-x-0 top-0 z-50">
-    <div class="border-b border-[#ececec] bg-white">
-      <div class="mx-auto flex h-14.5 w-full max-w-470 items-center justify-between px-3 sm:h-21.5 sm:px-5 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-[#d9d9d9] bg-[#f4f4f4]">
+    <div dir="ltr" class="mx-auto flex h-16.5 w-full max-w-550 items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
 
         <!-- LOGO -->
         <NuxtLink dir="ltr" to="/" class="flex min-w-0 items-center gap-2">
@@ -230,7 +230,7 @@ onUnmounted(() => {
       >
         <div
           v-if="isMobileMenuOpen"
-          class="border-t border-gray-200 bg-white px-3 py-3 md:hidden"
+          class="border-t border-[#d9d9d9] bg-[#f4f4f4] px-3 py-3 md:hidden"
         >
           <div class="flex justify-end" dir="ltr">
             <ULocaleSelect
@@ -249,7 +249,6 @@ onUnmounted(() => {
           </div>
         </div>
       </Transition>
-    </div>
   </header>
 
   <!-- POPUP -->

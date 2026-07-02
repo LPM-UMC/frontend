@@ -82,6 +82,7 @@ import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import ModuleCard from '#features/dashboard/components/ModuleCard.vue'
 import { useI18n } from 'vue-i18n'
 import { useModulStore } from '#stores/modul'
+import { useAuthStore } from '#stores/auth'
 
 definePageMeta({
   layout: 'dashboard',
@@ -90,6 +91,7 @@ definePageMeta({
 const { t } = useI18n()
 const localePath = useLocalePath()
 const modulStore = useModulStore()
+const authStore = useAuthStore()
 
 const breadcrumbItems = computed(() => [
   {
@@ -107,7 +109,8 @@ const search = ref('')
 const defaultCardColor = '#ffffff'
 const alternateCardColor = '#f6f7f9'
 
-onMounted(() => {
+onMounted(async () => {
+  await authStore.initAuth()
   modulStore.fetchModulAmi()
 })
 
