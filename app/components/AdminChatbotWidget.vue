@@ -172,7 +172,6 @@ const box = ref<HTMLElement | null>(null)
 const loading = ref(false)
 const error = ref<any>(null)
 
-const authStore = useAuthStore()
 let abortController: AbortController | null = null
 
 const initialHistory: any[] = []
